@@ -570,14 +570,12 @@ class Widget extends Component {
     }
   }
 
-  handleMessageSubmit(event) {
-    event.preventDefault();
-    const userUttered = event.target.message.value;
+  handleMessageSubmit(message) {
+    const userUttered = message;
     if (userUttered) {
       this.props.dispatch(addUserMessage(userUttered));
       this.props.dispatch(emitUserMessage(userUttered));
     }
-    event.target.message.value = '';
   }
 
   render() {
@@ -585,7 +583,7 @@ class Widget extends Component {
       <WidgetLayout
         toggleChat={() => this.toggleConversation()}
         toggleFullScreen={() => this.toggleFullScreen()}
-        onSendMessage={event => this.handleMessageSubmit(event)}
+        onSendMessage={message => this.handleMessageSubmit(message)}
         title={this.props.title}
         subtitle={this.props.subtitle}
         customData={this.props.customData}
