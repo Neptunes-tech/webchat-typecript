@@ -53,23 +53,22 @@ In your `<body/>`:
 ```html
 <script>
     !(function () {
-      let e = document.createElement("script"),
-        t = document.head || document.getElementsByTagName("head")[0];
-      (e.src =
-        "https://cdn.jsdelivr.net/npm/rasa-webchat@1.x.x/lib/index.js"),
-        // Replace 1.x.x with the version that you want
-        (e.async = !0),
-        (e.onload = () => {
-          window.WebChat.default(
-            {
-              customData: { language: "en" },
-              socketUrl: "https://bf-botfront.development.agents.botfront.cloud",
-              // add other props here
-            },
-            null
-          );
-        }),
-        t.insertBefore(e, t.firstChild);
+        let e = document.createElement('script'),
+            t = document.head || document.getElementsByTagName('head')[0];
+        (e.src = 'https://cdn.jsdelivr.net/npm/rasa-webchat@1.x.x/lib/index.js'),
+            // Replace 1.x.x with the version that you want
+            (e.async = !0),
+            (e.onload = () => {
+                window.WebChat.default(
+                    {
+                        customData: { language: 'en' },
+                        socketUrl: 'https://bf-botfront.development.agents.botfront.cloud',
+                        // add other props here
+                    },
+                    null
+                );
+            }),
+            t.insertBefore(e, t.firstChild);
     })();
 </script>
 ```
@@ -116,6 +115,7 @@ function CustomWidget = () => {
 | `tooltipPayload`       | `null`             | Payload sent to Rasa when the widget loads. The response will be displayed as a tooltip.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | `socketUrl`            | `null`             | Socket URL                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | `socketPath`           | `null`             | Close the chat window                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `protocolOptions`      | `null`             | Custom protocol options, the options like `url` and `path` will be overwritten the especied as `socketUrl` or `socketPath` for example. (e.g. of options `{"transports": ["websocket"]}`)                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | `customData`           | `null`             | Arbitrary object sent with the socket. If using with Botfront, it must include the language (e.g. `{"language": "en"}`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | `docViewer`            | `false`            | If you add this prop to the component or to the init script, `docViewer=true` , this will treat links in received messages as links to a document ( `.pdf .doc .xlsx` etc. ) and will open them in a popup using `https://docs.google.com/viewer` service                                                                                                                                                                                                                                                                                                                                                    |
 | `title`                | `'Welcome"`        | Title shown in the header of the widget                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
@@ -144,7 +144,7 @@ function CustomWidget = () => {
     if (delay > 2 * 1000) delay = 3 * 1000;
     if (delay < 400) delay = 1000;
     return delay;
-}
+};
 ```
 
 ##### `onSocketEvent`
@@ -195,9 +195,7 @@ function myComponent() {
         }
     }
 
-    return <RasaWebchat
-        ref={webchatRef}
-    />;
+    return <RasaWebchat ref={webchatRef} />;
 }
 ```
 
