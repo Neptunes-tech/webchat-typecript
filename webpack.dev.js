@@ -12,11 +12,10 @@ module.exports = {
     libraryTarget: 'umd'
   },
   devServer: {
-    stats: 'errors-only',
     host: process.env.HOST, // Defaults to `localhost`
     port: process.env.PORT, // Defaults to 8080
     open: true, // Open the page in browser
-    contentBase: path.resolve(__dirname, '/lib')
+    static: { directory: path.resolve(__dirname, '/lib') }
   },
   resolve: {
     extensions: ['.js', '.jsx']
@@ -45,7 +44,9 @@ module.exports = {
         {
           loader: 'sass-loader',
           options: {
-            includePaths: [path.resolve(__dirname, 'src/scss/')]
+            sassOptions: {
+              includePaths: [path.resolve(__dirname, 'src/scss/')]
+            }
           }
         }
       ]
