@@ -1,16 +1,4 @@
-<p align="center">
-
-<a href="https://www.npmjs.com/package/botfront">
-    <img alt="npm" src="https://img.shields.io/npm/v/rasa-webchat.svg">
-</a>
-<a href='https://github.com/botfront/botfront/blob/master/LICENSE'>
-    <img alt="License" src="https://img.shields.io/github/license/botfront/rasa-webchat">
-</a>
-<a href='https://spectrum.chat/botfront'>
-    <img alt="Spectrum link" src="https://withspectrum.github.io/badge/badge.svg">
-</a>
-</p>
-<h1 align="center">Rasa Webchat 💬</h1>
+<h1 align="center">SDP Webchat 💬</h1>
 <h5 align="center">
  A chat widget to deploy virtual assistants made with <a href="https://github.com/rasaHQ/rasa">Rasa</a> or <a href="https://github.com/botfront/botfront?utm_source=rasa_webchat">Botfront</a> on any website.
 </h5>
@@ -38,12 +26,6 @@
 -   Smart delay between messages
 -   Easy to import in a script tag or as a React Component
 
-## 🔥 Promo: check out our other cool open source project
-
-<a href="https://github.com/botfront/botfront?utm_source=rasa_webchat">
-<img align="center" src="https://github.com/botfront/botfront/raw/master/botfront_animation.gif" alt="demonstration" width="100%">
-</a>
-
 ## Usage
 
 ### In a `<script>` tag
@@ -55,14 +37,13 @@ In your `<body/>`:
     !(function () {
         let e = document.createElement('script'),
             t = document.head || document.getElementsByTagName('head')[0];
-        (e.src = 'https://cdn.jsdelivr.net/npm/rasa-webchat@1.x.x/lib/index.js'),
+        (e.src = 'https://customers.viind.com/webchat/1.x.x/lib/index.js'),
             // Replace 1.x.x with the version that you want
             (e.async = !0),
             (e.onload = () => {
                 window.WebChat.default(
                     {
-                        customData: { language: 'en' },
-                        socketUrl: 'https://bf-botfront.development.agents.botfront.cloud',
+                        socketUrl: 'https://YOUR-CHATBOT-INSTANCE',
                         // add other props here
                     },
                     null
@@ -177,7 +158,7 @@ params={{
 
 #### Tooltips
 
-Text messages received when the widget is closed will be shown as a tooltip.
+Text messages received when the widget is closed will be shown as a tooltip. If you wish to display a custom tooltip, use the `tooltipText` property.
 
 #### Sending a message on page load
 
@@ -215,7 +196,7 @@ If you want to process `customData` in Rasa you have to [create a new channel](h
 
 #### Botfront
 
-The Rasa Webchat is developped by the [Botfront](https://botfront.io) team and it works with Botfront. If your bot is multilingual, make sure to specificy the current language in the `customData` prop. E.g. `customData={{language: 'en'}}`. See in [Botfront docs](https://botfront.io/docs/channels/webchat/) for more details.
+If your bot is multilingual, make sure to specificy the current language in the `customData` prop. E.g. `customData={{language: 'en'}}`. See in [Botfront docs](https://botfront.io/docs/channels/webchat/) for more details.
 
 ## Styles
 
@@ -286,8 +267,6 @@ hierarchy:
 
 <br/>
 <h2 align="center">License</h2>
-
-Copyright (C) 2021 Dialogue Technologies Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
