@@ -35,7 +35,7 @@
 
     .#{$namespace}response {
         @include message-bubble($grey-2, #000, 0 15px 15px 15px);
-        overflow-wrap: break-word;
+        overflow-wrap: anywhere;
     }
 
     /* For markdown elements created with default styles */

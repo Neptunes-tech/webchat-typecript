@@ -3,6 +3,8 @@ const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { version } = require('./package.json');
+const { BannerPlugin } = require('webpack');
+var fs = require('fs');
 
 module.exports = [
     {
@@ -16,6 +18,9 @@ module.exports = [
         },
         resolve: {
             extensions: ['.js', '.jsx'],
+            alias: {
+                'react-native$': 'react-native-web',
+            },
         },
         mode: 'production',
         module: {
@@ -68,6 +73,7 @@ module.exports = [
                     { from: path.join(__dirname, '/static'), to: path.join(__dirname, '/lib') },
                 ],
             }),
+            new BannerPlugin(fs.readFileSync('./NOTICE', 'utf8')),
         ],
     },
     {
@@ -96,6 +102,9 @@ module.exports = [
         },
         resolve: {
             extensions: ['.js', '.jsx'],
+            alias: {
+                'react-native$': 'react-native-web',
+            },
         },
         mode: 'production',
         module: {
@@ -148,6 +157,7 @@ module.exports = [
                     { from: path.join(__dirname, '/static'), to: path.join(__dirname, '/module') },
                 ],
             }),
+            new BannerPlugin(fs.readFileSync('./NOTICE', 'utf8')),
         ],
     },
 ];

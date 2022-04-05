@@ -2,6 +2,8 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { version } = require('./package.json');
+const { BannerPlugin } = require('webpack');
+var fs = require('fs');
 
 module.exports = {
     // entry: ['babel-polyfill', './index.js'],
@@ -20,6 +22,9 @@ module.exports = {
     },
     resolve: {
         extensions: ['.js', '.jsx'],
+        alias: {
+            'react-native$': 'react-native-web',
+        },
     },
     mode: 'development',
     devtool: 'eval-source-map',
@@ -77,5 +82,6 @@ module.exports = {
         new CopyWebpackPlugin({
             patterns: [{ from: path.join(__dirname, '/static'), to: path.join(__dirname, '/lib') }],
         }),
+        new BannerPlugin(fs.readFileSync('./NOTICE', 'utf8')),
     ],
 };
