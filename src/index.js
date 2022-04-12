@@ -145,6 +145,7 @@ const ConnectedWidget = forwardRef((props, ref) => {
                     showMessageDate={props.showMessageDate}
                     customMessageDelay={props.customMessageDelay}
                     tooltipText={props.tooltipText}
+                    tooltipSuggestions={props.tooltipSuggestions}
                     tooltipPayload={props.tooltipPayload}
                     tooltipDelay={props.tooltipDelay}
                     disableTooltips={props.disableTooltips}
@@ -189,6 +190,7 @@ ConnectedWidget.propTypes = {
     showMessageDate: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
     customMessageDelay: PropTypes.func,
     tooltipText: PropTypes.string,
+    tooltipSuggestions: PropTypes.arrayOf(PropTypes.string),
     tooltipPayload: PropTypes.string,
     tooltipDelay: PropTypes.number,
     onWidgetEvent: PropTypes.shape({
@@ -238,6 +240,7 @@ ConnectedWidget.defaultProps = {
         return delay;
     },
     tooltipText: null,
+    tooltipSuggestions: null,
     tooltipPayload: null,
     tooltipDelay: 500,
     onWidgetEvent: {

@@ -54,6 +54,7 @@ const WidgetLayout = (props) => {
                     closeImage={props.closeImage}
                     displayUnreadCount={props.displayUnreadCount}
                     tooltipText={props.tooltipText}
+                    tooltipSuggestions={props.tooltipSuggestions}
                     tooltipPayload={props.tooltipPayload}
                 />
             )}
@@ -95,6 +96,7 @@ WidgetLayout.propTypes = {
     displayUnreadCount: PropTypes.bool,
     showMessageDate: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
     tooltipText: PropTypes.string,
+    tooltipSuggestions: PropTypes.arrayOf(PropTypes.string),
     tooltipPayload: PropTypes.string,
 };
 

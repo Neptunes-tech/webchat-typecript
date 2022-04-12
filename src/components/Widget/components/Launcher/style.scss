@@ -84,7 +84,7 @@
         width: 320px;
         font-size: 16px;
         padding: 0px 8px;
-        line-height: 19px;
+        line-height: 25px;
         font-family: $fontfamily;
         animation: slideUp 0.3s ease-in-out;
         transition: all 0.2s ease-in-out;
@@ -107,7 +107,7 @@
                 background: rgb(250, 250, 250);
             }
             .#{$namespace}tooltip-close button {
-                background-color: rgb(250, 250, 250);
+                filter: brightness(150%);
             }
         }
 
@@ -242,6 +242,20 @@
         outline: none;
     }
 
+    .#{$namespace}tooltip-header {
+        box-sizing: border-box;
+        border-radius: 8px 8px 1px 1px;
+        right: 0px;
+        top: 0px;
+        padding: 0px 8px;
+        transition: all 0.2s ease-in-out;
+
+        position: absolute;
+        background-color: var(--#{$namespace}tertiary);
+        height: 30px;
+        width: 100%;
+    }
+
     .#{$namespace}tooltip-close {
         position: absolute;
         right: 7px;
@@ -271,9 +285,19 @@
         transform: translateY(0);
     }
 }
-
 .#{$namespace}open-launcher {
-    @include animation(0, 0.5s, rotation-rl);
+    width: 90% !important;
+}
+
+// .#{$namespace}closing-launcher {
+//     @include animation(0, 0.5s, rotation-rl);
+// }
+
+.#{$namespace}rotation-full {
+    @include animation(0s, 1s, rotation-full);
+}
+.#{$namespace}rotation-half {
+    @include animation(0s, 1s, rotation-half);
 }
 
 .#{$namespace}close-launcher {

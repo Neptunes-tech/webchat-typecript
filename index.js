@@ -133,6 +133,7 @@ export const rasaWebchatProTypes = {
     showMessageDate: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
     customMessageDelay: PropTypes.func,
     tooltipText: PropTypes.string,
+    tooltipSuggestions: PropTypes.arrayOf(PropTypes.string),
     tooltipPayload: PropTypes.string,
     tooltipDelay: PropTypes.number,
     withRules: PropTypes.bool,
@@ -201,6 +202,7 @@ export const rasaWebchatProDefaultTypes = {
         return delay;
     },
     tooltipText: null,
+    tooltipSuggestions: null,
     tooltipPayload: null,
     tooltipDelay: 500,
     withRules: true,

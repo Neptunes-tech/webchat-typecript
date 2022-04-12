@@ -10,10 +10,10 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
 import { MESSAGES_TYPES } from 'constants';
-import { Image, Message, Buttons } from 'messagesComponents';
+import { Image, Buttons, DynamicMessage, Message } from 'messagesComponents';
 import { showTooltip as showTooltipAction, emitUserMessage } from 'actions';
 import { onRemove } from 'utils/dom';
-import openLauncher from 'assets/launcher_button.svg';
+import openLauncher from 'assets/launcher_button.png';
 import closeIcon from 'assets/clear-button-grey.svg';
 import close from 'assets/clear-button.svg';
 import Badge from './components/Badge';
@@ -37,6 +37,7 @@ const Launcher = ({
     domHighlight,
     sendPayload,
     tooltipText,
+    tooltipSuggestions,
 }) => {
     const { mainColor, assistBackgoundColor } = useContext(ThemeContext);
 
@@ -77,15 +78,43 @@ const Launcher = ({
         ],
         placement: (domHighlight && domHighlight.get('tooltipPlacement')) || 'auto',
     });
-
-    let tooltipMessage = new Map();
-    if (tooltipText) {
-        tooltipMessage = new Map({
+    const [tooltipMessage, settooltipMessage] = useState(
+        new Map({
             type: MESSAGES_TYPES.TEXT,
             sender: 'response',
             text: tooltipText,
-        });
-    }
+            dynamicText: tooltipSuggestions[0],
+        })
+    );
+
+    const [animationClass, setAnimationClass] = useState('rw-rotation-half');
+    const [index, setIndex] = useState(1);
+
+    const updateSuggestion = () => {
+        setAnimationClass('rw-rotation-full');
+        setTimeout(() => {
+            setAnimationClass('');
+        }, 1500);
+
+        if (tooltipText) {
+            settooltipMessage(
+                new Map({
+                    type: MESSAGES_TYPES.TEXT,
+                    sender: 'response',
+                    text: tooltipText,
+                    dynamicText: tooltipSuggestions[index % tooltipSuggestions.length],
+                })
+            );
+        }
+        setIndex(index + 1);
+    };
+
+    useEffect(() => {
+        const intervalID = setInterval(updateSuggestion, 5000);
+        return () => {
+            clearInterval(intervalID);
+        };
+    }, [updateSuggestion]);
 
     const className = ['rw-launcher'];
 
@@ -104,11 +133,13 @@ const Launcher = ({
     if (isChatOpen) className.push('rw-hide-sm');
     if (fullScreenMode && isChatOpen) className.push('rw-full-screen rw-hide');
 
-    const getComponentToRender = (message, buttonSeparator = false) => {
+    const getComponentToRender = (message, buttonSeparator = false, forTooltip = false) => {
         const ComponentToRender = (() => {
             switch (message.get('type')) {
                 case MESSAGES_TYPES.TEXT: {
-                    return Message;
+                    if (forTooltip) {
+                        return DynamicMessage;
+                    } else return Message;
                 }
                 case MESSAGES_TYPES.IMGREPLY.IMAGE: {
                     return Image;
@@ -163,29 +194,33 @@ const Launcher = ({
     );
     const renderTooltipContent = () => (
         <React.Fragment>
-            <div className="rw-tooltip-close">
-                <button
-                    onClick={(e) => {
-                        /* stop the propagation because the popup is also a button
-            otherwise it would open the webchat when closing the tooltip */
-                        e.stopPropagation();
+            <div className="rw-tooltip-header">
+                <div className="rw-tooltip-close">
+                    <button
+                        onClick={(e) => {
+                            /* stop the propagation because the popup is also a button
+                               otherwise it would open the webchat when closing the tooltip */
+                            e.stopPropagation();
 
-                        const payload = domHighlight.get('tooltipClose');
-                        if (domHighlight && payload) {
-                            sendPayload(`/${payload}`);
-                        }
-                        closeTooltip();
-                    }}
-                >
-                    <img src={closeIcon} alt="close" />
-                </button>
+                            const payload = domHighlight.get('tooltipClose');
+                            if (domHighlight && payload) {
+                                sendPayload(`/${payload}`);
+                            }
+                            closeTooltip();
+                        }}
+                    >
+                        <img src={closeIcon} alt="close" />
+                    </button>
+                </div>
             </div>
             {(tooltipMessage.size > 0 && (
-                <div onMouseUp={() => toggle()}>{getComponentToRender(tooltipMessage, true)}</div>
+                <div onMouseUp={() => toggle()}>
+                    {getComponentToRender(tooltipMessage, true, true)}
+                </div>
             )) ||
                 (lastMessages.length === 1 && (
                     <div onMouseUp={() => toggle()}>
-                        {getComponentToRender(lastMessages[0], true)}
+                        {getComponentToRender(lastMessages[0], true, true)}
                     </div>
                 )) ||
                 renderSequenceTooltip(lastMessages)}
@@ -230,7 +265,11 @@ const Launcher = ({
             {unreadCount > 0 && displayUnreadCount && (
                 <div className="rw-unread-count-pastille">{unreadCount}</div>
             )}
-            <img src={openLauncherImage || openLauncher} className="rw-open-launcher" alt="" />
+            <img
+                src={openLauncherImage || openLauncher}
+                className={`rw-open-launcher ${animationClass}`}
+                alt=""
+            />
             {showTooltip &&
                 (tooltipText || (lastMessage && lastMessage.get('sender') === 'response')) &&
                 (referenceElement ? renderPlacedTooltip() : renderToolTip())}

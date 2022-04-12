@@ -1,0 +1,17 @@
+@import 'variables.scss';
+
+@import 'common.scss';
+
+/* For markdown elements created with default styles */
+.#{$namespace}message-text {
+    margin: 0;
+    text-align: left;
+}
+
+.#{$namespace}message-dynamic {
+    margin: 0;
+    text-align: left;
+    width: 100%;
+    font-size: 25px !important;
+    color: var(--#{$namespace}tertiary);
+}
