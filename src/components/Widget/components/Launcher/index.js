@@ -96,16 +96,16 @@ const Launcher = ({
             setAnimationClass('');
         }, 1500);
 
-        if (tooltipText) {
-            settooltipMessage(
-                new Map({
-                    type: MESSAGES_TYPES.TEXT,
-                    sender: 'response',
-                    text: tooltipText,
-                    dynamicText: tooltipSuggestions[index % tooltipSuggestions.length],
-                })
-            );
-        }
+        // if (tooltipText) {
+        //     settooltipMessage(
+        //         new Map({
+        //             type: MESSAGES_TYPES.TEXT,
+        //             sender: 'response',
+        //             text: tooltipText,
+        //             dynamicText: tooltipSuggestions[index % tooltipSuggestions.length],
+        //         })
+        //     );
+        // }
         setIndex(index + 1);
     };
 
@@ -265,11 +265,13 @@ const Launcher = ({
             {unreadCount > 0 && displayUnreadCount && (
                 <div className="rw-unread-count-pastille">{unreadCount}</div>
             )}
-            <img
-                src={openLauncherImage || openLauncher}
-                className={`rw-open-launcher ${animationClass}`}
-                alt=""
-            />
+            <div className="rw-closing-animation">
+                <img
+                    src={openLauncherImage || openLauncher}
+                    className={`rw-open-launcher ${animationClass}`}
+                    alt=""
+                />
+            </div>
             {showTooltip &&
                 (tooltipText || (lastMessage && lastMessage.get('sender') === 'response')) &&
                 (referenceElement ? renderPlacedTooltip() : renderToolTip())}

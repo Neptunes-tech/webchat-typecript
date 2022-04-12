@@ -22,16 +22,20 @@ class DynamicMessage extends PureComponent {
 
         return (
             <div>
-                <p className="rw-message-text">{text}</p>
-                <div className="rw-message-dynamic">
+                <p className="rw-message-text">
+                    <br></br>
+                    {text}
+                </p>
+                <p className="rw-message-dynamic">
+                    {dynamicText}
                     {/* <TypeAnimation
                         cursor={false}
-                        sequence={[text[10], 5000, ' ']}
+                        sequence={[dynamicText, 3500, '', 500]}
                         wrapper="h3"
                         repeat={Infinity}
                     /> */}
-                    {dynamicText}
-                </div>
+                    {/* <br></br> */}
+                </p>
             </div>
         );
     }

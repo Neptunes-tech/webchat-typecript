@@ -289,9 +289,9 @@
     width: 90% !important;
 }
 
-// .#{$namespace}closing-launcher {
-//     @include animation(0, 0.5s, rotation-rl);
-// }
+.#{$namespace}closing-animation {
+    @include animation(0s, 0.5s, rotation-rl);
+}
 
 .#{$namespace}rotation-full {
     @include animation(0s, 1s, rotation-full);
@@ -304,7 +304,7 @@
     &.#{$namespace}default {
         width: 20px !important;
     }
-    @include animation(0, 0.5s, rotation-lr);
+    @include animation(0s, 0.5s, rotation-lr);
 }
 
 @media screen and (max-width: 800px) {
