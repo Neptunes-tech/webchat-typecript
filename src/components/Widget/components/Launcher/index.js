@@ -91,13 +91,18 @@ const Launcher = ({
     const [animationClass, setanimationClass] = useState('rw-rotation-half');
 
     const updateSuggestion = () => {
-        setanimationClass('rw-rotation-full');
-        setTimeout(() => {
-            setanimationClass('');
-        }, 2000);
+        if (showTooltip) {
+            setanimationClass('rw-rotation-full');
+            setTimeout(() => {
+                setanimationClass('');
+            }, 2000);
+        }
     };
 
     useEffect(() => {
+        if (animationClass === 'rw-rotation-half') {
+            setanimationClass('');
+        }
         const intervalID = setInterval(updateSuggestion, 8000);
         return () => {
             clearInterval(intervalID);
