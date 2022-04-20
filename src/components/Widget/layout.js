@@ -56,6 +56,7 @@ const WidgetLayout = (props) => {
                     tooltipText={props.tooltipText}
                     tooltipSuggestions={props.tooltipSuggestions}
                     tooltipPayload={props.tooltipPayload}
+                    iconSpinFrequence={props.iconSpinFrequence}
                 />
             )}
         </div>
@@ -98,6 +99,7 @@ WidgetLayout.propTypes = {
     tooltipText: PropTypes.string,
     tooltipSuggestions: PropTypes.arrayOf(PropTypes.string),
     tooltipPayload: PropTypes.string,
+    iconSpinFrequence: PropTypes.number,
 };
 
 export default connect(mapStateToProps)(WidgetLayout);

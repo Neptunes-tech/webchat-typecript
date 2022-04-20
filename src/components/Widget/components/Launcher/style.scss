@@ -311,6 +311,9 @@
 .#{$namespace}rotation-full {
     @include animation(0s, 1s, rotation-full);
 }
+.#{$namespace}rotation-full1 {
+    @include animation(0s, 1s, rotation-full);
+}
 .#{$namespace}rotation-half {
     @include animation(0s, 1s, rotation-half);
 }

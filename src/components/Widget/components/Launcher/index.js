@@ -39,6 +39,7 @@ const Launcher = ({
     sendPayload,
     tooltipText,
     tooltipSuggestions,
+    iconSpinFrequence,
 }) => {
     const { mainColor, assistBackgoundColor } = useContext(ThemeContext);
 
@@ -88,6 +89,7 @@ const Launcher = ({
         });
     }
 
+    const iconSpinnerDelay = iconSpinFrequence;
     const [animationClass, setanimationClass] = useState('rw-rotation-half');
 
     const updateSuggestion = () => {
@@ -95,7 +97,7 @@ const Launcher = ({
             setanimationClass('rw-rotation-full');
             setTimeout(() => {
                 setanimationClass('');
-            }, 2000);
+            }, 975);
         }
     };
 
@@ -103,7 +105,7 @@ const Launcher = ({
         if (animationClass === 'rw-rotation-half') {
             setanimationClass('');
         }
-        const intervalID = setInterval(updateSuggestion, 8000);
+        const intervalID = setInterval(updateSuggestion, iconSpinnerDelay);
         return () => {
             clearInterval(intervalID);
         };
