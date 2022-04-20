@@ -8,9 +8,10 @@ import { usePopper } from 'react-popper';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import Typewriter from 'typewriter-effect';
 
 import { MESSAGES_TYPES } from 'constants';
-import { Image, Buttons, DynamicMessage, Message } from 'messagesComponents';
+import { Image, Buttons, Message } from 'messagesComponents';
 import { showTooltip as showTooltipAction, emitUserMessage } from 'actions';
 import { onRemove } from 'utils/dom';
 import openLauncher from 'assets/launcher_button.png';
@@ -83,34 +84,20 @@ const Launcher = ({
             type: MESSAGES_TYPES.TEXT,
             sender: 'response',
             text: tooltipText,
-            dynamicText: tooltipSuggestions[0],
         })
     );
 
-    const [animationClass, setAnimationClass] = useState('rw-rotation-half');
-    const [index, setIndex] = useState(1);
+    const [animationClass, setanimationClass] = useState('rw-rotation-half');
 
     const updateSuggestion = () => {
-        setAnimationClass('rw-rotation-full');
+        setanimationClass('rw-rotation-full');
         setTimeout(() => {
-            setAnimationClass('');
-        }, 1500);
-
-        // if (tooltipText) {
-        //     settooltipMessage(
-        //         new Map({
-        //             type: MESSAGES_TYPES.TEXT,
-        //             sender: 'response',
-        //             text: tooltipText,
-        //             dynamicText: tooltipSuggestions[index % tooltipSuggestions.length],
-        //         })
-        //     );
-        // }
-        setIndex(index + 1);
+            setanimationClass('');
+        }, 2000);
     };
 
     useEffect(() => {
-        const intervalID = setInterval(updateSuggestion, 5000);
+        const intervalID = setInterval(updateSuggestion, 8000);
         return () => {
             clearInterval(intervalID);
         };
@@ -133,13 +120,11 @@ const Launcher = ({
     if (isChatOpen) className.push('rw-hide-sm');
     if (fullScreenMode && isChatOpen) className.push('rw-full-screen rw-hide');
 
-    const getComponentToRender = (message, buttonSeparator = false, forTooltip = false) => {
+    const getComponentToRender = (message, buttonSeparator = false) => {
         const ComponentToRender = (() => {
             switch (message.get('type')) {
                 case MESSAGES_TYPES.TEXT: {
-                    if (forTooltip) {
-                        return DynamicMessage;
-                    } else return Message;
+                    return Message;
                 }
                 case MESSAGES_TYPES.IMGREPLY.IMAGE: {
                     return Image;
@@ -213,14 +198,36 @@ const Launcher = ({
                     </button>
                 </div>
             </div>
-            {(tooltipMessage.size > 0 && (
+            {(tooltipMessage.size > 0 && tooltipSuggestions && (
                 <div onMouseUp={() => toggle()}>
-                    {getComponentToRender(tooltipMessage, true, true)}
+                    <p className="rw-dynamic-text">
+                        <br></br>
+                        {tooltipText}
+                    </p>
+                    <p className="rw-dynamic-suggestions">
+                        <Typewriter
+                            options={{
+                                strings: tooltipSuggestions,
+                                autoStart: true,
+                                delay: 50,
+                                deleteSpeed: 25,
+                                pauseFor: 3000,
+                                loop: true,
+                                cursor: '',
+                                wrapperClassName: 'rw-textwriter-effect',
+                            }}
+                        />
+                    </p>
                 </div>
             )) ||
+                (tooltipMessage.size > 0 && (
+                    <div onMouseUp={() => toggle()}>
+                        {getComponentToRender(tooltipMessage, true)}
+                    </div>
+                )) ||
                 (lastMessages.length === 1 && (
                     <div onMouseUp={() => toggle()}>
-                        {getComponentToRender(lastMessages[0], true, true)}
+                        {getComponentToRender(lastMessages[0], true)}
                     </div>
                 )) ||
                 renderSequenceTooltip(lastMessages)}

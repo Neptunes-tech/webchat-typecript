@@ -285,6 +285,21 @@
         transform: translateY(0);
     }
 }
+
+.#{$namespace}dynamic-text {
+    margin: 0;
+    text-align: left;
+}
+
+.#{$namespace}dynamic-suggestions {
+    // margin: 0;
+    text-align: left;
+    min-height: 30px;
+    width: 100%;
+    font-size: 25px !important;
+    color: var(--#{$namespace}tertiary);
+}
+
 .#{$namespace}open-launcher {
     width: 90% !important;
 }
