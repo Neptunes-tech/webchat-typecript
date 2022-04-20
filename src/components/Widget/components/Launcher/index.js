@@ -79,13 +79,14 @@ const Launcher = ({
         ],
         placement: (domHighlight && domHighlight.get('tooltipPlacement')) || 'auto',
     });
-    const [tooltipMessage, settooltipMessage] = useState(
-        new Map({
+    let tooltipMessage = new Map();
+    if (tooltipText) {
+        tooltipMessage = new Map({
             type: MESSAGES_TYPES.TEXT,
             sender: 'response',
             text: tooltipText,
-        })
-    );
+        });
+    }
 
     const [animationClass, setanimationClass] = useState('rw-rotation-half');
 
@@ -198,12 +199,10 @@ const Launcher = ({
                     </button>
                 </div>
             </div>
+            <br></br>
             {(tooltipMessage.size > 0 && tooltipSuggestions && (
                 <div onMouseUp={() => toggle()}>
-                    <p className="rw-dynamic-text">
-                        <br></br>
-                        {tooltipText}
-                    </p>
+                    <p className="rw-dynamic-text">{tooltipText}</p>
                     <p className="rw-dynamic-suggestions">
                         <Typewriter
                             options={{
