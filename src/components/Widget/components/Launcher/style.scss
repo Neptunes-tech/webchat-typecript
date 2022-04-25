@@ -35,9 +35,9 @@
     border: 0;
     border-radius: 50%;
     box-shadow: 0px 2px 10px 1px $grey-3;
-    height: 60px;
+    height: 70px;
     margin: 0;
-    width: 60px;
+    width: 70px;
     box-sizing: border-box;
 
     &:focus {
@@ -75,8 +75,8 @@
         box-sizing: border-box;
         border-radius: 8px;
         position: absolute;
-        right: 78px;
-        bottom: 12px;
+        right: 84px;
+        bottom: 17px;
         box-shadow: 0 0.9px 1.4px -4px rgba(0, 0, 0, 0.042), 0 2.3px 3.3px -4px rgba(0, 0, 0, 0.061),
             0 4.7px 6.3px -4px rgba(0, 0, 0, 0.075), 0 9px 11.2px -4px rgba(0, 0, 0, 0.089),
             0 18.2px 20.9px -4px rgba(0, 0, 0, 0.108), 0 50px 50px -4px rgba(0, 0, 0, 0.15);
@@ -84,7 +84,7 @@
         width: 320px;
         font-size: 16px;
         padding: 0px 8px;
-        line-height: 19px;
+        line-height: 25px;
         font-family: $fontfamily;
         animation: slideUp 0.3s ease-in-out;
         transition: all 0.2s ease-in-out;
@@ -107,7 +107,7 @@
                 background: rgb(250, 250, 250);
             }
             .#{$namespace}tooltip-close button {
-                background-color: rgb(250, 250, 250);
+                filter: brightness(150%);
             }
         }
 
@@ -242,10 +242,24 @@
         outline: none;
     }
 
+    .#{$namespace}tooltip-header {
+        box-sizing: border-box;
+        border-radius: 8px 8px 1px 1px;
+        right: 0px;
+        top: 0px;
+        padding: 0px 8px;
+        transition: all 0.2s ease-in-out;
+
+        position: absolute;
+        background-color: var(--#{$namespace}tertiary);
+        height: 30px;
+        width: 100%;
+    }
+
     .#{$namespace}tooltip-close {
         position: absolute;
-        right: 7px;
-        top: 3px;
+        right: 5px;
+        top: 2px;
         color: red;
         height: 15px;
         width: 15px;
@@ -272,15 +286,43 @@
     }
 }
 
+.#{$namespace}dynamic-text {
+    margin: 0;
+    text-align: left;
+}
+
+.#{$namespace}dynamic-suggestions {
+    // margin: 0;
+    text-align: left;
+    min-height: 30px;
+    width: 100%;
+    font-size: 25px !important;
+    color: var(--#{$namespace}tertiary);
+}
+
 .#{$namespace}open-launcher {
-    @include animation(0, 0.5s, rotation-rl);
+    width: 90% !important;
+}
+
+.#{$namespace}closing-animation {
+    @include animation(0s, 0.5s, rotation-rl);
+}
+
+.#{$namespace}rotation-full {
+    @include animation(0s, 1s, rotation-full);
+}
+.#{$namespace}rotation-full1 {
+    @include animation(0s, 1s, rotation-full);
+}
+.#{$namespace}rotation-half {
+    @include animation(0s, 1s, rotation-half);
 }
 
 .#{$namespace}close-launcher {
     &.#{$namespace}default {
         width: 20px !important;
     }
-    @include animation(0, 0.5s, rotation-lr);
+    @include animation(0s, 0.5s, rotation-lr);
 }
 
 @media screen and (max-width: 800px) {

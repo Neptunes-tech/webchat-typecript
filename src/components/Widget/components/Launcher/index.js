@@ -8,12 +8,13 @@ import { usePopper } from 'react-popper';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import Typewriter from 'typewriter-effect';
 
 import { MESSAGES_TYPES } from 'constants';
-import { Image, Message, Buttons } from 'messagesComponents';
+import { Image, Buttons, Message } from 'messagesComponents';
 import { showTooltip as showTooltipAction, emitUserMessage } from 'actions';
 import { onRemove } from 'utils/dom';
-import openLauncher from 'assets/launcher_button.svg';
+import openLauncher from 'assets/launcher_button.png';
 import closeIcon from 'assets/clear-button-grey.svg';
 import close from 'assets/clear-button.svg';
 import Badge from './components/Badge';
@@ -37,6 +38,8 @@ const Launcher = ({
     domHighlight,
     sendPayload,
     tooltipText,
+    tooltipSuggestions,
+    iconSpinFrequence,
 }) => {
     const { mainColor, assistBackgoundColor } = useContext(ThemeContext);
 
@@ -77,7 +80,6 @@ const Launcher = ({
         ],
         placement: (domHighlight && domHighlight.get('tooltipPlacement')) || 'auto',
     });
-
     let tooltipMessage = new Map();
     if (tooltipText) {
         tooltipMessage = new Map({
@@ -86,6 +88,28 @@ const Launcher = ({
             text: tooltipText,
         });
     }
+
+    const iconSpinnerDelay = iconSpinFrequence;
+    const [animationClass, setAnimationClass] = useState('rw-rotation-half');
+
+    const updateSuggestion = () => {
+        if (showTooltip) {
+            setAnimationClass('rw-rotation-full');
+            setTimeout(() => {
+                setAnimationClass('');
+            }, 975);
+        }
+    };
+
+    useEffect(() => {
+        if (animationClass === 'rw-rotation-half') {
+            setAnimationClass('');
+        }
+        const intervalID = setInterval(updateSuggestion, iconSpinnerDelay);
+        return () => {
+            clearInterval(intervalID);
+        };
+    }, [updateSuggestion]);
 
     const className = ['rw-launcher'];
 
@@ -163,26 +187,50 @@ const Launcher = ({
     );
     const renderTooltipContent = () => (
         <React.Fragment>
-            <div className="rw-tooltip-close">
-                <button
-                    onClick={(e) => {
-                        /* stop the propagation because the popup is also a button
-            otherwise it would open the webchat when closing the tooltip */
-                        e.stopPropagation();
+            <div className="rw-tooltip-header">
+                <div className="rw-tooltip-close">
+                    <button
+                        onClick={(e) => {
+                            /* stop the propagation because the popup is also a button
+                               otherwise it would open the webchat when closing the tooltip */
+                            e.stopPropagation();
 
-                        const payload = domHighlight.get('tooltipClose');
-                        if (domHighlight && payload) {
-                            sendPayload(`/${payload}`);
-                        }
-                        closeTooltip();
-                    }}
-                >
-                    <img src={closeIcon} alt="close" />
-                </button>
+                            const payload = domHighlight.get('tooltipClose');
+                            if (domHighlight && payload) {
+                                sendPayload(`/${payload}`);
+                            }
+                            closeTooltip();
+                        }}
+                    >
+                        <img src={closeIcon} alt="close" />
+                    </button>
+                </div>
             </div>
-            {(tooltipMessage.size > 0 && (
-                <div onMouseUp={() => toggle()}>{getComponentToRender(tooltipMessage, true)}</div>
+            <br />
+            {(tooltipMessage.size > 0 && tooltipSuggestions && (
+                <div onMouseUp={() => toggle()}>
+                    <p className="rw-dynamic-text">{tooltipText}</p>
+                    <p className="rw-dynamic-suggestions">
+                        <Typewriter
+                            options={{
+                                strings: tooltipSuggestions,
+                                autoStart: true,
+                                delay: 50,
+                                deleteSpeed: 25,
+                                pauseFor: 3000,
+                                loop: true,
+                                cursor: '',
+                                wrapperClassName: 'rw-textwriter-effect',
+                            }}
+                        />
+                    </p>
+                </div>
             )) ||
+                (tooltipMessage.size > 0 && (
+                    <div onMouseUp={() => toggle()}>
+                        {getComponentToRender(tooltipMessage, true)}
+                    </div>
+                )) ||
                 (lastMessages.length === 1 && (
                     <div onMouseUp={() => toggle()}>
                         {getComponentToRender(lastMessages[0], true)}
@@ -230,7 +278,13 @@ const Launcher = ({
             {unreadCount > 0 && displayUnreadCount && (
                 <div className="rw-unread-count-pastille">{unreadCount}</div>
             )}
-            <img src={openLauncherImage || openLauncher} className="rw-open-launcher" alt="" />
+            <div className="rw-closing-animation">
+                <img
+                    src={openLauncherImage || openLauncher}
+                    className={`rw-open-launcher ${animationClass}`}
+                    alt=""
+                />
+            </div>
             {showTooltip &&
                 (tooltipText || (lastMessage && lastMessage.get('sender') === 'response')) &&
                 (referenceElement ? renderPlacedTooltip() : renderToolTip())}

@@ -622,7 +622,9 @@ class Widget extends Component {
                 displayUnreadCount={this.props.displayUnreadCount}
                 showMessageDate={this.props.showMessageDate}
                 tooltipText={this.props.tooltipText}
+                tooltipSuggestions={this.props.tooltipSuggestions}
                 tooltipPayload={this.props.tooltipPayload}
+                iconSpinFrequence={this.props.iconSpinFrequence}
             />
         );
     }
@@ -669,9 +671,11 @@ Widget.propTypes = {
     showMessageDate: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
     customMessageDelay: PropTypes.func.isRequired,
     tooltipText: PropTypes.string,
+    tooltipSuggestions: PropTypes.arrayOf(PropTypes.string),
     tooltipPayload: PropTypes.string,
     tooltipSent: PropTypes.shape({}),
     tooltipDelay: PropTypes.number.isRequired,
+    iconSpinFrequence: PropTypes.number,
     domHighlight: PropTypes.shape({}),
     storage: PropTypes.shape({}),
     disableTooltips: PropTypes.bool,
@@ -689,7 +693,9 @@ Widget.defaultProps = {
     autoClearCache: false,
     displayUnreadCount: false,
     tooltipText: null,
+    tooltipSuggestions: null,
     tooltipPayload: null,
+    iconSpinFrequence: 10000,
     inputTextFieldHint: 'Type a message...',
     oldUrl: '',
     disableTooltips: false,
