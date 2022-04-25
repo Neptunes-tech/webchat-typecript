@@ -249,20 +249,20 @@
         top: 0px;
         padding: 0px 8px;
         transition: all 0.2s ease-in-out;
-
         position: absolute;
         background-color: var(--#{$namespace}tertiary);
         height: 30px;
         width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
     }
 
     .#{$namespace}tooltip-close {
-        position: absolute;
-        right: 5px;
-        top: 2px;
         color: red;
         height: 15px;
         width: 15px;
+        line-height: 0;
         transition: all 0.2s ease-in-out;
         button {
             transition: all 0.2s ease-in-out;
