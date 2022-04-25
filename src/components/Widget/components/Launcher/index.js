@@ -90,20 +90,20 @@ const Launcher = ({
     }
 
     const iconSpinnerDelay = iconSpinFrequence;
-    const [animationClass, setanimationClass] = useState('rw-rotation-half');
+    const [animationClass, setAnimationClass] = useState('rw-rotation-half');
 
     const updateSuggestion = () => {
         if (showTooltip) {
-            setanimationClass('rw-rotation-full');
+            setAnimationClass('rw-rotation-full');
             setTimeout(() => {
-                setanimationClass('');
+                setAnimationClass('');
             }, 975);
         }
     };
 
     useEffect(() => {
         if (animationClass === 'rw-rotation-half') {
-            setanimationClass('');
+            setAnimationClass('');
         }
         const intervalID = setInterval(updateSuggestion, iconSpinnerDelay);
         return () => {
@@ -206,7 +206,7 @@ const Launcher = ({
                     </button>
                 </div>
             </div>
-            <br></br>
+            <br />
             {(tooltipMessage.size > 0 && tooltipSuggestions && (
                 <div onMouseUp={() => toggle()}>
                     <p className="rw-dynamic-text">{tooltipText}</p>

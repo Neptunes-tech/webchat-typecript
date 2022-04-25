@@ -35,9 +35,9 @@
     border: 0;
     border-radius: 50%;
     box-shadow: 0px 2px 10px 1px $grey-3;
-    height: 60px;
+    height: 70px;
     margin: 0;
-    width: 60px;
+    width: 70px;
     box-sizing: border-box;
 
     &:focus {
@@ -75,8 +75,8 @@
         box-sizing: border-box;
         border-radius: 8px;
         position: absolute;
-        right: 78px;
-        bottom: 12px;
+        right: 84px;
+        bottom: 17px;
         box-shadow: 0 0.9px 1.4px -4px rgba(0, 0, 0, 0.042), 0 2.3px 3.3px -4px rgba(0, 0, 0, 0.061),
             0 4.7px 6.3px -4px rgba(0, 0, 0, 0.075), 0 9px 11.2px -4px rgba(0, 0, 0, 0.089),
             0 18.2px 20.9px -4px rgba(0, 0, 0, 0.108), 0 50px 50px -4px rgba(0, 0, 0, 0.15);
