@@ -31,6 +31,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 1px 4px;
     background-color: var(--#{$namespace}tertiary);
     border: 0;
     border-radius: 50%;
@@ -89,9 +90,9 @@
         animation: slideUp 0.3s ease-in-out;
         transition: all 0.2s ease-in-out;
 
-        @media screen and (max-width: 800px) {
-            right: 74px;
-            width: calc(100vw - 90px);
+        @media screen and (max-width: 424px) {
+            right: 80px;
+            width: calc(100vw - 100px);
         }
 
         &:hover {
