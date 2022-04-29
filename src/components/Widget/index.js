@@ -625,6 +625,7 @@ class Widget extends Component {
                 tooltipSuggestions={this.props.tooltipSuggestions}
                 tooltipPayload={this.props.tooltipPayload}
                 iconSpinFrequence={this.props.iconSpinFrequence}
+                iconSpinNoTooltip={this.props.iconSpinNoTooltip}
             />
         );
     }
@@ -676,6 +677,7 @@ Widget.propTypes = {
     tooltipSent: PropTypes.shape({}),
     tooltipDelay: PropTypes.number.isRequired,
     iconSpinFrequence: PropTypes.number,
+    iconSpinNoTooltip: PropTypes.bool,
     domHighlight: PropTypes.shape({}),
     storage: PropTypes.shape({}),
     disableTooltips: PropTypes.bool,
@@ -696,6 +698,7 @@ Widget.defaultProps = {
     tooltipSuggestions: null,
     tooltipPayload: null,
     iconSpinFrequence: 10000,
+    iconSpinNoTooltip: true,
     inputTextFieldHint: 'Type a message...',
     oldUrl: '',
     disableTooltips: false,

@@ -149,6 +149,7 @@ const ConnectedWidget = forwardRef((props, ref) => {
                     tooltipPayload={props.tooltipPayload}
                     tooltipDelay={props.tooltipDelay}
                     iconSpinFrequence={props.iconSpinFrequence}
+                    iconSpinNoTooltip={props.iconSpinNoTooltip}
                     disableTooltips={props.disableTooltips}
                     defaultHighlightCss={props.defaultHighlightCss}
                     defaultHighlightAnimation={props.defaultHighlightAnimation}
@@ -195,6 +196,7 @@ ConnectedWidget.propTypes = {
     tooltipPayload: PropTypes.string,
     tooltipDelay: PropTypes.number,
     iconSpinFrequence: PropTypes.number,
+    iconSpinNoTooltip: PropTypes.bool,
     onWidgetEvent: PropTypes.shape({
         onChatOpen: PropTypes.func,
         onChatClose: PropTypes.func,
@@ -246,6 +248,7 @@ ConnectedWidget.defaultProps = {
     tooltipPayload: null,
     tooltipDelay: 500,
     iconSpinFrequence: 10000,
+    iconSpinNoTooltip: true,
     onWidgetEvent: {
         onChatOpen: () => {},
         onChatClose: () => {},
