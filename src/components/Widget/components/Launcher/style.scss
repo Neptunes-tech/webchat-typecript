@@ -2,6 +2,10 @@
 @import 'common.scss';
 @import 'animation.scss';
 
+:root {
+    --#{$namespace}indentleft: #{$indentleft};
+}
+
 .#{$namespace}markdown {
     p {
         margin: 10px;
@@ -82,18 +86,14 @@
             0 4.7px 6.3px -4px rgba(0, 0, 0, 0.075), 0 9px 11.2px -4px rgba(0, 0, 0, 0.089),
             0 18.2px 20.9px -4px rgba(0, 0, 0, 0.108), 0 50px 50px -4px rgba(0, 0, 0, 0.15);
 
-        width: 320px;
         font-size: 16px;
         padding: 0px 8px;
         line-height: 25px;
         font-family: $fontfamily;
         animation: slideUp 0.3s ease-in-out;
         transition: all 0.2s ease-in-out;
-
-        @media screen and (max-width: 424px) {
-            right: 80px;
-            width: calc(100vw - 100px);
-        }
+        max-width: 320px;
+        width: calc(100vw - 100px - var(--#{$namespace}indentleft));
 
         &:hover {
             background-color: rgb(250, 250, 250);

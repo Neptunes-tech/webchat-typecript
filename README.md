@@ -205,9 +205,10 @@ If your bot is multilingual, make sure to specificy the current language in the 
 
 To modify the theme of the widget, you can just overwride the following css variables:
 
-| Class         | Default   | Description   |
-| ------------- | --------- | ------------- |
-| --rw-tertiary | `#135afe` | Primary color |
+| Class           | Default   | Description                 |
+| --------------- | --------- | --------------------------- |
+| --rw-tertiary   | `#135afe` | Primary color               |
+| --rw-indentleft | `0px`     | Left indentation of tooltip |
 
 From version 0.8 we started prefixing all css classes, if you already had css styling for the widget, just prepend `rw-` to all the classes you changed.
 
