@@ -20,8 +20,10 @@ const WidgetLayout = (props) => {
         classes.push('rw-chat-open');
     }
 
+    const zIndex = props.fullScreenMode ? 9999999999 : 9999;
+
     return isVisible ? (
-        <div className={classes.join(' ')}>
+        <div className={classes.join(' ')} style={{ zIndex: zIndex }}>
             {chatShowing && (
                 <Conversation
                     title={props.title}
