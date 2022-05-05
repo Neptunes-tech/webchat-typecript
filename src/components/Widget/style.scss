@@ -146,8 +146,13 @@
     position: fixed;
     right: 0;
     width: auto;
+    z-index: 9999;
     align-items: flex-end;
     justify-content: flex-end;
+
+    &.#{$namespace}chat-open {
+        z-index: 9999999999 !important;
+    }
 
     &.#{$namespace}full-screen.#{$namespace}chat-open {
         @include widget-container-fs;
