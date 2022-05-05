@@ -151,7 +151,7 @@
     justify-content: flex-end;
 
     &.#{$namespace}chat-open {
-        z-index: 9999999999 !important;
+        z-index: 9999999999;
     }
 
     &.#{$namespace}full-screen.#{$namespace}chat-open {
