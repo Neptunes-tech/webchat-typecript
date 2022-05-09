@@ -4,6 +4,7 @@
 
 :root {
     --#{$namespace}tertiary: #{$tertiary};
+    --#{$namespace}indentleft: #{$indentleft};
 }
 
 .#{$namespace}widget-container,
