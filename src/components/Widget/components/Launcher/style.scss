@@ -89,7 +89,6 @@
         animation: slideUp 0.3s ease-in-out;
         transition: all 0.2s ease-in-out;
         max-width: 320px;
-        --#{$namespace}indentleft: #{$indentleft};
         width: calc(100vw - 100px - var(--#{$namespace}indentleft));
 
         &:hover {
