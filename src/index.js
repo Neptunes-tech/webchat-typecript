@@ -238,8 +238,8 @@ ConnectedWidget.defaultProps = {
     displayUnreadCount: false,
     showMessageDate: false,
     customMessageDelay: (message) => {
-        let delay = message.length * 30;
-        if (delay > 3 * 1000) delay = 3 * 1000;
+        let delay = message.length * 10;
+        if (delay > 2000) delay = 2000;
         if (delay < 800) delay = 800;
         return delay;
     },
