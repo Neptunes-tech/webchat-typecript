@@ -68,7 +68,9 @@ class Widget extends Component {
         document.body.appendChild(styleNode);
 
         this.intervalId = setInterval(() => dispatch(evalUrl(window.location.href)), 500);
-        if (tooltipText) {
+        const localSession = getLocalSession(storage, SESSION_NAME);
+
+        if (tooltipText && (!localSession || !localSession.metadata.tooltipDismissed)) {
             dispatch(showTooltip(true));
         }
         if (connectOn === 'mount') {
@@ -76,9 +78,7 @@ class Widget extends Component {
             return;
         }
 
-        const localSession = getLocalSession(storage, SESSION_NAME);
         const lastUpdate = localSession ? localSession.lastUpdate : 0;
-
         if (autoClearCache) {
             if (Date.now() - lastUpdate < 30 * 60 * 1000) {
                 this.initializeWidget();
@@ -421,7 +421,7 @@ class Widget extends Component {
                     // storage.clear();
                     // Store the received session_id to storage
 
-                    storeLocalSession(storage, SESSION_NAME, remoteId);
+                    storeLocalSession(storage, remoteId);
                     dispatch(pullSession());
                     if (sendInitPayload) {
                         this.trySendInitPayload();

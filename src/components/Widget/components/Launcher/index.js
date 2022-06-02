@@ -12,7 +12,7 @@ import Typewriter from 'typewriter-effect';
 
 import { MESSAGES_TYPES } from 'constants';
 import { Image, Buttons, Message } from 'messagesComponents';
-import { showTooltip as showTooltipAction, emitUserMessage } from 'actions';
+import { showTooltip as showTooltipAction, emitUserMessage, tooltipDismissed } from 'actions';
 import { onRemove } from 'utils/dom';
 import openLauncher from 'assets/launcher_button.png';
 import closeIcon from 'assets/clear-button-grey.svg';
@@ -368,7 +368,10 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    closeTooltip: () => dispatch(showTooltipAction(false)),
+    closeTooltip: () => {
+        dispatch(showTooltipAction(false));
+        dispatch(tooltipDismissed(true));
+    },
     sendPayload: (payload) => dispatch(emitUserMessage(payload)),
 });
 
