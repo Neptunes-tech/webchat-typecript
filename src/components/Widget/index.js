@@ -60,6 +60,7 @@ class Widget extends Component {
             dispatch,
             defaultHighlightAnimation,
             tooltipText,
+            tooltipDismissed,
         } = this.props;
 
         // add the default highlight css to the document
@@ -68,10 +69,11 @@ class Widget extends Component {
         document.body.appendChild(styleNode);
 
         this.intervalId = setInterval(() => dispatch(evalUrl(window.location.href)), 500);
-        if (tooltipText) {
+        if (tooltipText && !tooltipDismissed) {
             dispatch(showTooltip(true));
         }
         if (connectOn === 'mount') {
+            console.log("connectOn is 'mount'");
             this.initializeWidget();
             return;
         }
@@ -638,6 +640,7 @@ const mapStateToProps = (state) => ({
     isChatVisible: state.behavior.get('isChatVisible'),
     fullScreenMode: state.behavior.get('fullScreenMode'),
     tooltipSent: state.metadata.get('tooltipSent'),
+    tooltipDismissed: state.metadata.get('tooltipDismissed'),
     oldUrl: state.behavior.get('oldUrl'),
     pageChangeCallbacks: state.behavior.get('pageChangeCallbacks'),
     domHighlight: state.metadata.get('domHighlight'),
@@ -675,6 +678,7 @@ Widget.propTypes = {
     tooltipSuggestions: PropTypes.arrayOf(PropTypes.string),
     tooltipPayload: PropTypes.string,
     tooltipSent: PropTypes.shape({}),
+    tooltipDismissed: PropTypes.bool,
     tooltipDelay: PropTypes.number.isRequired,
     iconSpinFrequence: PropTypes.number,
     iconSpinNoTooltip: PropTypes.bool,
