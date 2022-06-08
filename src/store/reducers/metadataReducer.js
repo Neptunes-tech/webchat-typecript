@@ -4,6 +4,9 @@ import * as actionTypes from '../actions/actionTypes';
 import { getLocalSession, storeMetadataTo } from './helper';
 
 export default function (storage) {
+    const localSession = getLocalSession(storage, SESSION_NAME);
+    const sessionValues = Map((localSession && localSession.metadata) || {});
+
     const defaultValues = Map({
         linkTarget: '',
         userInput: '',
@@ -15,7 +18,9 @@ export default function (storage) {
 
     const initialState = Map({
         tooltipSent: Map(),
-    }).merge(defaultValues);
+    })
+        .merge(defaultValues)
+        .merge(sessionValues);
 
     return function reducer(state = initialState, action) {
         const storeMetadata = storeMetadataTo(storage);
@@ -36,9 +41,7 @@ export default function (storage) {
                 );
             }
             case actionTypes.SHOW_TOOLTIP: {
-                return state.get('tooltipDismissed')
-                    ? state
-                    : storeMetadata(state.set('showTooltip', action.visible));
+                return storeMetadata(state.set('showTooltip', action.visible));
             }
             case actionTypes.TOOLTIP_DISMISSED: {
                 return storeMetadata(state.set('tooltipDismissed', action.visible));
