@@ -37,6 +37,7 @@ const Launcher = ({
     lastUserMessage,
     domHighlight,
     sendPayload,
+    tooltipHeader,
     tooltipText,
     tooltipSuggestions,
     iconSpinFrequence,
@@ -191,6 +192,7 @@ const Launcher = ({
     const renderTooltipContent = () => (
         <React.Fragment>
             <div className="rw-tooltip-header">
+                <p className="tooltip-header">{tooltipHeader}</p>
                 <div className="rw-tooltip-close">
                     <button
                         onClick={(e) => {

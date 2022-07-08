@@ -623,6 +623,7 @@ class Widget extends Component {
                 customComponent={this.props.customComponent}
                 displayUnreadCount={this.props.displayUnreadCount}
                 showMessageDate={this.props.showMessageDate}
+                tooltipHeader={this.props.tooltipHeader}
                 tooltipText={this.props.tooltipText}
                 tooltipSuggestions={this.props.tooltipSuggestions}
                 tooltipPayload={this.props.tooltipPayload}
@@ -674,6 +675,7 @@ Widget.propTypes = {
     displayUnreadCount: PropTypes.bool,
     showMessageDate: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
     customMessageDelay: PropTypes.func.isRequired,
+    tooltipHeader: PropTypes.string,
     tooltipText: PropTypes.string,
     tooltipSuggestions: PropTypes.arrayOf(PropTypes.string),
     tooltipPayload: PropTypes.string,
@@ -698,6 +700,7 @@ Widget.defaultProps = {
     connectOn: 'mount',
     autoClearCache: false,
     displayUnreadCount: false,
+    tooltipHeader: null,
     tooltipText: null,
     tooltipSuggestions: null,
     tooltipPayload: null,

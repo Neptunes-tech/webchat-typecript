@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
+import ReactMarkdown from 'react-markdown';
 
 import close from 'assets/clear-button.svg';
 import fullscreen from 'assets/fullscreen_button.svg';
@@ -52,7 +53,7 @@ const Header = ({
           }
         </div>
         <h4 className={`rw-title ${profileAvatar && 'rw-with-avatar'}`}>{title}</h4>
-        {subtitle && <span className={profileAvatar && 'rw-with-avatar'}>{subtitle}</span>}
+        {subtitle && <ReactMarkdown className={`rw-markdown subtitle-markdown ${profileAvatar && 'rw-with-avatar'}`}>{subtitle}</ReactMarkdown>}
       </div>
       {
         !connected &&
