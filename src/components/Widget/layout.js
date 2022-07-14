@@ -53,6 +53,7 @@ const WidgetLayout = (props) => {
                     openLauncherImage={props.openLauncherImage}
                     closeImage={props.closeImage}
                     displayUnreadCount={props.displayUnreadCount}
+                    tooltipHeader={props.tooltipHeader}
                     tooltipText={props.tooltipText}
                     tooltipSuggestions={props.tooltipSuggestions}
                     tooltipPayload={props.tooltipPayload}
@@ -97,6 +98,7 @@ WidgetLayout.propTypes = {
     customComponent: PropTypes.func,
     displayUnreadCount: PropTypes.bool,
     showMessageDate: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
+    tooltipHeader: PropTypes.string,
     tooltipText: PropTypes.string,
     tooltipSuggestions: PropTypes.arrayOf(PropTypes.string),
     tooltipPayload: PropTypes.string,

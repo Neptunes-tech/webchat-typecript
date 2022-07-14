@@ -132,6 +132,7 @@ export const rasaWebchatProTypes = {
     displayUnreadCount: PropTypes.bool,
     showMessageDate: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
     customMessageDelay: PropTypes.func,
+    tooltipHeader: PropTypes.string,
     tooltipText: PropTypes.string,
     tooltipSuggestions: PropTypes.arrayOf(PropTypes.string),
     iconSpinFrequence: PropTypes.number,
@@ -203,6 +204,7 @@ export const rasaWebchatProDefaultTypes = {
         if (delay < 800) delay = 800;
         return delay;
     },
+    tooltipHeader: null,
     tooltipText: null,
     tooltipSuggestions: null,
     tooltipPayload: null,

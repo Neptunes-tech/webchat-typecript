@@ -144,6 +144,7 @@ const ConnectedWidget = forwardRef((props, ref) => {
                     socket={instanceSocket.current}
                     showMessageDate={props.showMessageDate}
                     customMessageDelay={props.customMessageDelay}
+                    tooltipHeader={props.tooltipHeader}
                     tooltipText={props.tooltipText}
                     tooltipSuggestions={props.tooltipSuggestions}
                     tooltipPayload={props.tooltipPayload}
@@ -191,6 +192,7 @@ ConnectedWidget.propTypes = {
     displayUnreadCount: PropTypes.bool,
     showMessageDate: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
     customMessageDelay: PropTypes.func,
+    tooltipHeader: PropTypes.string,
     tooltipText: PropTypes.string,
     tooltipSuggestions: PropTypes.arrayOf(PropTypes.string),
     tooltipPayload: PropTypes.string,
@@ -243,6 +245,7 @@ ConnectedWidget.defaultProps = {
         if (delay < 800) delay = 800;
         return delay;
     },
+    tooltipHeader: null,
     tooltipText: null,
     tooltipSuggestions: null,
     tooltipPayload: null,

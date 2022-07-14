@@ -184,3 +184,17 @@
         @include widget-container-fs;
     }
 }
+
+.rw-tooltip-header {
+    justify-content: space-between !important;
+}
+
+.tooltip-header{
+    color: white;
+}
+
+.subtitle-markdown{
+    text-align: left;
+    margin-top: 2rem;
+    margin-left: 1.4rem;
+}
