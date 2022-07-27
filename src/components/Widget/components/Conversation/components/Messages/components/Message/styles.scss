@@ -27,7 +27,7 @@
         background-color: var(--#{$namespace}tertiary);
         max-width: 85%;
         margin-left: auto;
-        overflow-wrap: break-word;
+        overflow-wrap: anywhere;
         a {
             color: $turqois-1;
         }
