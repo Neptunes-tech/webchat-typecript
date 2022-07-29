@@ -157,6 +157,9 @@ $fontfamily: 'Inter', sans-serif;
     text-decoration: unset;
     box-shadow: 0 0.2px 0.7px -7px rgba(0, 0, 0, 0.277), 0 0.5px 1.8px -7px rgba(0, 0, 0, 0.369),
         0 1.2px 3.8px -7px rgba(0, 0, 0, 0.442), 0 4px 13px -7px rgba(0, 0, 0, 0.64);
+    overflow-wrap: anywhere;
+    word-wrap: break-word;
+    word-break: break-word;
 
     &:hover {
         position: relative;
