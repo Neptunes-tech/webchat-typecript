@@ -198,3 +198,18 @@
     margin-top: 2rem;
     margin-left: 1.4rem;
 }
+
+@media screen and (max-width: 320px) {
+    .rw-dynamic-suggestions{
+        overflow-wrap: anywhere;
+    }
+    .rw-tooltip-body{
+        min-height: 8rem;
+    }
+    .rw-tooltip-header{
+        min-height: 3rem;
+    }
+    .rw-dynamic-text{
+        margin-top: 1.5rem !important;
+    }
+}
