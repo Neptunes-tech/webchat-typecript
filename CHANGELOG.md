@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.2](https://https//github.com/botfront/rasa-webchat/compare/v1.4.1...v1.4.2) (2022-08-12)
+
+
+### Bug Fixes
+
+* Adjusted Chatbot Window ([0a8a8f2](https://https//github.com/botfront/rasa-webchat/commit/0a8a8f26be1eca245ab193e4f4a6d97d45c5b818))
+
 ### [1.4.1](https://https//github.com/botfront/rasa-webchat/compare/v1.4.0...v1.4.1) (2022-07-29)
 
 ### [1.0.1](https://https///compare/v1.0.0...v1.0.1) (2021-04-15)
