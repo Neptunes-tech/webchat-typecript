@@ -90,6 +90,7 @@
         transition: all 0.2s ease-in-out;
         max-width: 320px;
         width: calc(100vw - 100px - var(--#{$namespace}indentleft));
+        overflow-wrap: anywhere;
 
         &:hover {
             background-color: rgb(250, 250, 250);
