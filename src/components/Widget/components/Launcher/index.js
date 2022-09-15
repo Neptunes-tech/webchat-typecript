@@ -6,8 +6,9 @@ import { Map } from 'immutable';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { usePopper } from 'react-popper';
 import Slider from 'react-slick';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
+// slick carousel fonts kaputt und werden derzeit nicht benutzt
+// import 'slick-carousel/slick/slick.css';
+// import 'slick-carousel/slick/slick-theme.css';
 import Typewriter from 'typewriter-effect';
 
 import { MESSAGES_TYPES } from 'constants';
