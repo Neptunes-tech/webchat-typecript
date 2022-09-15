@@ -212,7 +212,7 @@ const Launcher = ({
                     </button>
                 </div>
             </div>
-            <br />
+
             {(tooltipMessage.size > 0 && tooltipSuggestions && (
                 <div onMouseUp={() => toggle()}>
                     <p className="rw-dynamic-text">{tooltipText}</p>
