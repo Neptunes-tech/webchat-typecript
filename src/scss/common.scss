@@ -10,6 +10,7 @@ $fontfamily: 'Inter', sans-serif;
     max-width: 215px;
     text-align: left;
     font-family: $fontfamily;
+    box-sizing: unset;
 }
 
 @mixin borderless-message-bubble($color, $textColor) {
@@ -160,6 +161,7 @@ $fontfamily: 'Inter', sans-serif;
     overflow-wrap: anywhere;
     word-wrap: break-word;
     word-break: break-word;
+    box-sizing: unset;
 
     &:hover {
         position: relative;
