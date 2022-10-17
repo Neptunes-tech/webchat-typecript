@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.5](https://https//github.com/botfront/rasa-webchat/compare/v1.4.4...v1.4.5) (2022-10-17)
+
 ### [1.4.2](https://https//github.com/botfront/rasa-webchat/compare/v1.4.1...v1.4.2) (2022-08-12)
 
 
