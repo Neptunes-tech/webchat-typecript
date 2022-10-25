@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.6](https://https//github.com/botfront/rasa-webchat/compare/v1.4.5...v1.4.6) (2022-10-25)
+
+
+### Bug Fixes
+
+* **BB-734:** make links more visible ([d797ab4](https://https//github.com/botfront/rasa-webchat/commit/d797ab47c4f29fa774f6df64d8720b3780f31cc0))
+
 ### [1.4.5](https://https//github.com/botfront/rasa-webchat/compare/v1.4.4...v1.4.5) (2022-10-17)
 
 ### [1.4.2](https://https//github.com/botfront/rasa-webchat/compare/v1.4.1...v1.4.2) (2022-08-12)
