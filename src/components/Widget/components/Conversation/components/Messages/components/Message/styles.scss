@@ -52,7 +52,7 @@
                     margin-bottom: 0;
                 }
                 a { 
-                    color: var(--#{$namespace}tertiary) !important;
+                    color: $tertiary !important;
                 }  
             }
         }
