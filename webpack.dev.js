@@ -77,6 +77,10 @@ module.exports = {
             filename: 'index.html',
             inject: false,
             template: 'dev/src/index.html',
+            templateParameters: {
+                chatbotEndpoint: process.env['CHATBOT_ENDPOINT'],
+                customerId: process.env['CUSTOMER_ID'],
+            },
             showErrors: true,
         }),
         new CopyWebpackPlugin({

@@ -11,14 +11,14 @@
                     (e.onload = () => {
                         window.WebChat.default(
                             {
-                                customData: { key: 'value' },
-                                socketUrl: 'FILL_ME',
+                                customData: { customer_id: '<%= customerId %>' },
+                                socketUrl: '<%= chatbotEndpoint %>',
                                 socketPath: '/socket.io.multitenant/',
                                 initPayload: 'Hallo',
                                 title: 'Titel',
                                 subtitle: 'Untertitel',
                                 inputTextFieldHint: 'Nachricht eintippen...',
-                                embeddded: false,
+                                embedded: false,
                                 showFullScreenButton: true,
                                 params: { storage: 'session' },
                                 tooltipHeader: 'Hallo! Ich heiße Chatbot',
