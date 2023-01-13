@@ -606,6 +606,7 @@ class Widget extends Component {
                 onSendMessage={(message) => this.handleMessageSubmit(message)}
                 title={this.props.title}
                 subtitle={this.props.subtitle}
+                titleImage={this.props.titleImage}
                 customData={this.props.customData}
                 profileAvatar={this.props.profileAvatar}
                 showCloseButton={this.props.showCloseButton}
@@ -652,6 +653,7 @@ Widget.propTypes = {
     title: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
     customData: PropTypes.shape({}),
     subtitle: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+    titleImage: PropTypes.string,
     initPayload: PropTypes.string,
     profileAvatar: PropTypes.string,
     showCloseButton: PropTypes.bool,

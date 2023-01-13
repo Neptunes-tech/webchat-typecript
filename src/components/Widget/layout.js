@@ -26,6 +26,7 @@ const WidgetLayout = (props) => {
                 <Conversation
                     title={props.title}
                     subtitle={props.subtitle}
+                    titleImage={props.titleImage}
                     sendMessage={props.onSendMessage}
                     profileAvatar={props.profileAvatar}
                     toggleChat={props.toggleChat}
@@ -76,6 +77,7 @@ const mapStateToProps = (state) => ({
 WidgetLayout.propTypes = {
     title: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
     subtitle: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+    titleImage: PropTypes.string,
     onSendMessage: PropTypes.func,
     toggleChat: PropTypes.func,
     toggleFullScreen: PropTypes.func,
