@@ -123,6 +123,7 @@ const ConnectedWidget = forwardRef((props, ref) => {
                     initPayload={props.initPayload}
                     title={props.title}
                     subtitle={props.subtitle}
+                    titleImage={props.titleImage}
                     customData={props.customData}
                     handleNewUserMessage={props.handleNewUserMessage}
                     profileAvatar={props.profileAvatar}
@@ -165,6 +166,7 @@ ConnectedWidget.propTypes = {
     initPayload: PropTypes.string,
     title: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
     subtitle: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+    titleImage: PropTypes.string,
     protocol: PropTypes.string,
     socketUrl: PropTypes.string.isRequired,
     socketPath: PropTypes.string,

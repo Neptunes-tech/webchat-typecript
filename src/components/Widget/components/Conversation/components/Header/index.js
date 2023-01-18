@@ -11,6 +11,7 @@ import ThemeContext from '../../../../ThemeContext';
 const Header = ({
   title,
   subtitle,
+  titleImage,
   fullScreenMode,
   toggleFullScreen,
   toggleChat,
@@ -52,9 +53,12 @@ const Header = ({
             </button>
           }
         </div>
-        <h4 className={`rw-title ${profileAvatar && 'rw-with-avatar'}`}>{title}</h4>
-        {subtitle && <ReactMarkdown className={`rw-markdown subtitle-markdown ${profileAvatar && 'rw-with-avatar'}`}>{subtitle}</ReactMarkdown>}
-      </div>
+        {titleImage && <img src={titleImage} style={{margin: '20px'}} />}
+        {!titleImage && <>
+          <h4 className={`rw-title ${profileAvatar && 'rw-with-avatar'}`}>{title}</h4>
+          {subtitle && <ReactMarkdown className={`rw-markdown subtitle-markdown ${profileAvatar && 'rw-with-avatar'}`}>{subtitle}</ReactMarkdown>}
+        </>}
+        </div>
       {
         !connected &&
         <span className="rw-loading">
@@ -67,6 +71,7 @@ const Header = ({
 Header.propTypes = {
   title: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   subtitle: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+  titleImage: PropTypes.string,
   fullScreenMode: PropTypes.bool,
   toggleFullScreen: PropTypes.func,
   toggleChat: PropTypes.func,
