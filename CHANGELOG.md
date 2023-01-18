@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.5.0](https://https//github.com/botfront/rasa-webchat/compare/v1.4.7...v1.5.0) (2023-01-18)
+
+
+### Features
+
+* add env vars ([d18150d](https://https//github.com/botfront/rasa-webchat/commit/d18150d148ea29977a2e582280a40276e51f1005))
+* **BB-806:** allow custom logo ([ee4b5fa](https://https//github.com/botfront/rasa-webchat/commit/ee4b5fab049867ccd37cc95a159316dfb8085ebe))
+
 ### [1.4.7](https://https//github.com/botfront/rasa-webchat/compare/v1.4.6...v1.4.7) (2022-10-25)
 
 ### [1.4.6](https://https//github.com/botfront/rasa-webchat/compare/v1.4.5...v1.4.6) (2022-10-25)
