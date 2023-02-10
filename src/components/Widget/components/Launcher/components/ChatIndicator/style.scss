@@ -1,0 +1,14 @@
+@import "variables.scss";
+
+.#{$namespace}launcher {
+  .#{$namespace}chatindicator {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    background-color: $red-1;
+    color: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+  }
+}
