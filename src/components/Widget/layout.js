@@ -50,6 +50,7 @@ const WidgetLayout = (props) => {
                     toggle={props.toggleChat}
                     isChatOpen={props.isChatOpen}
                     badge={props.badge}
+                    chatIndicator={props.chatIndicator}
                     fullScreenMode={props.fullScreenMode}
                     openLauncherImage={props.openLauncherImage}
                     closeImage={props.closeImage}
@@ -90,6 +91,7 @@ WidgetLayout.propTypes = {
     disabledInput: PropTypes.bool,
     fullScreenMode: PropTypes.bool,
     badge: PropTypes.number,
+    chatIndicator: PropTypes.bool,
     embedded: PropTypes.bool,
     inputTextFieldHint: PropTypes.string,
     params: PropTypes.object,

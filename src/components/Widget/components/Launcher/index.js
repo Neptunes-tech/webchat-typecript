@@ -19,6 +19,7 @@ import openLauncher from 'assets/launcher_button.png';
 import closeIcon from 'assets/clear-button-grey.svg';
 import close from 'assets/clear-button.svg';
 import Badge from './components/Badge';
+import ChatIndicator from './components/ChatIndicator';
 import { safeQuerySelectorAll } from 'utils/dom';
 import './style.scss';
 import ThemeContext from '../../ThemeContext';
@@ -43,10 +44,13 @@ const Launcher = ({
     tooltipSuggestions,
     iconSpinFrequence,
     iconSpinNoTooltip,
+    chatIndicator
 }) => {
     const { mainColor, assistBackgoundColor } = useContext(ThemeContext);
 
     const [referenceElement, setReferenceElement] = useState(null);
+
+    const [newChatIndicator, setNewChatIndicator] = useState(true)
 
     useEffect(() => {
         const setReference = (selector) => {
@@ -177,7 +181,7 @@ const Launcher = ({
                         onMouseUp={(event) => {
                             if (
                                 Math.abs(dragStatus.current.x - event.clientX) +
-                                    Math.abs(dragStatus.current.y - event.clientY) <
+                                Math.abs(dragStatus.current.y - event.clientY) <
                                 15
                             ) {
                                 toggle();
@@ -302,9 +306,10 @@ const Launcher = ({
             type="button"
             style={{ backgroundColor: mainColor }}
             className={className.join(' ')}
-            onClick={toggle}
+            onClick={(e) => { toggle(); setNewChatIndicator(false); }}
         >
             <Badge badge={badge} />
+            {chatIndicator && newChatIndicator && <ChatIndicator />}
             {isChatOpen ? (
                 <img
                     src={closeImage || close}
@@ -314,6 +319,7 @@ const Launcher = ({
             ) : (
                 renderOpenLauncherImage()
             )}
+
         </button>
     );
 };
@@ -331,6 +337,7 @@ Launcher.propTypes = {
     lastUserMessage: PropTypes.oneOfType([ImmutablePropTypes.map, PropTypes.bool]),
     domHighlight: PropTypes.shape({}),
     lastMessages: PropTypes.arrayOf(ImmutablePropTypes.map),
+    chatIndicator: PropTypes.bool
 };
 
 const mapStateToProps = (state) => ({

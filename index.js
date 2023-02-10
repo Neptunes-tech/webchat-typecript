@@ -90,9 +90,9 @@ class RasaWebchatProWithRules extends React.Component {
                     onSocketEvent={
                         withRules
                             ? {
-                                  session_confirm: this.handleSessionConfirm,
-                                  ...onSocketEvent,
-                              }
+                                session_confirm: this.handleSessionConfirm,
+                                ...onSocketEvent,
+                            }
                             : { ...onSocketEvent }
                     }
                 />
@@ -122,6 +122,7 @@ export const rasaWebchatProTypes = {
     onSocketEvent: PropTypes.objectOf(PropTypes.func),
     fullScreenMode: PropTypes.bool,
     badge: PropTypes.number,
+    chatIndicator: PropTypes.bool,
     embedded: PropTypes.bool,
     // eslint-disable-next-line react/forbid-prop-types
     params: PropTypes.object,

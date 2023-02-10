@@ -49,7 +49,7 @@ class Widget extends Component {
         this.sendMessage = this.sendMessage.bind(this);
         this.getSessionId = this.getSessionId.bind(this);
         this.intervalId = null;
-        this.eventListenerCleaner = () => {};
+        this.eventListenerCleaner = () => { };
     }
 
     componentDidMount() {
@@ -348,9 +348,9 @@ class Widget extends Component {
                             rectangle.top >= 0 &&
                             rectangle.left >= 0 &&
                             rectangle.bottom <=
-                                (window.innerHeight || document.documentElement.clientHeight) &&
+                            (window.innerHeight || document.documentElement.clientHeight) &&
                             rectangle.right <=
-                                (window.innerWidth || document.documentElement.clientWidth);
+                            (window.innerWidth || document.documentElement.clientWidth);
                         if (!ElemIsInViewPort) {
                             elements[0].scrollIntoView({
                                 block: 'center',
@@ -616,6 +616,7 @@ class Widget extends Component {
                 isChatOpen={this.props.isChatOpen}
                 isChatVisible={this.props.isChatVisible}
                 badge={this.props.badge}
+                chatIndicator={this.props.chatIndicator}
                 embedded={this.props.embedded}
                 params={this.props.params}
                 openLauncherImage={this.props.openLauncherImage}
@@ -665,6 +666,7 @@ Widget.propTypes = {
     isChatVisible: PropTypes.bool,
     isChatOpen: PropTypes.bool,
     badge: PropTypes.number,
+    chatIndicator: PropTypes.bool,
     socket: PropTypes.shape({}),
     embedded: PropTypes.bool,
     params: PropTypes.shape({}),
