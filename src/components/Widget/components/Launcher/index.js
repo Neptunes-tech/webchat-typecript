@@ -309,7 +309,7 @@ const Launcher = ({
             onClick={(e) => { toggle(); setNewChatIndicator(false); }}
         >
             <Badge badge={badge} />
-            {chatIndicator && newChatIndicator && <ChatIndicator />}
+            {chatIndicator && newChatIndicator && !isChatOpen && <ChatIndicator />}
             {isChatOpen ? (
                 <img
                     src={closeImage || close}
