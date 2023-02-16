@@ -134,6 +134,7 @@ const ConnectedWidget = forwardRef((props, ref) => {
                     autoClearCache={props.autoClearCache}
                     fullScreenMode={props.fullScreenMode}
                     badge={props.badge}
+                    chatIndicator={props.chatIndicator}
                     embedded={props.embedded}
                     params={props.params}
                     storage={storage}
@@ -184,6 +185,7 @@ ConnectedWidget.propTypes = {
     onSocketEvent: PropTypes.objectOf(PropTypes.func),
     fullScreenMode: PropTypes.bool,
     badge: PropTypes.number,
+    chatIndicator: PropTypes.bool,
     embedded: PropTypes.bool,
     // eslint-disable-next-line react/forbid-prop-types
     params: PropTypes.object,
@@ -232,6 +234,7 @@ ConnectedWidget.defaultProps = {
     socketUrl: 'http://localhost',
     protocolOptions: {},
     badge: 0,
+    chatIndicator: false,
     embedded: false,
     params: {
         storage: 'local',
@@ -255,10 +258,10 @@ ConnectedWidget.defaultProps = {
     iconSpinFrequence: 10000,
     iconSpinNoTooltip: true,
     onWidgetEvent: {
-        onChatOpen: () => {},
-        onChatClose: () => {},
-        onChatVisible: () => {},
-        onChatHidden: () => {},
+        onChatOpen: () => { },
+        onChatClose: () => { },
+        onChatVisible: () => { },
+        onChatHidden: () => { },
     },
     disableTooltips: false,
     mainColor: '',

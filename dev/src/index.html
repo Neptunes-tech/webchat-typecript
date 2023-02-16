@@ -1,45 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>Botfront - Web Chat</title>
-        <script>
-            !(function () {
-                let e = document.createElement('script'),
-                    t = document.head || document.getElementsByTagName('head')[0];
-                (e.src = 'index.js'),
-                    (e.async = !0),
-                    (e.onload = () => {
-                        window.WebChat.default(
-                            {
-                                customData: { customer_id: '<%= customerId %>' },
-                                socketUrl: '<%= chatbotEndpoint %>',
-                                socketPath: '/socket.io.multitenant/',
-                                initPayload: 'Hallo',
-                                title: 'Titel',
-                                subtitle: 'Untertitel',
-                                inputTextFieldHint: 'Nachricht eintippen...',
-                                embedded: false,
-                                showFullScreenButton: true,
-                                params: { storage: 'session' },
-                                tooltipHeader: 'Hallo! Ich heiße Chatbot',
-                                tooltipText: '... und beantworte Ihre Fragen zu:',
-                                tooltipSuggestions: [
-                                    'Corona-Impfungen',
-                                    'Quarantäne Regeln',
-                                    'Maskenpflicht',
-                                ],
-                            },
-                            null
-                        );
-                    }),
-                    t.insertBefore(e, t.firstChild);
-            })();
-        </script>
-    </head>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <body style="background: #4dbcc6">
-        <p></p>
-        <a>Please use the webchat at the bottom</a>
-        <script src="index.js" type="text/javascript"></script>
-    </body>
+
+<head>
+    <title>Botfront - Web Chat</title>
+    <script>
+        !(function () {
+            let e = document.createElement('script'),
+                t = document.head || document.getElementsByTagName('head')[0];
+            (e.src = 'index.js'),
+                (e.async = !0),
+                (e.onload = () => {
+                    window.WebChat.default(
+                        {
+                            customData: { customer_id: '<%= customerId %>' },
+                            socketUrl: '<%= chatbotEndpoint %>',
+                            socketPath: '/socket.io.multitenant/',
+                            initPayload: 'Hallo',
+                            title: 'Titel',
+                            subtitle: 'Untertitel',
+                            inputTextFieldHint: 'Nachricht eintippen...',
+                            embedded: false,
+                            showFullScreenButton: true,
+                            params: { storage: 'session' },
+                            tooltipHeader: 'Hallo! Ich heiße Chatbot',
+                            tooltipText: '... und beantworte Ihre Fragen zu:',
+                            tooltipSuggestions: [
+                                'Corona-Impfungen',
+                                'Quarantäne Regeln',
+                                'Maskenpflicht',
+                            ],
+                            chatIndicator: true
+                        },
+                        null
+                    );
+                }),
+                t.insertBefore(e, t.firstChild);
+        })();
+    </script>
+</head>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<body style="background: #4dbcc6">
+    <p></p>
+    <a>Please use the webchat at the bottom</a>
+    <script src="index.js" type="text/javascript"></script>
+</body>
+
 </html>
