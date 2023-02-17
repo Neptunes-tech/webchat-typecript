@@ -123,6 +123,7 @@ export const rasaWebchatProTypes = {
     fullScreenMode: PropTypes.bool,
     badge: PropTypes.number,
     chatIndicator: PropTypes.bool,
+    tooltipDisabled: PropTypes.bool,
     embedded: PropTypes.bool,
     // eslint-disable-next-line react/forbid-prop-types
     params: PropTypes.object,

@@ -135,6 +135,7 @@ const ConnectedWidget = forwardRef((props, ref) => {
                     fullScreenMode={props.fullScreenMode}
                     badge={props.badge}
                     chatIndicator={props.chatIndicator}
+                    tooltipDisabled={props.tooltipDisabled}
                     embedded={props.embedded}
                     params={props.params}
                     storage={storage}
@@ -186,6 +187,7 @@ ConnectedWidget.propTypes = {
     fullScreenMode: PropTypes.bool,
     badge: PropTypes.number,
     chatIndicator: PropTypes.bool,
+    tooltipDisabled: PropTypes.bool,
     embedded: PropTypes.bool,
     // eslint-disable-next-line react/forbid-prop-types
     params: PropTypes.object,
@@ -235,6 +237,7 @@ ConnectedWidget.defaultProps = {
     protocolOptions: {},
     badge: 0,
     chatIndicator: false,
+    tooltipDisabled: false,
     embedded: false,
     params: {
         storage: 'local',

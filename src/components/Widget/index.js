@@ -617,6 +617,7 @@ class Widget extends Component {
                 isChatVisible={this.props.isChatVisible}
                 badge={this.props.badge}
                 chatIndicator={this.props.chatIndicator}
+                tooltipDisabled={this.props.tooltipDisabled}
                 embedded={this.props.embedded}
                 params={this.props.params}
                 openLauncherImage={this.props.openLauncherImage}
@@ -667,6 +668,7 @@ Widget.propTypes = {
     isChatOpen: PropTypes.bool,
     badge: PropTypes.number,
     chatIndicator: PropTypes.bool,
+    tooltipDisabled: PropTypes.bool,
     socket: PropTypes.shape({}),
     embedded: PropTypes.bool,
     params: PropTypes.shape({}),
