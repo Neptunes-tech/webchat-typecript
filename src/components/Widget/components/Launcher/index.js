@@ -44,7 +44,8 @@ const Launcher = ({
     tooltipSuggestions,
     iconSpinFrequence,
     iconSpinNoTooltip,
-    chatIndicator
+    chatIndicator,
+    tooltipDisabled
 }) => {
     const { mainColor, assistBackgoundColor } = useContext(ThemeContext);
 
@@ -295,7 +296,7 @@ const Launcher = ({
                     alt=""
                 />
             </div>
-            {showTooltip &&
+            {!tooltipDisabled && showTooltip &&
                 (tooltipText || (lastMessage && lastMessage.get('sender') === 'response')) &&
                 (referenceElement ? renderPlacedTooltip() : renderToolTip())}
         </div>
@@ -337,7 +338,8 @@ Launcher.propTypes = {
     lastUserMessage: PropTypes.oneOfType([ImmutablePropTypes.map, PropTypes.bool]),
     domHighlight: PropTypes.shape({}),
     lastMessages: PropTypes.arrayOf(ImmutablePropTypes.map),
-    chatIndicator: PropTypes.bool
+    chatIndicator: PropTypes.bool,
+    tooltipDisabled: PropTypes.bool
 };
 
 const mapStateToProps = (state) => ({
