@@ -707,7 +707,7 @@ Widget.defaultProps = {
     autoClearCache: false,
     displayUnreadCount: false,
     tooltipHeader: null,
-    tooltipText: null,
+    tooltipText: " ",
     tooltipSuggestions: null,
     tooltipPayload: null,
     iconSpinFrequence: 10000,

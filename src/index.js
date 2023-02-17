@@ -254,7 +254,7 @@ ConnectedWidget.defaultProps = {
         return delay;
     },
     tooltipHeader: null,
-    tooltipText: null,
+    tooltipText: " ",
     tooltipSuggestions: null,
     tooltipPayload: null,
     tooltipDelay: 500,
