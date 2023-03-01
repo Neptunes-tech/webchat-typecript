@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import RasaWebchatPro from './src/pro-src/rules-wrapper';
 
 import './src/pro-src/index.css';
-
+console.log('*****')
 class RasaWebchatProWithRules extends React.Component {
     constructor(props) {
         super(props);
