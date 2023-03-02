@@ -2,9 +2,9 @@ import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import ReactMarkdown from 'react-markdown';
 
-import close from 'assets/clear-button.svg';
-import fullscreen from 'assets/fullscreen_button.svg';
-import fullscreenExit from 'assets/fullscreen_exit_button.svg';
+import close from '../../../../../../assets/clear-button.svg';
+import fullscreen from '../../../../../../assets/fullscreen_button.svg';
+import fullscreenExit from '../../../../../../assets/fullscreen_exit_button.svg';
 import './style.scss';
 import ThemeContext from '../../../../ThemeContext';
 
@@ -21,7 +21,7 @@ const Header = ({
   connectingText,
   closeImage,
   profileAvatar
-}) => {
+}:any) => {
   const { mainColor } = useContext(ThemeContext);
   return (
     <div className="rw-header-and-loading">

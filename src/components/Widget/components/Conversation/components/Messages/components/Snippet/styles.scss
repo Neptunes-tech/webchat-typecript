@@ -1,7 +1,5 @@
-@import "variables.scss";
-
-@import "common.scss";
-
+@import "../../../../../../../../scss/variables.scss";
+@import "../../../../../../../../scss/common.scss";
 .#{$namespace}conversation-container {
   .#{$namespace}snippet {
     @include message-bubble($grey-2, #000);

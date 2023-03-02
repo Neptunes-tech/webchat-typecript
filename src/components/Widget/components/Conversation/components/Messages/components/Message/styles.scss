@@ -1,6 +1,5 @@
-@import 'variables.scss';
-
-@import 'common.scss';
+@import "../../../../../../../../scss/variables.scss";
+@import "../../../../../../../../scss/common.scss";
 
 .#{$namespace}conversation-container {
     .#{$namespace}message {

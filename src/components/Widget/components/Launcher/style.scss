@@ -1,6 +1,6 @@
-@import 'variables.scss';
-@import 'common.scss';
-@import 'animation.scss';
+@import '../../../../scss/variables.scss';
+@import '../../../../scss/common.scss';
+@import '../../../../scss/animation.scss';
 
 .#{$namespace}markdown {
     p {

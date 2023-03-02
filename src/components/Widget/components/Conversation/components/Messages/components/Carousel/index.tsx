@@ -2,18 +2,18 @@ import React, { useRef, useState, useContext } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { addUserMessage, emitUserMessage } from 'actions';
-import { PROP_TYPES } from 'constants';
-import Arrow from 'assets/arrow';
-import ThemeContext from '../../../../../../ThemeContext';
+import { addUserMessage, emitUserMessage } from '../../../../../../../../store/actions';
+import { PROP_TYPES } from '../../../../../../../../constants';
+import Arrow from '../../../../../../../../assets/arrow'
+import ThemeContext from '../../../../../../ThemeContext'
 
-import './styles.scss';
+import './styles.scss'
 
-const Carousel = (props) => {
-  const carousel = props.message.toJS();
+const Carousel = (props:any) => {
+  const carousel = props.message.toJS()
 
-  const handleClick = (action) => {
-    if (!action || action.type !== 'postback') return;
+  const handleClick = (action:any) => {
+    if (!action || action.type !== 'postback') return
     const { chooseReply } = props;
     chooseReply(action.payload, action.title);
   };
@@ -177,7 +177,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  chooseReply: (payload, title) => {
+  chooseReply: (payload:any, title:any) => {
     if (title) dispatch(addUserMessage(title));
     dispatch(emitUserMessage(payload));
   }

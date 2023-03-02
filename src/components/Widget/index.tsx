@@ -32,9 +32,9 @@ import {
     setDomHighlight,
     evalUrl,
     setCustomCss,
-} from 'actions';
-import { safeQuerySelectorAll } from 'utils/dom';
-import { SESSION_NAME, NEXT_MESSAGE } from 'constants';
+} from '../../store/actions';
+import { safeQuerySelectorAll } from '../../utils/dom';
+import { SESSION_NAME, NEXT_MESSAGE } from '../../constants';
 import { isVideo, isImage, isButtons, isText, isCarousel } from './msgProcessor';
 import WidgetLayout from './layout';
 import { storeLocalSession, getLocalSession } from '../../store/reducers/helper';

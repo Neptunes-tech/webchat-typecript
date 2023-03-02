@@ -1,7 +1,7 @@
 import { Map, fromJS } from 'immutable';
-import { MESSAGES_TYPES, MESSAGE_SENDER, SESSION_NAME } from 'constants';
+import { MESSAGES_TYPES, MESSAGE_SENDER, SESSION_NAME } from '../../constants';
 
-import { Video, Image, Message, Carousel, Buttons } from 'messagesComponents';
+import { Video, Image, Message, Carousel, Buttons } from '../../components/Widget/components/Conversation/components/Messages/components';
 
 export function createNewMessage(text, sender, nextMessageIsTooltip, hidden) {
   return Map({

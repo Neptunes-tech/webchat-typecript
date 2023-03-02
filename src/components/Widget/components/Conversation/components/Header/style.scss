@@ -1,6 +1,6 @@
-@import 'variables.scss';
+@import '../../../../../../scss/variables.scss';
 
-@import 'common.scss';
+@import '../../../../../../scss/common.scss';
 
 .#{$namespace}conversation-container {
     .#{$namespace}header {
@@ -81,7 +81,7 @@
     }
 }
 
-&.#{$namespace}widget-embedded {
+.#{$namespace}widget-embedded {
     .#{$namespace}header {
         display: none;
     }

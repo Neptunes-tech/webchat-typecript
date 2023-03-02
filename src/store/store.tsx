@@ -1,6 +1,6 @@
 import { createStore, combineReducers, compose, applyMiddleware } from 'redux';
 
-import { SESSION_NAME } from 'constants';
+import { SESSION_NAME } from '../constants';
 
 import behavior from './reducers/behaviorReducer';
 import messages from './reducers/messagesReducer';

@@ -1,6 +1,6 @@
-@import 'variables.scss';
-@import 'animation.scss';
-@import 'common.scss';
+@import '../../scss/variables.scss';
+@import '../../scss/animation.scss';
+@import '../../scss/common.scss';
 
 :root {
     --#{$namespace}tertiary: #{$tertiary};

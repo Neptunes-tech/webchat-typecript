@@ -3,20 +3,20 @@ import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { connect } from 'react-redux';
 
-import { MESSAGES_TYPES } from 'constants';
-import { Video, Image, Message, Carousel, Buttons } from 'messagesComponents';
+import { MESSAGES_TYPES } from '../../../../../../constants';
+import { Video, Image, Message, Carousel, Buttons } from '../Messages/components';
 
 import './styles.scss';
 import ThemeContext from '../../../../ThemeContext';
 
-const isToday = (date) => {
+const isToday = (date:any) => {
   const today = new Date();
   return date.getDate() === today.getDate() &&
     date.getMonth() === today.getMonth() &&
     date.getFullYear() === today.getFullYear();
 };
 
-const formatDate = (date) => {
+const formatDate = (date:any) => {
   const dateToFormat = new Date(date);
   const showDate = isToday(dateToFormat) ? '' : `${dateToFormat.toLocaleDateString()} `;
   return `${showDate}${dateToFormat.toLocaleTimeString('en-US', { timeStyle: 'short' })}`;

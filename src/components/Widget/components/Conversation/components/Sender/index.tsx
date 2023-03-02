@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import TextareaAutosize from 'react-textarea-autosize';
 import { isMobile } from 'react-device-detect';
-import Send from 'assets/send_button';
+import Send from '../../../../../../assets/send_button';
 import './style.scss';
 
 const Sender = ({ sendMessage, inputTextFieldHint, disabledInput, userInput }) => {

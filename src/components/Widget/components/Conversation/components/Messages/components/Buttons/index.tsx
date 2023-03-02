@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { PROP_TYPES } from 'constants';
-import { addUserMessage, emitUserMessage, setButtons, toggleInputDisabled } from 'actions';
+import { PROP_TYPES } from '../../../../../../../../constants';
+import { addUserMessage, emitUserMessage, setButtons, toggleInputDisabled } from '../../../../../../../../store/actions';
 import Message from '../Message/index';
 
 import './styles.scss';
@@ -10,7 +10,7 @@ import ThemeContext from '../../../../../../ThemeContext';
 
 
 class Buttons extends PureComponent {
-  constructor(props) {
+  constructor(props: any) {
     super(props);
     this.handleClick = this.handleClick.bind(this);
 
@@ -19,7 +19,7 @@ class Buttons extends PureComponent {
       getChosenReply,
       inputState,
       id
-    } = this.props;
+    }: any = this.props;
 
     const hint = message.get('hint');
     const chosenReply = getChosenReply(id);
@@ -28,21 +28,21 @@ class Buttons extends PureComponent {
     }
   }
 
-  handleClick(reply) {
+  handleClick(reply: any) {
     const {
       chooseReply,
       id
-    } = this.props;
+    }: any = this.props;
 
     const payload = reply.get('payload');
     const title = reply.get('title');
     chooseReply(payload, title, id);
   }
 
-  renderButtons(message, buttons, persit) {
+  renderButtons(message: string, buttons: any, persit: any) {
     const { isLast, linkTarget, separateButtons
-    } = this.props;
-    const { userTextColor, userBackgroundColor } = this.context;
+    }: any = this.props;
+    const { userTextColor, userBackgroundColor }: any = this.context;
     const buttonStyle = {
       color: userTextColor,
       backgroundColor: userBackgroundColor,
@@ -51,10 +51,10 @@ class Buttons extends PureComponent {
     return (
       <div>
         <Message message={message} />
-        {separateButtons && (<div className="rw-separator" />) }
+        {separateButtons && (<div className="rw-separator" />)}
         {(isLast || persit) && (
           <div className="rw-replies">
-            {buttons.map((reply, index) => {
+            {buttons.map((reply: any, index: any) => {
               if (reply.get('type') === 'web_url') {
                 return (
                   <a
@@ -95,7 +95,7 @@ class Buttons extends PureComponent {
       message,
       getChosenReply,
       id
-    } = this.props;
+    }: any = this.props;
     const chosenReply = getChosenReply(id);
     if (message.get('quick_replies') !== undefined) {
       const buttons = message.get('quick_replies');

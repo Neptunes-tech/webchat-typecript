@@ -1,9 +1,8 @@
-@import "variables.scss";
+@import "../../../../scss/variables.scss";
+@import "../../../../scss/common.scss";
+@import "../../../../scss/animation.scss";
 
-@import "common.scss";
-@import "animation.scss";
-
-&.#{$namespace}conversation-container {
+#{$namespace}conversation-container {
   @include animation(0, 0.5s, slide-in);
   border-radius: 10px;
   box-shadow:
@@ -23,7 +22,7 @@
   @include animation(0, 0.5s, slide-out);
 }
 
-&.#{$namespace}widget-embedded {
+#{$namespace}widget-embedded {
   .#{$namespace}conversation-container {
     @include animation(0, 0s, slide-in); // disable animation
     @include conversation-container-fs;

@@ -3,24 +3,24 @@ import ReactMarkdown from 'react-markdown';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { PROP_TYPES } from 'constants';
+import { PROP_TYPES } from '../../../../../../../../constants';
 import DocViewer from '../docViewer';
 import './styles.scss';
 import ThemeContext from '../../../../../../ThemeContext';
 
 class Message extends PureComponent {
     render() {
-        const { docViewer, linkTarget } = this.props;
+        const { docViewer, linkTarget }: any = this.props;
         const sender = this.props.message.get('sender');
         const text = this.props.message.get('text');
-        const customCss =
+        const customCss: any =
             this.props.message.get('customCss') && this.props.message.get('customCss').toJS();
 
         if (customCss && customCss.style === 'class') {
             customCss.css = customCss.css.replace(/^\./, '');
         }
 
-        const { userTextColor, userBackgroundColor, assistTextColor, assistBackgoundColor } =
+        const { userTextColor, userBackgroundColor, assistTextColor, assistBackgoundColor }: any =
             this.context;
         let style;
         if (sender === 'response' && customCss && customCss.style === 'class') {
@@ -90,7 +90,7 @@ Message.defaultTypes = {
     linkTarget: '_blank',
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: any) => ({
     linkTarget: state.metadata.get('linkTarget'),
     docViewer: state.behavior.get('docViewer'),
 });

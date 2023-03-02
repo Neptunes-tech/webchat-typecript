@@ -11,16 +11,16 @@ import Slider from 'react-slick';
 // import 'slick-carousel/slick/slick-theme.css';
 import Typewriter from 'typewriter-effect';
 
-import { MESSAGES_TYPES } from 'constants';
-import { Image, Buttons, Message } from 'messagesComponents';
-import { showTooltip as showTooltipAction, emitUserMessage, tooltipDismissed } from 'actions';
-import { onRemove } from 'utils/dom';
-import openLauncher from 'assets/launcher_button.png';
-import closeIcon from 'assets/clear-button-grey.svg';
-import close from 'assets/clear-button.svg';
+import { MESSAGES_TYPES } from '../../../../constants';
+import { Image, Buttons, Message } from '../Conversation/components/Messages/components';
+import { showTooltip as showTooltipAction, emitUserMessage, tooltipDismissed } from '../../../../store/actions';
+import { onRemove } from '../../../../utils/dom';
+import openLauncher from '../../../../assets/launcher_button.png';
+import closeIcon from '../../../../assets/clear-button-grey.svg';
+import close from '../../../../assets/clear-button.svg';
 import Badge from './components/Badge';
 import ChatIndicator from './components/ChatIndicator';
-import { safeQuerySelectorAll } from 'utils/dom';
+import { safeQuerySelectorAll } from '../../../../utils/dom';
 import './style.scss';
 import ThemeContext from '../../ThemeContext';
 

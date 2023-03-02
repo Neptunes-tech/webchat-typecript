@@ -1,5 +1,5 @@
 import { List, fromJS } from 'immutable';
-import { MESSAGE_SENDER, SESSION_NAME } from 'constants';
+import { MESSAGE_SENDER, SESSION_NAME } from '../../constants';
 
 import {
   createButtons,
