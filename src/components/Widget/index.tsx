@@ -40,7 +40,14 @@ import WidgetLayout from './layout';
 import { storeLocalSession, getLocalSession } from '../../store/reducers/helper';
 
 class Widget extends Component {
-    constructor(props) {
+    eventListenerCleaner: () => void;
+    intervalId: null;
+    onGoingMessageDelay: boolean;
+    messageDelayTimeout: null;
+    delayedMessage: null;
+    messages: never[];
+    tooltipTimeout: string | number  | undefined;
+    constructor(props: any) {
         super(props);
         this.messages = [];
         this.delayedMessage = null;
@@ -61,7 +68,7 @@ class Widget extends Component {
             defaultHighlightAnimation,
             tooltipText,
             tooltipDismissed,
-        } = this.props;
+        }: any = this.props;
 
         // add the default highlight css to the document
         const styleNode = document.createElement('style');
@@ -95,7 +102,7 @@ class Widget extends Component {
     }
 
     componentDidUpdate() {
-        const { isChatOpen, dispatch, embedded, initialized } = this.props;
+        const { isChatOpen, dispatch, embedded, initialized }: any = this.props;
 
         if (isChatOpen) {
             if (!initialized) {
@@ -111,7 +118,7 @@ class Widget extends Component {
     }
 
     componentWillUnmount() {
-        const { socket } = this.props;
+        const { socket }: any = this.props;
 
         if (socket) {
             socket.close();
@@ -121,15 +128,15 @@ class Widget extends Component {
     }
 
     getSessionId() {
-        const { storage } = this.props;
+        const { storage }: any = this.props;
         // Get the local session, check if there is an existing session_id
         const localSession = getLocalSession(storage, SESSION_NAME);
         const localId = localSession ? localSession.session_id : null;
         return localId;
     }
 
-    sendMessage(payload, text = '', when = 'always', tooltipSelector = false) {
-        const { dispatch, initialized, messages } = this.props;
+    sendMessage(payload: any, text = '', when = 'always', tooltipSelector = false) {
+        const { dispatch, initialized, messages }: any = this.props;
         const emit = () => {
             const send = () => {
                 dispatch(emitUserMessage(payload));
@@ -160,8 +167,8 @@ class Widget extends Component {
         }
     }
 
-    handleMessageReceived(messageWithMetadata) {
-        const { dispatch, isChatOpen, disableTooltips } = this.props;
+    handleMessageReceived(messageWithMetadata: any) {
+        const { dispatch, isChatOpen, disableTooltips }: any = this.props;
 
         // we extract metadata so we are sure it does not interfer with type checking of the message
         const { metadata, ...message } = messageWithMetadata;
@@ -177,12 +184,13 @@ class Widget extends Component {
             dispatch(triggerMessageDelayed(true));
             this.newMessageTimeout(message);
         } else {
+
             this.messages.push(message);
         }
     }
 
     popLastMessage() {
-        const { dispatch } = this.props;
+        const { dispatch }: any = this.props;
         if (this.messages.length) {
             this.onGoingMessageDelay = true;
             dispatch(triggerMessageDelayed(true));
@@ -190,8 +198,8 @@ class Widget extends Component {
         }
     }
 
-    newMessageTimeout(message) {
-        const { dispatch, customMessageDelay } = this.props;
+    newMessageTimeout(message: any) {
+        const { dispatch, customMessageDelay }: any = this.props;
         this.delayedMessage = message;
         this.messageDelayTimeout = setTimeout(() => {
             this.dispatchMessage(message);
@@ -203,8 +211,8 @@ class Widget extends Component {
         }, customMessageDelay(message.text || ''));
     }
 
-    propagateMetadata(metadata) {
-        const { dispatch } = this.props;
+    propagateMetadata(metadata:any) {
+        const { dispatch }:any = this.props;
         const {
             linkTarget,
             userInput,
@@ -240,8 +248,8 @@ class Widget extends Component {
         }
     }
 
-    handleBotUtterance(botUtterance) {
-        const { dispatch } = this.props;
+    handleBotUtterance(botUtterance:any) {
+        const { dispatch }:any = this.props;
         this.clearCustomStyle();
         this.eventListenerCleaner();
         dispatch(clearMetadata());
@@ -253,10 +261,10 @@ class Widget extends Component {
         this.handleMessageReceived(newMessage);
     }
 
-    addCustomsEventListeners(pageEventCallbacks) {
-        const eventsListeners = [];
+    addCustomsEventListeners(pageEventCallbacks:any) {
+        const eventsListeners:any = [];
 
-        pageEventCallbacks.forEach((pageEvent) => {
+        pageEventCallbacks.forEach((pageEvent:any) => {
             const { event, payload, selector } = pageEvent;
             const sendPayload = () => {
                 this.sendMessage(payload);
@@ -274,7 +282,7 @@ class Widget extends Component {
         });
 
         const cleaner = () => {
-            eventsListeners.forEach((eventsListener) => {
+            eventsListeners.forEach((eventsListener:any) => {
                 eventsListener.elem.removeEventListener(
                     eventsListener.event,
                     eventsListener.sendPayload
@@ -286,7 +294,7 @@ class Widget extends Component {
     }
 
     clearCustomStyle() {
-        const { domHighlight, defaultHighlightClassname } = this.props;
+        const { domHighlight, defaultHighlightClassname }:any = this.props;
         const domHighlightJS = domHighlight.toJS() || {};
         if (domHighlightJS.selector) {
             const elements = safeQuerySelectorAll(domHighlightJS.selector);
@@ -310,7 +318,7 @@ class Widget extends Component {
     }
 
     applyCustomStyle() {
-        const { domHighlight, defaultHighlightCss, defaultHighlightClassname } = this.props;
+        const { domHighlight, defaultHighlightCss, defaultHighlightClassname }:any = this.props;
         const domHighlightJS = domHighlight.toJS() || {};
         if (domHighlightJS.selector) {
             const elements = safeQuerySelectorAll(domHighlightJS.selector);
@@ -365,7 +373,7 @@ class Widget extends Component {
     }
 
     checkVersionBeforePull() {
-        const { storage } = this.props;
+        const { storage } :any= this.props;
         const localSession = getLocalSession(storage, SESSION_NAME);
         if (localSession && localSession.version !== 'PACKAGE_VERSION_TO_BE_REPLACED') {
             storage.removeItem(SESSION_NAME);
@@ -382,11 +390,11 @@ class Widget extends Component {
             connectOn,
             tooltipPayload,
             tooltipDelay,
-        } = this.props;
+        } :any= this.props;
         if (!socket.isInitialized()) {
             socket.createSocket();
 
-            socket.on('bot_uttered', (botUttered) => {
+            socket.on('bot_uttered', (botUttered:any) => {
                 // botUttered.attachment.payload.elements = [botUttered.attachment.payload.elements];
                 // console.log(botUttered);
                 this.handleBotUtterance(botUttered);
@@ -403,7 +411,7 @@ class Widget extends Component {
             });
 
             // When session_confirm is received from the server:
-            socket.on('session_confirm', (sessionObject) => {
+            socket.on('session_confirm', (sessionObject:any) => {
                 const remoteId =
                     sessionObject && sessionObject.session_id
                         ? sessionObject.session_id
@@ -450,7 +458,7 @@ class Widget extends Component {
                 }
             });
 
-            socket.on('disconnect', (reason) => {
+            socket.on('disconnect', (reason:any) => {
                 // eslint-disable-next-line no-console
                 console.log(reason);
                 if (reason !== 'io client disconnect') {
@@ -480,7 +488,7 @@ class Widget extends Component {
             embedded,
             connected,
             dispatch,
-        } = this.props;
+        }:any = this.props;
 
         // Send initial payload when chat is opened or widget is shown
         if (!initialized && connected && ((isChatOpen && isChatVisible) || embedded)) {
@@ -503,7 +511,7 @@ class Widget extends Component {
     }
 
     trySendTooltipPayload() {
-        const { tooltipPayload, socket, customData, connected, isChatOpen, dispatch, tooltipSent } =
+        const { tooltipPayload, socket, customData, connected, isChatOpen, dispatch, tooltipSent }:any =
             this.props;
 
         if (connected && !isChatOpen && !tooltipSent.get(tooltipPayload)) {
@@ -523,7 +531,7 @@ class Widget extends Component {
     }
 
     toggleConversation() {
-        const { isChatOpen, dispatch, disableTooltips } = this.props;
+        const { isChatOpen, dispatch, disableTooltips }:any = this.props;
         if (isChatOpen && this.delayedMessage) {
             if (!disableTooltips) dispatch(showTooltip(true));
             clearTimeout(this.messageDelayTimeout);
@@ -550,7 +558,7 @@ class Widget extends Component {
         this.props.dispatch(toggleFullScreen());
     }
 
-    dispatchMessage(message) {
+    dispatchMessage(message:any) {
         if (Object.keys(message).length === 0) {
             return;
         }
@@ -590,7 +598,7 @@ class Widget extends Component {
         }
     }
 
-    handleMessageSubmit(message) {
+    handleMessageSubmit(message:any) {
         const userUttered = message;
         if (userUttered) {
             this.props.dispatch(addUserMessage(userUttered));
@@ -637,7 +645,7 @@ class Widget extends Component {
     }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state:any) => ({
     initialized: state.behavior.get('initialized'),
     connected: state.behavior.get('connected'),
     isChatOpen: state.behavior.get('isChatOpen'),

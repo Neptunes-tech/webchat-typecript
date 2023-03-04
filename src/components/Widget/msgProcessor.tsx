@@ -1,4 +1,4 @@
-export function isCarousel(message) {
+export function isCarousel(message:any) {
   return Object.keys(message).includes('attachment')
     && Object.keys(message.attachment).includes('type')
     && message.attachment.type === 'template'
@@ -9,23 +9,23 @@ export function isCarousel(message) {
     && message.attachment.payload.elements.length > 0;
 }
 
-export function isVideo(message) {
+export function isVideo(message:any) {
   return Object.keys(message).includes('attachment')
     && Object.keys(message.attachment).includes('type')
     && message.attachment.type === 'video';
 }
 
-export function isImage(message) {
+export function isImage(message:any) {
   return Object.keys(message).includes('attachment')
     && Object.keys(message.attachment).includes('type')
     && message.attachment.type === 'image';
 }
 
-export function isText(message) {
+export function isText(message:any) {
   return Object.keys(message).length === 1 && Object.keys(message).includes('text');
 }
 
-export function isButtons(message) {
+export function isButtons(message:any) {
   return Object.keys(message).length === 2
     && Object.keys(message).includes('text')
     && (Object.keys(message).includes('quick_replies') || Object.keys(message).includes('buttons'));

@@ -5,6 +5,7 @@ import Portal from '../../../../../../../../utils/portal';
 import './style.scss';
 
 class DocViewer extends Component {
+  static propTypes: { src: PropTypes.Validator<string>; };
   constructor() {
     super();
     this.iframeLoaded = this.iframeLoaded.bind(this);

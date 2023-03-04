@@ -6,7 +6,7 @@ import Conversation from './components/Conversation';
 import Launcher from './components/Launcher';
 import './style.scss';
 
-const WidgetLayout = (props) => {
+const WidgetLayout = (props:any) => {
     const classes = props.embedded ? ['rw-widget-embedded'] : ['rw-widget-container'];
     if (props.fullScreenMode) {
         classes.push('rw-full-screen');
@@ -68,7 +68,7 @@ const WidgetLayout = (props) => {
     ) : null;
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state:any) => ({
     isChatVisible: state.behavior.get('isChatVisible'),
     isChatOpen: state.behavior.get('isChatOpen'),
     disabledInput: state.behavior.get('disabledInput'),

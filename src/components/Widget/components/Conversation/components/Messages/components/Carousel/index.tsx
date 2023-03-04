@@ -9,10 +9,10 @@ import ThemeContext from '../../../../../../ThemeContext'
 
 import './styles.scss'
 
-const Carousel = (props:any) => {
+const Carousel = (props: any) => {
   const carousel = props.message.toJS()
 
-  const handleClick = (action:any) => {
+  const handleClick = (action: any) => {
     if (!action || action.type !== 'postback') return
     const { chooseReply } = props;
     chooseReply(action.payload, action.title);
@@ -26,12 +26,12 @@ const Carousel = (props:any) => {
 
   const handleScroll = () => {
     const current = scrollContainer.current;
-    if (current.scrollLeft > 0) {
+    if ((current as any).scrollLeft > 0) {
       setLeftButton(true);
     } else {
       setLeftButton(false);
     }
-    if (current.clientWidth === current.scrollWidth - current.scrollLeft) {
+    if ((current as any).clientWidth === (current as any).scrollWidth - (current as any).scrollLeft) {
       setRightButton(false);
     } else {
       setRightButton(true);
@@ -39,15 +39,15 @@ const Carousel = (props:any) => {
   };
 
   const handleLeftArrow = () => {
-    scrollContainer.current.scrollTo({
-      left: scrollContainer.current.scrollLeft - 230,
+    (scrollContainer as any).current.scrollTo({
+      left: (scrollContainer as any).current.scrollLeft - 230,
       behavior: 'smooth'
     });
   };
 
   const handleRightArrow = () => {
-    scrollContainer.current.scrollTo({
-      left: scrollContainer.current.scrollLeft + 230,
+    (scrollContainer as any).current.scrollTo({
+      left: (scrollContainer as any).current.scrollLeft + 230,
       behavior: 'smooth'
     });
   };
@@ -57,7 +57,7 @@ const Carousel = (props:any) => {
   return (
     <React.Fragment>
       <div className="rw-carousel-container" ref={scrollContainer} onScroll={() => handleScroll()}>
-        {carousel.elements.map((carouselCard, index) => {
+        {carousel.elements.map((carouselCard: any, index: number) => {
           const defaultActionUrl =
             carouselCard.default_action && carouselCard.default_action.type === 'web_url'
               ? carouselCard.default_action.url
@@ -101,7 +101,7 @@ const Carousel = (props:any) => {
                 {carouselCard.subtitle}
               </a>
               <div className="rw-carousel-buttons-container">
-                {carouselCard.buttons.map((button, buttonIndex) => {
+                {carouselCard.buttons.map((button: any, buttonIndex: any) => {
                   if (button.type === 'web_url') {
                     return (
                       <a
@@ -144,7 +144,7 @@ const Carousel = (props:any) => {
             role="button"
             tabIndex={0}
           >
-            <div className="rw-arrow" alt="left carousel arrow" ><Arrow /></div>
+            <div className="rw-arrow" ><Arrow /></div>
           </div>
         )}
         {rightButton && (
@@ -155,7 +155,7 @@ const Carousel = (props:any) => {
             role="button"
             tabIndex={0}
           >
-            <div className="rw-arrow" alt="right carousel arrow"><Arrow /></div>
+            <div className="rw-arrow"><Arrow /></div>
           </div>
         )}
       </div>
@@ -172,12 +172,12 @@ Carousel.propTypes = {
   linkTarget: PropTypes.string
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: any) => ({
   linkTarget: state.metadata.get('linkTarget')
 });
 
-const mapDispatchToProps = dispatch => ({
-  chooseReply: (payload:any, title:any) => {
+const mapDispatchToProps = (dispatch: any) => ({
+  chooseReply: (payload: any, title: any) => {
     if (title) dispatch(addUserMessage(title));
     dispatch(emitUserMessage(payload));
   }

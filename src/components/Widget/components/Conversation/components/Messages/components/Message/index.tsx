@@ -9,24 +9,27 @@ import './styles.scss';
 import ThemeContext from '../../../../../../ThemeContext';
 
 class Message extends PureComponent {
+    static propTypes: { message: Requireable<any>; docViewer: PropTypes.Requireable<boolean>; linkTarget: PropTypes.Requireable<string>; };
+    static defaultTypes: { docViewer: boolean; linkTarget: string; };
     render() {
-        const { docViewer, linkTarget }: any = this.props;
-        const sender = this.props.message.get('sender');
-        const text = this.props.message.get('text');
+        const { docViewer, linkTarget, message }: any = this.props;
+        const sender = message.get('sender');
+        const text = message.get('text');
         const customCss: any =
-            this.props.message.get('customCss') && this.props.message.get('customCss').toJS();
+            message.get('customCss') && message.get('customCss').toJS();
 
         if (customCss && customCss.style === 'class') {
             customCss.css = customCss.css.replace(/^\./, '');
         }
-
+        // var obj: { property: string; } = { property: "foo" };
         const { userTextColor, userBackgroundColor, assistTextColor, assistBackgoundColor }: any =
             this.context;
         let style;
         if (sender === 'response' && customCss && customCss.style === 'class') {
             style = undefined;
         } else if (sender === 'response' && customCss && customCss.style) {
-            style = { cssText: customCss.css };
+            let obj: { cssText: string } = { cssText: customCss.css }
+            style = obj;
         } else if (sender === 'response') {
             style = { color: assistTextColor, backgroundColor: assistBackgoundColor };
         } else if (sender === 'client') {

@@ -10,6 +10,7 @@ import ThemeContext from '../../../../../../ThemeContext';
 
 
 class Buttons extends PureComponent {
+  static propTypes: { src: PropTypes.Validator<string>; };
   constructor(props: any) {
     super(props);
     this.handleClick = this.handleClick.bind(this);
@@ -113,15 +114,15 @@ class Buttons extends PureComponent {
 
 Buttons.contextType = ThemeContext;
 
-const mapStateToProps = state => ({
-  getChosenReply: id => state.messages.get(id).get('chosenReply'),
+const mapStateToProps = (state:any) => ({
+  getChosenReply: (id:any) => state.messages.get(id).get('chosenReply'),
   inputState: state.behavior.get('disabledInput'),
   linkTarget: state.metadata.get('linkTarget')
 });
 
-const mapDispatchToProps = dispatch => ({
-  toggleInputDisabled: () => dispatch(toggleInputDisabled()),
-  chooseReply: (payload, title, id) => {
+const mapDispatchToProps = (dispatch:any) => ({
+  toggleInputDisabled: () => dispatch(toggleInputDisabled(null)),
+  chooseReply: (payload:any, title:any, id:any) => {
     dispatch(setButtons(id, title));
     dispatch(addUserMessage(title));
     dispatch(emitUserMessage(payload));
