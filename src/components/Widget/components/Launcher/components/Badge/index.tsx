@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import './style.scss';
 
-const Badge = ({ badge }) =>
+const Badge = ({ badge }: any) =>
   badge > 0 &&
   <span className="rw-badge">{badge}</span>;
 

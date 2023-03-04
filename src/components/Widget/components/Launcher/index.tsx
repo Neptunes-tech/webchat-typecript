@@ -46,7 +46,7 @@ const Launcher = ({
     iconSpinNoTooltip,
     chatIndicator,
     tooltipDisabled
-}) => {
+}: any) => {
     const { mainColor, assistBackgoundColor } = useContext(ThemeContext);
 
     const [referenceElement, setReferenceElement] = useState(null);
@@ -54,7 +54,7 @@ const Launcher = ({
     const [newChatIndicator, setNewChatIndicator] = useState(true)
 
     useEffect(() => {
-        const setReference = (selector) => {
+        const setReference = (selector: any) => {
             const reference = safeQuerySelectorAll(selector);
             if (reference && reference.length === 1) {
                 onRemove(reference[0], () => setReferenceElement(null));
@@ -88,10 +88,10 @@ const Launcher = ({
         ],
         placement: (domHighlight && domHighlight.get('tooltipPlacement')) || 'auto',
     });
-    let tooltipMessage = new Map();
+    let tooltipMessage = new Map<any, any>();
     if (tooltipText) {
-        tooltipMessage = new Map({
-            type: MESSAGES_TYPES.TEXT,
+        tooltipMessage = new Map<any, any>({
+            any: MESSAGES_TYPES.TEXT,
             sender: 'response',
             text: tooltipText,
         });
@@ -138,7 +138,7 @@ const Launcher = ({
     if (isChatOpen) className.push('rw-hide-sm');
     if (fullScreenMode && isChatOpen) className.push('rw-full-screen rw-hide');
 
-    const getComponentToRender = (message, buttonSeparator = false) => {
+    const getComponentToRender = (message: any, buttonSeparator = false) => {
         const ComponentToRender = (() => {
             switch (message.get('type')) {
                 case MESSAGES_TYPES.TEXT: {
@@ -168,10 +168,10 @@ const Launcher = ({
         toggle(); // open the chat if the tooltip do not know how to display the compoment
     };
 
-    const renderSequenceTooltip = (lastMessagesSeq) => (
+    const renderSequenceTooltip = (lastMessagesSeq: any) => (
         <div className="rw-slider-safe-zone" onClick={(e) => e.stopPropagation()}>
             <Slider {...sliderSettings}>
-                {lastMessagesSeq.map((message) => (
+                {lastMessagesSeq.map((message: any) => (
                     // eslint-disable-next-line jsx-a11y/no-static-element-interactions
                     <div
                         className="rw-tooltip-response"
@@ -342,7 +342,7 @@ Launcher.propTypes = {
     tooltipDisabled: PropTypes.bool
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: any) => ({
     lastMessages:
         (state.messages &&
             (() => {
@@ -357,8 +357,8 @@ const mapStateToProps = (state) => ({
                     messages.unshift(state.messages.get(-i));
                 }
                 return messages;
-            })()) ||
-        new Map(),
+            })()) || new Map<any>(),
+
     unreadCount: state.behavior.get('unreadCount') || 0,
     showTooltip: state.metadata.get('showTooltip'),
     linkTarget: state.metadata.get('linkTarget'),
@@ -379,12 +379,12 @@ const mapStateToProps = (state) => ({
     domHighlight: state.metadata.get('domHighlight'),
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch: any) => ({
     closeTooltip: () => {
         dispatch(showTooltipAction(false));
         dispatch(tooltipDismissed(true));
     },
-    sendPayload: (payload) => dispatch(emitUserMessage(payload)),
+    sendPayload: (payload: any) => dispatch(emitUserMessage(payload)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Launcher);
