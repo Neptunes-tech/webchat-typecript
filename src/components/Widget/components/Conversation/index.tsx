@@ -7,7 +7,7 @@ import Messages from './components/Messages';
 import Sender from './components/Sender';
 import './style.scss';
 
-const Conversation = (props) => (
+const Conversation = (props:any) => (
     <div className="rw-conversation-container">
         <Header
             title={props.title}
@@ -29,7 +29,7 @@ const Conversation = (props) => (
             customComponent={props.customComponent}
             showMessageDate={props.showMessageDate}
         />
-        <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : ''}>
+        <KeyboardAvoidingView behavior='padding'>
             <Sender
                 sendMessage={props.sendMessage}
                 disabledInput={props.disabledInput}

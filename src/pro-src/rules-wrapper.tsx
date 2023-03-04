@@ -45,7 +45,7 @@ const RasaWebchatPro = React.memo(
   })
 );
 
-RasaWebchatPro.propTypes = rasaWebchatProTypes;
+// RasaWebchatPro.propTypes = rasaWebchatProTypes;
 
 // RasaWebchatPro.defaultProps = rasaWebchatProDefaultTypes;
 

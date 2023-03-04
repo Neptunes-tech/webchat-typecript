@@ -6,6 +6,7 @@ import './style.scss';
 
 class DocViewer extends Component {
   static propTypes: { src: PropTypes.Validator<string>; };
+  iframe: any;
   constructor() {
     super();
     this.iframeLoaded = this.iframeLoaded.bind(this);
@@ -25,6 +26,9 @@ class DocViewer extends Component {
   iframeLoaded() {
     clearInterval(this.iframeTimeoutId);
     this.setState({ iFrameLoading: false });
+  }
+  iframeTimeoutId(iframeTimeoutId: any) {
+    throw new Error('Method not implemented.');
   }
 
   bindActions() {

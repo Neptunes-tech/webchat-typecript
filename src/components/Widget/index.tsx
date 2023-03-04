@@ -47,6 +47,11 @@ class Widget extends Component {
     delayedMessage: null;
     messages: never[];
     tooltipTimeout: string | number  | undefined;
+    static defaultProps: {
+        isChatOpen: boolean; isChatVisible: boolean; fullScreenMode: boolean; connectOn: string; autoClearCache: boolean; displayUnreadCount: boolean; tooltipHeader: null; tooltipText: string; tooltipSuggestions: null; tooltipPayload: null; iconSpinFrequence: number; iconSpinNoTooltip: boolean; inputTextFieldHint: string; oldUrl: string; disableTooltips: boolean; defaultHighlightClassname: string; defaultHighlightCss: string;
+        // unfortunately it looks like outline-style is not an animatable property on Safari
+        defaultHighlightAnimation: string;
+    };
     constructor(props: any) {
         super(props);
         this.messages = [];

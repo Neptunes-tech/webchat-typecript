@@ -30,6 +30,11 @@ const scrollToBottom = () => {
 };
 
 class Messages extends Component {
+  // static propTypes: { src: PropTypes.Validator<string>; };
+  static propTypes: { message: Requireable<any>; docViewer: PropTypes.Requireable<boolean>; linkTarget: PropTypes.Requireable<string>; };
+
+  static defaultTypes: { displayTypingIndication:boolean };
+
   componentDidMount() {
     scrollToBottom();
   }
@@ -38,8 +43,11 @@ class Messages extends Component {
     scrollToBottom();
   }
 
-  getComponentToRender = (message, index, isLast) => {
-    const { params } = this.props;
+  getComponentToRender = (message:any, index:number, isLast:any) => {
+    const { params }:any = this.props;
+    const { customComponent }:any = this.props;
+
+
     const ComponentToRender = (() => {
       switch (message.get('type')) {
         case MESSAGES_TYPES.TEXT: {
@@ -61,7 +69,7 @@ class Messages extends Component {
           return connect(
             store => ({ store }),
             dispatch => ({ dispatch })
-          )(this.props.customComponent);
+          )(customComponent);
         default:
           return null;
       }
@@ -78,23 +86,23 @@ class Messages extends Component {
   }
 
   render() {
-    const { displayTypingIndication, profileAvatar } = this.props;
+    const { displayTypingIndication, profileAvatar }:any = this.props;
 
     const renderMessages = () => {
       const {
         messages,
         showMessageDate
-      } = this.props;
+      }:any = this.props;
 
       if (messages.isEmpty()) return null;
 
       const groups = [];
-      let group = null;
+      let group:any = null;
 
       const dateRenderer = typeof showMessageDate === 'function' ? showMessageDate :
         showMessageDate === true ? formatDate : null;
 
-      const renderMessageDate = (message) => {
+      const renderMessageDate = (message:any) => {
         const timestamp = message.get('timestamp');
 
         if (!dateRenderer || !timestamp) return null;
@@ -104,7 +112,7 @@ class Messages extends Component {
           : null;
       };
 
-      const renderMessage = (message, index) => (
+      const renderMessage = (message:any, index:number) => (
         <div className={`rw-message ${profileAvatar && 'rw-with-avatar'}`} key={index}>
           {
             profileAvatar &&
@@ -116,7 +124,7 @@ class Messages extends Component {
         </div>
       );
 
-      messages.forEach((msg, index) => {
+      messages.forEach((msg:any, index:number) => {
         if (msg.get('hidden')) return;
         if (group === null || group.from !== msg.get('sender')) {
           if (group !== null) groups.push(group);
@@ -138,7 +146,7 @@ class Messages extends Component {
         </div>
       ));
     };
-    const { conversationBackgroundColor, assistBackgoundColor } = this.context;
+    const { conversationBackgroundColor, assistBackgoundColor }:any = this.context;
 
     return (
       <div id="rw-messages" style={{ backgroundColor: conversationBackgroundColor }} className="rw-messages-container">

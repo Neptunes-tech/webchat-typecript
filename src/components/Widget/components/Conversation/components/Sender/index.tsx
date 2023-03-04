@@ -6,10 +6,10 @@ import { isMobile } from 'react-device-detect';
 import Send from '../../../../../../assets/send_button';
 import './style.scss';
 
-const Sender = ({ sendMessage, inputTextFieldHint, disabledInput, userInput }) => {
+const Sender = ({ sendMessage, inputTextFieldHint, disabledInput, userInput }:any) => {
     const [inputValue, setInputValue] = useState('');
     const formRef = useRef('');
-    function handleChange(e) {
+    function handleChange(e:any) {
         setInputValue(e.target.value);
     }
 
@@ -18,12 +18,12 @@ const Sender = ({ sendMessage, inputTextFieldHint, disabledInput, userInput }) =
         setInputValue('');
     }
 
-    function handleSubmit(e) {
+    function handleSubmit(e:any) {
         e.preventDefault();
         handleSend();
     }
 
-    function onEnterPress(e) {
+    function onEnterPress(e:any) {
         if (e.keyCode === 13 && e.shiftKey === false) {
             e.preventDefault();
             handleSend();
@@ -61,7 +61,7 @@ const Sender = ({ sendMessage, inputTextFieldHint, disabledInput, userInput }) =
         </form>
     );
 };
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state:any) => ({
     userInput: state.metadata.get('userInput'),
 });
 
