@@ -40,7 +40,7 @@ class Buttons extends PureComponent {
     chooseReply(payload, title, id);
   }
 
-  renderButtons(message: string, buttons: any, persit: any) {
+  renderButtons(message:any, buttons: any, persit: any) {
     const { isLast, linkTarget, separateButtons
     }: any = this.props;
     const { userTextColor, userBackgroundColor }: any = this.context;
