@@ -10,7 +10,20 @@ const LOCAL_STORAGE_ACCESS_STRING = 'rasaWebchatPro';
 export const RULES_HANDLER_SINGLETON = 'rasaWebchatRulesHandler';
 
 export default class RulesHandler {
-  constructor(rules, sendMethod, triggerEventListenerUpdateRate = 500) {
+  url: string;
+  numberOfVisits: number;
+  rules: any;
+  sendMethod: any;
+  timeoutIds: never[];
+  eventListeners: never[];
+  resetListenersTimeouts: never[];
+  protocol: string;
+  triggerEventListenerUpdateRate: number;
+  lastLocationChange: number;
+  popstateCallback: () => void;
+  locationChangeCallback: () => void;
+  history: any;
+  constructor(rules: any, sendMethod: any, triggerEventListenerUpdateRate = 500) {
     this.url = window.location.host + window.location.pathname;
     this.numberOfVisits = 0;
     this.rules = rules;
@@ -24,7 +37,7 @@ export default class RulesHandler {
 
     // Here we supersede those events to all redirect them to our custom event
     window.history.pushState = (f =>
-      function pushState() {
+      () => {
         const ret = f.apply(this, arguments);
         window.dispatchEvent(new Event('pushstate'));
         window.dispatchEvent(new Event('locationchange'));
@@ -32,7 +45,7 @@ export default class RulesHandler {
       })(window.history.pushState);
 
     window.history.replaceState = (f =>
-      function replaceState() {
+      () => {
         const ret = f.apply(this, arguments);
         window.dispatchEvent(new Event('replacestate'));
         window.dispatchEvent(new Event('locationchange'));
@@ -46,26 +59,26 @@ export default class RulesHandler {
     window.addEventListener('popstate', this.popstateCallback);
 
     this.locationChangeCallback = () => {
-      if ((Date.now() - window[RULES_HANDLER_SINGLETON].lastLocationChange) < 150) {
+      if ((Date.now() - (window as any)[RULES_HANDLER_SINGLETON].lastLocationChange) < 150) {
         return;
       }
-      window[RULES_HANDLER_SINGLETON].lastLocationChange = Date.now();
+      (window as any)[RULES_HANDLER_SINGLETON].lastLocationChange = Date.now();
       // We use the window object that was set in the react component
       // So that we have an up to date version
-      if (window[RULES_HANDLER_SINGLETON]) {
-        window[RULES_HANDLER_SINGLETON].url =
-                    window.location.host + window.location.pathname;
+      if ((window as any)[RULES_HANDLER_SINGLETON]) {
+        (window as any)[RULES_HANDLER_SINGLETON].url =
+          window.location.host + window.location.pathname;
         // We clean up the timeouts so that we don't have race conditions and unwanted triggers
-        window[RULES_HANDLER_SINGLETON].cleanUp();
-        window[RULES_HANDLER_SINGLETON].initHandler();
+        (window as any)[RULES_HANDLER_SINGLETON].cleanUp();
+        (window as any)[RULES_HANDLER_SINGLETON].initHandler();
       }
     };
 
     window.addEventListener('locationchange', this.locationChangeCallback);
   }
 
-  static removeEventListeners(eventListeners) {
-    eventListeners.forEach((eventListener) => {
+  static removeEventListeners(eventListeners: any) {
+    eventListeners.forEach((eventListener: any) => {
       eventListener.elem.removeEventListener(
         eventListener.event,
         eventListener.conditionChecker
@@ -73,12 +86,12 @@ export default class RulesHandler {
     });
   }
 
-  updateRules(newRules) {
-    window[RULES_HANDLER_SINGLETON].cleanUp();
-    window[RULES_HANDLER_SINGLETON].rules = newRules;
+  updateRules(newRules: any) {
+    (window as any)[RULES_HANDLER_SINGLETON].cleanUp();
+    (window as any)[RULES_HANDLER_SINGLETON].rules = newRules;
   }
 
-  storeRuleHash(rule) {
+  storeRuleHash(rule: any) {
     // We remove the payload and text so that they're not part of the rule when we
     // compute if it has already been ran or not.
     const rulesHash = hash(rule.trigger);
@@ -88,7 +101,7 @@ export default class RulesHandler {
     rule.hash = rulesHash;
 
     const ruleTriggered = this.history.rulesTriggered.find(
-      ruleInStorage => ruleInStorage.hash === rulesHash
+      (ruleInStorage: any) => ruleInStorage.hash === rulesHash
     );
     if (!(ruleTriggered && ruleTriggered.triggerLimit)) {
       this.history.rulesTriggered.push({
@@ -96,7 +109,7 @@ export default class RulesHandler {
         triggerLimit: rule.trigger.triggerLimit,
         triggered: 0
       });
-      this.storeHistory();
+      this.storeHistory(null);
     }
   }
 
@@ -107,20 +120,18 @@ export default class RulesHandler {
     const visitsOnThisPage = this.history.timePerPage[this.url];
     this.history.timePerPage[this.url] = visitsOnThisPage ? visitsOnThisPage + 1 : 1;
     this.storeHistory(this.url);
-    this.rules.forEach((rules) => {
+    this.rules.forEach((rules: any) => {
       const trigger = rules.trigger || {};
 
       if (trigger && (trigger.when === 'limited' || trigger.timeLimit)) {
         this.storeRuleHash(rules);
       }
+      const timeFun = () => (window as any)[RULES_HANDLER_SINGLETON].initEventHandler(rules)
 
       if (trigger.eventListeners) {
         if (trigger.timeOnPage) {
           this.timeoutIds.push(
-            setTimeout(
-              () => window[RULES_HANDLER_SINGLETON].initEventHandler(rules),
-              trigger.timeOnPage * 1000
-            )
+            setTimeout(timeFun, (trigger.timeOnPage * 1000))
           );
         } else {
           this.initEventHandler(rules);
@@ -132,27 +143,27 @@ export default class RulesHandler {
         this.verifyConditions(rules);
       } else {
         this.timeoutIds.push(
-          setTimeout(
-            () => window[RULES_HANDLER_SINGLETON].verifyConditions(rules),
-            trigger.timeOnPage * 1000
+          setTimeout<[]>(
+            () => window[RULES_HANDLER_SINGLETON].verifyConditions(rules): () => void,
+            (trigger.timeOnPage * 1000): number
           )
         );
       }
     });
   }
 
-  initEventHandler(rules, withViz = true) {
+  initEventHandler(rules: any, withViz = true) {
     const trigger = rules.trigger || {};
 
-    const eventListenersForThisTrigger = [];
+    const eventListenersForThisTrigger: any = [];
 
-    trigger.eventListeners.forEach((listener) => {
+    trigger.eventListeners.forEach((listener: any) => {
       if (!listener.selector || !listener.event) {
         // eslint-disable-next-line no-console
         console.log("you're missing a selector or an event on an event listener");
         return;
       }
-      let elemList = null;
+      let elemList: any = null;
       try {
         elemList = document.querySelectorAll(listener.selector);
       } catch (e) {
@@ -160,12 +171,12 @@ export default class RulesHandler {
         console.log(`${listener.selector} is not a valid selector string`);
       }
       if (elemList.length > 0) {
-        elemList.forEach((elem) => {
+        elemList.forEach((elem: any) => {
           // We create it empty, because it depends on what happens later in this method.
           // By the time this callback is called, it will be a different method.
-          let removalMethod = () => {};
+          let removalMethod = () => { };
           const conditionChecker = () => {
-            window[RULES_HANDLER_SINGLETON].verifyConditions(
+            (window as any)[RULES_HANDLER_SINGLETON].verifyConditions(
               rules,
               false,
               listener.visualization ? listener.selector : undefined,
@@ -219,11 +230,11 @@ export default class RulesHandler {
   }
 
   // returns a method to remove the element
-  addViz(listener, elem) {
+  addViz(listener: any, elem: any) {
     if (listener.event && listener.event.includes && listener.event.includes('click')) {
       elem.classList.add('rw-cursor-pointer');
     }
-    const vizRemoval = visualisationObject => () => {
+    const vizRemoval = (visualisationObject: any) => () => {
       try {
         document.body.removeChild(visualisationObject);
       } catch (e) {
@@ -248,35 +259,35 @@ export default class RulesHandler {
       this.placeDot(elem, dot);
       return vizRemoval(dot);
     }
-    return () => {};
+    return () => { };
   }
 
-  placeDot(receptacle, dot) {
+  placeDot(receptacle: any, dot: any) {
     const rect = receptacle.getBoundingClientRect();
     dot.setAttribute(
       'style',
       `top: ${rect.top + window.pageYOffset - 12}px; left: ${rect.right +
-                window.pageXOffset -
-                16}px`
+      window.pageXOffset -
+      16}px`
     );
   }
 
-  placeQuestionMark(receptacle, questionMark) {
+  placeQuestionMark(receptacle: any, questionMark: any) {
     const rect = receptacle.getBoundingClientRect();
     questionMark.setAttribute(
       'style',
       `top: ${rect.top +
-                (rect.bottom - rect.top) / 2 +
-                window.pageYOffset -
-                9}px; left: ${rect.right + window.pageXOffset + 5}px;`
+      (rect.bottom - rect.top) / 2 +
+      window.pageYOffset -
+      9}px; left: ${rect.right + window.pageXOffset + 5}px;`
     );
   }
 
-  verifyMobile(trigger) {
+  verifyMobile(trigger: any) {
     if (!trigger.device) return true;
     if (
       (/Mobi/.test(navigator.userAgent) && trigger.device === 'mobile') ||
-            (!/Mobi/.test(navigator.userAgent) && trigger.device !== 'mobile')
+      (!/Mobi/.test(navigator.userAgent) && trigger.device !== 'mobile')
     ) {
       return true;
     }
@@ -284,27 +295,27 @@ export default class RulesHandler {
   }
 
   // the times compared are in minute, Date gives milliseconds, so we do * 60 * 1000
-  verifyTimeLimit(trigger, ruleTriggeredIndex) {
+  verifyTimeLimit(trigger: any, ruleTriggeredIndex: any) {
     if (!trigger.timeLimit) return true;
     if (
       !this.history.rulesTriggered[ruleTriggeredIndex].lastTimeTriggered ||
-            (Date.now() -
-                Date.parse(this.history.rulesTriggered[ruleTriggeredIndex].lastTimeTriggered)) /
-                (60 * 1000) >
-                trigger.timeLimit
+      (Date.now() -
+        Date.parse(this.history.rulesTriggered[ruleTriggeredIndex].lastTimeTriggered)) /
+      (60 * 1000) >
+      trigger.timeLimit
     ) {
       return true;
     }
     return false;
   }
 
-  verifyUrlSequence(trigger) {
+  verifyUrlSequence(trigger: any) {
     let sequenceMatched = true;
     // We first check that there is enough urls in the history to match the sequence to
     if (this.history.path.length >= trigger.url.length) {
       // we use that next line to start from the end of the history.
       let historyPosition = this.history.path.length - 1;
-      trigger.url.forEach((triggerUrl, index) => {
+      trigger.url.forEach((triggerUrl: any, index: any) => {
         if (sequenceMatched === false || historyPosition < 0) return;
         const historyUrl = this.history.path[historyPosition];
         if (
@@ -359,7 +370,7 @@ export default class RulesHandler {
   // verifyUrl check that the url trigger is true
   // if its a string it checks if its the page we're currently on
   // if its an array, it checks that the user has been on every url mentionned in the array
-  verifyUrl(trigger) {
+  verifyUrl(trigger: any) {
     // rule is not defined
     if (!trigger.url) return true;
 
@@ -370,8 +381,8 @@ export default class RulesHandler {
       urlToUse = trigger.url;
     }
     // one url
-    if (typeof urlToUse === 'object' && typeof urlToUse.path === 'string') {
-      return RulesHandler.compareUrls(this.url, urlToUse.path, urlToUse.partialMatch);
+    if (typeof urlToUse === 'object' && typeof (urlToUse as any).path === 'string') {
+      return RulesHandler.compareUrls(this.url, (urlToUse as any).path, (urlToUse as any).partialMatch);
     }
 
     // multiple urls
@@ -380,7 +391,7 @@ export default class RulesHandler {
         return this.verifyUrlSequence(trigger);
       }
       return urlToUse.every(url =>
-        this.history.path.some(historyUrl =>
+        this.history.path.some((historyUrl: any) =>
           RulesHandler.compareUrls(historyUrl, url.path, url.partialMatch)
         )
       );
@@ -389,7 +400,7 @@ export default class RulesHandler {
     return false;
   }
 
-  static cleanURL(url) {
+  static cleanURL(url: any) {
     const regexProtocolHostPort = /(https?:\/\/)?(([A-Za-z0-9-])+(\.?))+[a-z]+(:[0-9]+)?/;
     const regexLastTrailingSlash = /\/$|\/(?=\?)/;
     const regexQueryString = /\?.+$/;
@@ -400,7 +411,7 @@ export default class RulesHandler {
     return cleanUrl;
   }
 
-  static compareUrls(urlWindow, urlCompare, partialMatch = false) {
+  static compareUrls(urlWindow: any, urlCompare: any, partialMatch = false) {
     if (partialMatch) {
       return RulesHandler.cleanURL(urlWindow).includes(RulesHandler.cleanURL(urlCompare));
     }
@@ -408,7 +419,7 @@ export default class RulesHandler {
   }
 
   // eslint-disable-next-line consistent-return
-  verifyConditions(rules, boolMode, tooltipSelector = false, removeViz = () => {}) {
+  verifyConditions(rules: any, boolMode: any, tooltipSelector = false, removeViz = () => { }) {
     const trigger = rules.trigger || {};
     const payload = {
       intent: rules.payload,
@@ -420,7 +431,7 @@ export default class RulesHandler {
 
     if (trigger && (trigger.when === 'limited' || trigger.timeLimit)) {
       ruleTriggeredIndex = this.history.rulesTriggered.findIndex(
-        rule => rule.hash === rules.hash
+        (rule: any) => rule.hash === rules.hash
       );
     }
 
@@ -429,33 +440,33 @@ export default class RulesHandler {
     const urlCondition = this.verifyUrl(trigger);
 
     const triggerLimitCondition =
-            !(trigger.triggerLimit && trigger.when === 'limited') ||
-            this.history.rulesTriggered[ruleTriggeredIndex].triggered <
-                this.history.rulesTriggered[ruleTriggeredIndex].triggerLimit;
+      !(trigger.triggerLimit && trigger.when === 'limited') ||
+      this.history.rulesTriggered[ruleTriggeredIndex].triggered <
+      this.history.rulesTriggered[ruleTriggeredIndex].triggerLimit;
 
     const timeLimitCondition = this.verifyTimeLimit(trigger, ruleTriggeredIndex);
 
     const numberOfPageVisitsCondition =
-            !trigger.numberOfPageVisits ||
-            (this.history.timePerPage[this.url] &&
-                this.history.timePerPage[this.url] >= parseInt(trigger.numberOfPageVisits, 10));
+      !trigger.numberOfPageVisits ||
+      (this.history.timePerPage[this.url] &&
+        this.history.timePerPage[this.url] >= parseInt(trigger.numberOfPageVisits, 10));
 
     const queryString = window.location.search;
     const queryStringCondition =
-            !trigger.queryString ||
-            trigger.queryString.every(queryObject =>
-              this.verifyQueryStringAndAddEntities(queryString, queryObject, payload)
-            );
+      !trigger.queryString ||
+      trigger.queryString.every((queryObject: any) =>
+        this.verifyQueryStringAndAddEntities(queryString, queryObject, payload)
+      );
 
     if (
       urlCondition &&
-            mobileCondition &&
-            numberOfPageVisitsCondition &&
-            triggerLimitCondition &&
-            queryStringCondition &&
-            timeLimitCondition &&
-            (!trigger.numberOfVisits ||
-                parseInt(trigger.numberOfVisits, 10) === parseInt(this.history.timesInDomain, 10))
+      mobileCondition &&
+      numberOfPageVisitsCondition &&
+      triggerLimitCondition &&
+      queryStringCondition &&
+      timeLimitCondition &&
+      (!trigger.numberOfVisits ||
+        parseInt(trigger.numberOfVisits, 10) === parseInt(this.history.timesInDomain, 10))
     ) {
       if (boolMode) {
         return true;
@@ -471,7 +482,7 @@ export default class RulesHandler {
         if (triggered + 1 === trigger.triggerLimit) {
           removeViz();
         }
-        this.storeHistory();
+        this.storeHistory(null);
       }
     } else if (boolMode) {
       return false;
@@ -480,16 +491,16 @@ export default class RulesHandler {
 
   // this checks that the query string is present, and adds it to the payload
   // that we're going to send if neccessary.
-  verifyQueryStringAndAddEntities(encodedQueryString, queryObject, payload) {
+  verifyQueryStringAndAddEntities(encodedQueryString: any, queryObject: any, payload: any) {
     const queryStringJson = this.convertQueryStringToJson(encodedQueryString);
     const { param, value } = queryObject;
     if (!queryObject.sendAsEntity) {
-      return queryStringJson[param] && queryStringJson[param] === value;
+      return (queryStringJson as any)[param] && (queryStringJson as any)[param] === value;
     }
-    if (queryStringJson[param]) {
+    if ((queryStringJson as any)[param]) {
       payload.entities.push({
         entity: queryObject.param,
-        value: queryStringJson[param]
+        value: (queryStringJson as any)[param]
       });
       return true;
     }
@@ -500,22 +511,21 @@ export default class RulesHandler {
     return query
       .replace(/^\?/, '')
       .split('&')
-      .reduce((json, item) => {
+      .reduce((json: any, item: any) => {
         if (item) {
-          item = item.split('=').map(value => decodeURIComponent(value));
+          item = item.split('=').map((value: any) => decodeURIComponent(value));
           json[item[0]] = item[1];
         }
         return json;
       }, {});
   }
 
-  sendMessage(payload, when = 'always', tooltipSelector = false) {
+  sendMessage(payload: any, when = 'always', tooltipSelector = false) {
     if (payload.intent) {
       let entities = '';
-      payload.entities.forEach((entity, index) => {
-        const ent = `"${entity.entity}":"${entity.value}"${
-          index === payload.entities.length - 1 ? '' : ','
-        }`;
+      payload.entities.forEach((entity: any, index: any) => {
+        const ent = `"${entity.entity}":"${entity.value}"${index === payload.entities.length - 1 ? '' : ','
+          }`;
         entities += ent;
       });
       const sentPayload = `${payload.intent}{${entities}}`;
@@ -531,7 +541,7 @@ export default class RulesHandler {
     }
   }
 
-  storeHistory(url) {
+  storeHistory(url: any) {
     if (this.history && this.history.lastTimeInDomain) {
       // https://stackoverflow.com/questions/12661293/save-and-load-date-localstorage
       // This is why we parse the date stored in localStorage
@@ -539,7 +549,7 @@ export default class RulesHandler {
       const minutesSinceLastSession = timeSinceLastSession / (60 * 1000);
       if (minutesSinceLastSession > 30) {
         this.history.timesInDomain =
-                    this.history && this.history.timesInDomain ? this.history.timesInDomain + 1 : 1;
+          this.history && this.history.timesInDomain ? this.history.timesInDomain + 1 : 1;
         this.history.path = [];
       }
     }

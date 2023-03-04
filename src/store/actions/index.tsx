@@ -12,6 +12,18 @@ export function connectServer() {
     };
 }
 
+export function connect() {
+    return {
+        type: actions.CONNECT,
+    };
+}
+
+export function disconnect() {
+    return {
+        type: actions.DISCONNECT,
+    };
+}
+
 export function disconnectServer() {
     return {
         type: actions.DISCONNECT,
@@ -66,14 +78,14 @@ export function toggleFullScreen() {
     };
 }
 
-export function toggleInputDisabled(disable) {
+export function toggleInputDisabled(disable:any) {
     return {
         type: actions.TOGGLE_INPUT_DISABLED,
         disable,
     };
 }
 
-export function addUserMessage(text, nextMessageIsTooltip = false, hidden = false) {
+export function addUserMessage(text:string, nextMessageIsTooltip = false, hidden = false) {
     return {
         type: actions.ADD_NEW_USER_MESSAGE,
         text,
@@ -82,49 +94,49 @@ export function addUserMessage(text, nextMessageIsTooltip = false, hidden = fals
     };
 }
 
-export function emitUserMessage(text) {
+export function emitUserMessage(text:string) {
     return {
         type: actions.EMIT_NEW_USER_MESSAGE,
         text,
     };
 }
 
-export function addResponseMessage(text) {
+export function addResponseMessage(text:string) {
     return {
         type: actions.ADD_NEW_RESPONSE_MESSAGE,
         text,
     };
 }
 
-export function addCarousel(carousel) {
+export function addCarousel(carousel:any) {
     return {
         type: actions.ADD_CAROUSEL,
         carousel,
     };
 }
 
-export function addVideoSnippet(video) {
+export function addVideoSnippet(video:any) {
     return {
         type: actions.ADD_NEW_VIDEO_VIDREPLY,
         video,
     };
 }
 
-export function addImageSnippet(image) {
+export function addImageSnippet(image:any) {
     return {
         type: actions.ADD_NEW_IMAGE_IMGREPLY,
         image,
     };
 }
 
-export function addButtons(buttons) {
+export function addButtons(buttons:any) {
     return {
         type: actions.ADD_BUTTONS,
         buttons,
     };
 }
 
-export function setButtons(id, title) {
+export function setButtons(id:any, title:string) {
     return {
         type: actions.SET_BUTTONS,
         id,
@@ -132,7 +144,7 @@ export function setButtons(id, title) {
     };
 }
 
-export function insertUserMessage(index, text) {
+export function insertUserMessage(index:any, text:string) {
     return {
         type: actions.INSERT_NEW_USER_MESSAGE,
         index,
@@ -140,7 +152,7 @@ export function insertUserMessage(index, text) {
     };
 }
 
-export function renderCustomComponent(component, props, showAvatar) {
+export function renderCustomComponent(component:any, props:any, showAvatar:any) {
     return {
         type: actions.ADD_COMPONENT_MESSAGE,
         component,
@@ -167,28 +179,28 @@ export function newUnreadMessage() {
     };
 }
 
-export function triggerMessageDelayed(messageDelayed) {
+export function triggerMessageDelayed(messageDelayed:any) {
     return {
         type: actions.TRIGGER_MESSAGE_DELAY,
         messageDelayed,
     };
 }
 
-export function showTooltip(visible) {
+export function showTooltip(visible:any) {
     return {
         type: actions.SHOW_TOOLTIP,
         visible,
     };
 }
 
-export function tooltipDismissed(visible) {
+export function tooltipDismissed(visible:any) {
     return {
         type: actions.TOOLTIP_DISMISSED,
         visible,
     };
 }
 
-export function triggerTooltipSent(payloadSent) {
+export function triggerTooltipSent(payloadSent:any) {
     return {
         type: actions.TRIGGER_TOOLTIP_SENT,
         payloadSent,
@@ -201,56 +213,56 @@ export function clearMetadata() {
     };
 }
 
-export function setLinkTarget(target) {
+export function setLinkTarget(target:any) {
     return {
         type: actions.SET_LINK_TARGET,
         target,
     };
 }
 
-export function setUserInput(userInputState) {
+export function setUserInput(userInputState:any) {
     return {
         type: actions.SET_USER_INPUT,
         userInputState,
     };
 }
 
-export function setPageChangeCallbacks(pageChangeCallbacks) {
+export function setPageChangeCallbacks(pageChangeCallbacks:any) {
     return {
         type: actions.SET_PAGECHANGE_CALLBACKS,
         pageChangeCallbacks,
     };
 }
 
-export function setDomHighlight(domHighlight) {
+export function setDomHighlight(domHighlight:any) {
     return {
         type: actions.SET_DOM_HIGHLIGHT,
         domHighlight,
     };
 }
 
-export function hintText(hint) {
+export function hintText(hint:any) {
     return {
         type: actions.SET_HINT_TEXT,
         hint,
     };
 }
 
-export function changeOldUrl(url) {
+export function changeOldUrl(url:any) {
     return {
         type: actions.SET_OLD_URL,
         url,
     };
 }
 
-export function evalUrl(url) {
+export function evalUrl(url:any) {
     return {
         type: actions.EVAL_URL,
         url,
     };
 }
 
-export function setCustomCss(customCss) {
+export function setCustomCss(customCss:any) {
     return {
         type: actions.SET_CUSTOM_CSS,
         customCss,

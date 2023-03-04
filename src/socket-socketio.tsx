@@ -9,7 +9,7 @@ export default function (socketUrl:any, customData:any, path:any, protocolOption
     const socket = io(socketUrl, options);
     socket.on('connect', () => {
         console.log(`connect:${socket.id}`);
-        socket.customData = customData;
+        (socket as any).customData = customData;
     });
 
     socket.on('connect_error', (error:any) => {

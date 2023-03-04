@@ -3,7 +3,7 @@ import { Map, fromJS } from 'immutable';
 import * as actionTypes from '../actions/actionTypes';
 import { getLocalSession, storeMetadataTo } from './helper';
 
-export default function (storage) {
+export default function (storage:any) {
     const localSession = getLocalSession(storage, SESSION_NAME);
     const sessionValues = Map((localSession && localSession.metadata) || {});
 
@@ -22,7 +22,7 @@ export default function (storage) {
         .merge(defaultValues)
         .merge(sessionValues);
 
-    return function reducer(state = initialState, action) {
+    return function reducer(state:any = initialState, action:any) {
         const storeMetadata = storeMetadataTo(storage);
         switch (action.type) {
             // Each change to the redux store's behavior Map gets recorded to storage

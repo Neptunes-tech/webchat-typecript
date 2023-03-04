@@ -1,4 +1,4 @@
-import { store } from '../../index';
+import { store } from '../../index'
 import * as actions from './index';
 
 export function isOpen() {
@@ -21,43 +21,43 @@ export function disconnect() {
   store.dispatch(actions.disconnect());
 }
 
-export function addUserMessage(text) {
+export function addUserMessage(text:string) {
   store.dispatch(actions.addUserMessage(text));
 }
 
-export function emitUserMessage(text) {
+export function emitUserMessage(text:string) {
   store.dispatch(actions.emitUserMessage(text));
 }
 
-export function addResponseMessage(text) {
+export function addResponseMessage(text:string) {
   store.dispatch(actions.addResponseMessage(text));
 }
 
-export function addCarousel(carousel) {
+export function addCarousel(carousel:string) {
   store.dispatch(actions.addCarousel(carousel));
 }
 
-export function addVideoSnippet(video) {
+export function addVideoSnippet(video:any) {
   store.dispatch(actions.addVideoSnippet(video));
 }
 
-export function addImageSnippet(image) {
+export function addImageSnippet(image:string) {
   store.dispatch(actions.addImageSnippet(image));
 }
 
-export function addButtons(buttons) {
+export function addButtons(buttons:string) {
   store.dispatch(actions.addButtons(buttons));
 }
 
-export function setButtons(id, title) {
+export function setButtons(id:any, title:string) {
   store.dispatch(actions.setButtons(id, title));
 }
 
-export function insertUserMessage(id, text) {
+export function insertUserMessage(id:any, text:string) {
   store.dispatch(actions.insertUserMessage(id, text));
 }
 
-export function renderCustomComponent(component, props, showAvatar = false) {
+export function renderCustomComponent(component:string, props:string, showAvatar = false) {
   store.dispatch(actions.renderCustomComponent(component, props, showAvatar));
 }
 
@@ -85,7 +85,7 @@ export function toggleFullScreen() {
   store.dispatch(actions.toggleFullScreen());
 }
 
-export function toggleInputDisabled(disable) {
+export function toggleInputDisabled(disable:string) {
   store.dispatch(actions.toggleInputDisabled(disable));
 }
 
@@ -101,7 +101,7 @@ export function newUnreadMessage() {
   store.dispatch(actions.newUnreadMessage());
 }
 
-export function send(playload, text = '', customStore) {
+export function send(playload:any, text = '', customStore:any) {
   if (customStore) {
     customStore.dispatch(actions.emitUserMessage(playload));
     if (text !== '') customStore.dispatch(actions.addUserMessage(text));

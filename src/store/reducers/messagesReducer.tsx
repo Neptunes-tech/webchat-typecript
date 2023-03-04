@@ -14,10 +14,10 @@ import {
 
 import * as actionTypes from '../actions/actionTypes';
 
-export default function (storage) {
+export default function (storage: any) {
   const initialState = List([]);
 
-  return function reducer(state = initialState, action) {
+  return function reducer(state: any = initialState, action: any) {
     const storeMessage = storeMessageTo(storage);
     switch (action.type) {
       // Each change to the redux store's message list gets recorded to storage
@@ -37,7 +37,7 @@ export default function (storage) {
         );
       }
       case actionTypes.ADD_NEW_RESPONSE_MESSAGE: {
-        return storeMessage(state.push(createNewMessage(action.text, MESSAGE_SENDER.RESPONSE)));
+        return storeMessage(state.push(createNewMessage(action.text, MESSAGE_SENDER.RESPONSE, null, null)));
       }
       case actionTypes.ADD_CAROUSEL: {
         return storeMessage(state.push(createCarousel(action.carousel, MESSAGE_SENDER.RESPONSE)));
@@ -58,13 +58,13 @@ export default function (storage) {
         return storeMessage(state.setIn([action.id, 'chosenReply'], action.title));
       }
       case actionTypes.INSERT_NEW_USER_MESSAGE: {
-        return storeMessage(state.insert(action.index, createNewMessage(action.text, MESSAGE_SENDER.CLIENT)));
+        return storeMessage(state.insert(action.index, createNewMessage(action.text, MESSAGE_SENDER.CLIENT, null, null)));
       }
       case actionTypes.DROP_MESSAGES: {
         return storeMessage(initialState);
       }
       case actionTypes.SET_CUSTOM_CSS: {
-        return storeMessage(state.update(state.size - 1, message => message.set('customCss', fromJS(action.customCss))));
+        return storeMessage(state.update(state.size - 1, (message: any) => message.set('customCss', fromJS(action.customCss))));
       }
       // Pull conversation from storage, parsing as immutable List
       case actionTypes.PULL_SESSION: {

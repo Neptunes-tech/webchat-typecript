@@ -1,4 +1,4 @@
-export function onRemove(element, callback) {
+export function onRemove(element:any, callback:any) {
   const obs = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
       mutation.removedNodes.forEach((el) => {

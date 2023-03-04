@@ -9,9 +9,21 @@ import socket from './socket';
 import ThemeContext from './components/Widget/ThemeContext';
 // eslint-disable-next-line import/no-mutable-exports
 
-const ConnectedWidget = forwardRef((props, ref) => {
+const ConnectedWidget = forwardRef((props:any, ref) => {
     class Socket {
-        constructor(url, customData, path, protocol, protocolOptions, onSocketEvent) {
+        url: any;
+        customData: any;
+        path: any;
+        protocol: any;
+        protocolOptions: any;
+        onSocketEvent: any;
+        socket: null;
+        onEvents: never[];
+        marker: number;
+        sessionConfirmed: undefined;
+        sessionId: any;
+        constructor(url: any, customData: any, path: any, protocol: any, protocolOptions: any, onSocketEvent: any) {
+
             this.url = url;
             this.customData = customData;
             this.path = path;
@@ -27,7 +39,7 @@ const ConnectedWidget = forwardRef((props, ref) => {
             return this.socket !== null && this.socket.connected;
         }
 
-        on(event, callback) {
+        on(event: any, callback: any) {
             if (!this.socket) {
                 this.onEvents.push({ event, callback });
             } else {
@@ -35,7 +47,7 @@ const ConnectedWidget = forwardRef((props, ref) => {
             }
         }
 
-        emit(message, data) {
+        emit(message: any, data: any) {
             if (this.socket) {
                 this.socket.emit(message, data);
             }
@@ -247,7 +259,7 @@ ConnectedWidget.defaultProps = {
     showFullScreenButton: false,
     displayUnreadCount: false,
     showMessageDate: false,
-    customMessageDelay: (message) => {
+    customMessageDelay: (message:any) => {
         let delay = message.length * 10;
         if (delay > 2000) delay = 2000;
         if (delay < 800) delay = 800;

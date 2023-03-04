@@ -3,7 +3,7 @@ import { MESSAGES_TYPES, MESSAGE_SENDER, SESSION_NAME } from '../../constants';
 
 import { Video, Image, Message, Carousel, Buttons } from '../../components/Widget/components/Conversation/components/Messages/components';
 
-export function createNewMessage(text, sender, nextMessageIsTooltip, hidden) {
+export function createNewMessage(text: any, sender: any, nextMessageIsTooltip: any, hidden: any) {
   return Map({
     type: MESSAGES_TYPES.TEXT,
     component: Message,
@@ -16,7 +16,7 @@ export function createNewMessage(text, sender, nextMessageIsTooltip, hidden) {
   });
 }
 
-export function createCarousel(carousel, sender) {
+export function createCarousel(carousel:any, sender:any) {
   return Map({
     type: MESSAGES_TYPES.CAROUSEL,
     component: Carousel,
@@ -26,7 +26,7 @@ export function createCarousel(carousel, sender) {
   });
 }
 
-export function createVideoSnippet(video, sender) {
+export function createVideoSnippet(video:any, sender:any) {
   return Map({
     type: MESSAGES_TYPES.VIDREPLY.VIDEO,
     component: Video,
@@ -38,7 +38,7 @@ export function createVideoSnippet(video, sender) {
   });
 }
 
-export function createImageSnippet(image, sender) {
+export function createImageSnippet(image:any, sender:any) {
   return Map({
     type: MESSAGES_TYPES.IMGREPLY.IMAGE,
     component: Image,
@@ -50,7 +50,7 @@ export function createImageSnippet(image, sender) {
   });
 }
 
-export function createButtons(buttons, sender) {
+export function createButtons(buttons:any, sender:any) {
   return Map({
     type: MESSAGES_TYPES.BUTTONS,
     component: Buttons,
@@ -65,7 +65,7 @@ export function createButtons(buttons, sender) {
   });
 }
 
-export function createComponentMessage(component, props, showAvatar) {
+export function createComponentMessage(component:any, props:any, showAvatar:any) {
   return Map({
     type: MESSAGES_TYPES.CUSTOM_COMPONENT,
     component,
@@ -76,7 +76,7 @@ export function createComponentMessage(component, props, showAvatar) {
   });
 }
 
-export function getLocalSession(storage, key) {
+export function getLocalSession(storage:any, key:any) {
   // Attempt to get local session from storage
   const cachedSession = storage.getItem(key);
   let session = null;
@@ -106,7 +106,7 @@ export function getLocalSession(storage, key) {
   return session;
 }
 
-export function storeLocalSession(storage, key, sid) {
+export function storeLocalSession(storage:any, key:any, sid:any) {
   // Attempt to store session id to local storage
   const cachedSession = storage.getItem(key);
   let session;
@@ -127,7 +127,7 @@ export function storeLocalSession(storage, key, sid) {
   storage.setItem(key, JSON.stringify(session));
 }
 
-export const storeMessageTo = storage => (conversation) => {
+export const storeMessageTo = (storage:any) => (conversation:any) => {
   // Store a conversation List to storage
   const localSession = getLocalSession(storage, SESSION_NAME);
   const newSession = {
@@ -140,7 +140,7 @@ export const storeMessageTo = storage => (conversation) => {
   return conversation;
 };
 
-export const storeParamsTo = storage => (params) => {
+export const storeParamsTo = (storage:any) => (params:any) => {
   // Store a params List to storage
   const localSession = getLocalSession(storage, SESSION_NAME);
   const newSession = {
@@ -155,7 +155,7 @@ export const storeParamsTo = storage => (params) => {
 };
 
 
-export const storeMetadataTo = storage => (metadata) => {
+export const storeMetadataTo = (storage:any) => (metadata:any) => {
   // Store a params List to storage
   const localSession = getLocalSession(storage, SESSION_NAME);
   const newSession = {

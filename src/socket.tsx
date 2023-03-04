@@ -1,10 +1,10 @@
-import socketio from './socket-socketio.tsx';
+import socketio from './socket-socketio';
 import sockjs from './socket-sockjs';
 
 const PROTOCOLS = { socketio, sockjs };
-export default function (socketUrl, customData, path, protocol, protocolOptions) {
+export default function (socketUrl:any, customData:any, path:any, protocol:any, protocolOptions:any) {
     protocol = protocol || 'socketio';
-    const socketProtocol = PROTOCOLS[protocol];
+    const socketProtocol = (PROTOCOLS as any)[protocol];
 
     if (socketProtocol !== undefined) {
         return socketProtocol(socketUrl, customData, path, protocolOptions);

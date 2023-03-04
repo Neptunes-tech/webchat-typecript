@@ -5,40 +5,40 @@ import RulesHandler, { RULES_HANDLER_SINGLETON } from './rules';
 import { rasaWebchatProTypes, rasaWebchatProDefaultTypes } from '../../index';
 
 const RasaWebchatPro = React.memo(
-  forwardRef((props, ref) => {
+  forwardRef((props:any, ref) => {
     const widget = useRef(null);
 
-    const updateRules = (newRules) => {
-      if (newRules && widget && widget.current.sendMessage) {
+    const updateRules = (newRules:any) => {
+      if (newRules && widget && (widget as any).current.sendMessage) {
         const handler =
-                    (window[RULES_HANDLER_SINGLETON] &&
-                        window[RULES_HANDLER_SINGLETON].updateRules(newRules)) ||
+                    ((window as any)[RULES_HANDLER_SINGLETON] &&
+                        (window as any)[RULES_HANDLER_SINGLETON].updateRules(newRules)) ||
                     new RulesHandler(
                       newRules,
-                      widget.current.sendMessage,
+                      (widget as any).current.sendMessage,
                       props.triggerEventListenerUpdateRate
                     );
         handler.initHandler();
         // putting it in the window object lets us do the singleton design pattern
-        window[RULES_HANDLER_SINGLETON] = handler;
+        (window as any)[RULES_HANDLER_SINGLETON] = handler;
       }
     };
 
     useEffect(() => function cleanUp() {
-      const handler = window[RULES_HANDLER_SINGLETON];
+      const handler = (window as any)[RULES_HANDLER_SINGLETON];
       if (handler && handler instanceof RulesHandler) {
         handler.cleanUp(true);
       }
     }, []);
 
     useImperativeHandle(ref, () => ({
-      sendMessage: (...args) => {
-        widget.current.sendMessage(...args);
+      sendMessage: (...args :any) => {
+        (widget as any).current.sendMessage(...args);
       },
-      updateRules: (rules) => {
+      updateRules: (rules:any) => {
         updateRules(rules);
       },
-      getSessionId: widget.current.getSessionId
+      getSessionId: (widget as any).current.getSessionId
     }));
 
     return <Widget ref={widget} {...{ ...props }} />;
@@ -47,6 +47,6 @@ const RasaWebchatPro = React.memo(
 
 RasaWebchatPro.propTypes = rasaWebchatProTypes;
 
-RasaWebchatPro.defaultProps = rasaWebchatProDefaultTypes;
+// RasaWebchatPro.defaultProps = rasaWebchatProDefaultTypes;
 
 export default RasaWebchatPro;

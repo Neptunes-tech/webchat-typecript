@@ -9,25 +9,19 @@ import metadata from './reducers/metadataReducer';
 import { getLocalSession } from './reducers/helper';
 import * as actionTypes from './actions/actionTypes';
 
-const cleanURL = (url) => {
+const cleanURL = (url: string) => {
   const regexProtocolHostPort = /https?:\/\/(([A-Za-z0-9-])+(\.?))+[a-z]+(:[0-9]+)?/;
   const regexLastTrailingSlash = /\/$|\/(?=\?)/;
   return url.replace(regexProtocolHostPort, '').replace(regexLastTrailingSlash, '');
 };
 
-const trimQueryString = (url) => {
+const trimQueryString = (url: string) => {
   const regexQueryString = /\?.+$/;
   return url.replace(regexQueryString, '');
 };
 
-function initStore(
-  connectingText,
-  socket,
-  storage,
-  docViewer = false,
-  onWidgetEvent,
-) {
-  const customMiddleWare = store => next => (action) => {
+function initStore(connectingText: any, socket: any, storage: any, docViewer = false, onWidgetEvent: any,): void {
+  const customMiddleWare = (store: any) => (next: any) => (action: any) => {
     const localSession = getLocalSession(storage, SESSION_NAME);
     let sessionId = localSession
       ? localSession.session_id
@@ -35,14 +29,14 @@ function initStore(
     if (!sessionId && socket.sessionId) {
       sessionId = socket.sessionId;
     }
-    const emitMessage = (payload) => {
+    const emitMessage = (payload: any) => {
       const emit = () => {
         socket.emit(
           'user_uttered', {
-            message: payload,
-            customData: socket.customData,
-            session_id: sessionId
-          }
+          message: payload,
+          customData: socket.customData,
+          session_id: sessionId
+        }
         );
         store.dispatch({
           type: actionTypes.ADD_NEW_USER_MESSAGE,
@@ -83,7 +77,7 @@ function initStore(
 
         if (store.getState().behavior.get('oldUrl') !== newUrl) {
           const { pageChanges, errorIntent } = pageCallbacksJs;
-          const matched = pageChanges.some((callback) => {
+          const matched = pageChanges.some((callback: any) => {
             if (callback.regex) {
               if (newUrl.match(callback.url)) {
                 emitMessage(callback.callbackIntent);
@@ -122,7 +116,7 @@ function initStore(
 
 
   // eslint-disable-next-line no-underscore-dangle
-  const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+  const composeEnhancer =( window as any)['__REDUX_DEVTOOLS_EXTENSION_COMPOSE__'] || compose;
 
   return createStore(
     reducer,
