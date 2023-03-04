@@ -35,6 +35,7 @@ class Message extends PureComponent {
         } else if (sender === 'client') {
             style = { color: userTextColor, backgroundColor: userBackgroundColor };
         }
+        // let obj: { cssText: string } = { cssText: customCss.css }
 
         return (
             <div
@@ -43,7 +44,8 @@ class Message extends PureComponent {
                         ? `rw-response ${customCss.css}`
                         : `rw-${sender}`
                 }
-                style={style}
+
+            // style={style}
             >
                 <div className="rw-message-text">
                     {sender === 'response' ? (
