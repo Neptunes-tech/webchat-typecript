@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 
-export const SESSION_NAME = 'chat_session';
+export const SESSION_NAME: string = 'chat_session';
 
 export const MESSAGE_SENDER = {
   CLIENT: 'client',
@@ -33,7 +33,7 @@ const senderType = PropTypes.oneOf([
   MESSAGE_SENDER.RESPONSE
 ]);
 
-export const NEXT_MESSAGE = 'mrbot_next_message';
+export const NEXT_MESSAGE: string = 'mrbot_next_message';
 
 export const PROP_TYPES = {
 

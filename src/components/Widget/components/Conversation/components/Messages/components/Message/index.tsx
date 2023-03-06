@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-
 import { PROP_TYPES } from '../../../../../../../../constants';
 import DocViewer from '../docViewer';
 import './styles.scss';
@@ -61,7 +60,7 @@ class Message extends PureComponent {
                             components={{
                                 a: (props) =>
                                     docViewer ? (
-                                        <DocViewer src={props.href}>{props.children}</DocViewer>
+                                        <DocViewer src={(props).href}>{props.children}</DocViewer>
                                     ) : (
                                         <a
                                             href={props.href}
@@ -100,4 +99,5 @@ const mapStateToProps = (state: any) => ({
     docViewer: state.behavior.get('docViewer'),
 });
 
-export default connect(mapStateToProps)(Message);
+export default connect(mapStateToProps)(Message as any);
+ 

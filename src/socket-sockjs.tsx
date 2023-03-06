@@ -6,7 +6,7 @@ import { EventEmitter } from 'events';
   This implementation mimics the SocketIO implementation.
 */
 export default function (socketUrl:any, customData:any, _path:any, options:any) {
-  const socket = SockJS(socketUrl + (_path || ''));
+  const socket:any = SockJS(socketUrl + (_path || ''));
   const stomp = Stomp.over(socket);
 
   const MESSAGES_CHANNEL = options.messagesChannel || '/app/sendMessage';
@@ -30,7 +30,7 @@ export default function (socketUrl:any, customData:any, _path:any, options:any) 
     send({
       type: 'CHAT',
       content: JSON.stringify(data),
-      sender: socketProxy.id
+      sender: (socketProxy as any).id
     });
   });
 
@@ -44,29 +44,31 @@ export default function (socketUrl:any, customData:any, _path:any, options:any) 
     });
   });
 
-  socketProxy.onconnect = () => {
-    socketProxy.connected = true;
-    socketProxy.id = extractSessionId(socket);
-    socketProxy.customData = customData;
-    stomp.subscribe(REPLY_TOPIC, socketProxy.onIncomingMessage);
+  (socketProxy as any).onconnect = () => {
+    (socketProxy as any).connected = true;
+    // (socketProxy as any).id = extractSessionId(socket);
+    (socketProxy as any).id = extractSessionId();
+
+    (socketProxy as any).customData = customData;
+    stomp.subscribe(REPLY_TOPIC, (socketProxy as any).onIncomingMessage);
     stomp.send(
       SUBSCRIPTION_CHANNEL,
       {},
-      JSON.stringify({ type: 'JOIN', sender: socketProxy.id })
+      JSON.stringify({ type: 'JOIN', sender: (socketProxy as any).id })
     );
   };
 
-  socketProxy.onerror = (error) => {
+  (socketProxy as any).onerror = (error:string) => {
     // eslint-disable-next-line no-console
     console.log(error);
   };
 
-  const emitBotUtteredMessage = (message) => {
+  const emitBotUtteredMessage = (message:any) => {
       delete message.recipient_id;
       socketProxy.emit('bot_uttered', message);
   }
 
-  socketProxy.onIncomingMessage = (payload) => {
+  (socketProxy as any).onIncomingMessage = (payload:any) => {
     const message = JSON.parse(payload.body);
 
     if (message.type === 'JOIN') {
@@ -76,7 +78,7 @@ export default function (socketUrl:any, customData:any, _path:any, options:any) 
       socketProxy.emit('disconnect', message.content || 'server left');
     } else if (message.type === 'SESSION_CONFIRM') {
       const props = JSON.parse(message.content)
-      socketProxy.emit('session_confirm', {session_id: socketProxy.id, ...props});
+      socketProxy.emit('session_confirm', {session_id: (socketProxy as any).id, ...props});
     } else if (message.type === 'CHAT') {
       const agentMessage = JSON.parse(message.content);
       if (agentMessage instanceof Array) {
@@ -87,15 +89,15 @@ export default function (socketUrl:any, customData:any, _path:any, options:any) 
     }
   };
 
-  socketProxy.close = () => {
+  (socketProxy as any).close = () => {
     socket.close();
   };
 
-  stomp.connect({}, socketProxy.onconnect, socketProxy.onerror);
+  stomp.connect({}, (socketProxy as any).onconnect, (socketProxy as any).onerror);
 
   stomp.onWebSocketClose = () => {
     // eslint-disable-next-line no-console
-    socketProxy.connected = false;
+    (socketProxy as any).connected = false;
     // eslint-disable-next-line no-console
     console.log('Closed sockjs connection');
     socketProxy.emit('disconnect');

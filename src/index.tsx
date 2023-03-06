@@ -9,7 +9,12 @@ import socket from './socket';
 import ThemeContext from './components/Widget/ThemeContext';
 // eslint-disable-next-line import/no-mutable-exports
 
-const ConnectedWidget = forwardRef((props:any, ref) => {
+interface valObj {
+    event: any,
+    callback: any
+}
+
+const ConnectedWidget = forwardRef((props: any, ref: any) => {
     class Socket {
         url: any;
         customData: any;
@@ -36,26 +41,29 @@ const ConnectedWidget = forwardRef((props:any, ref) => {
         }
 
         isInitialized() {
-            return this.socket !== null && this.socket.connected;
+            return this.socket !== null && (this as any).socket.connected;
         }
+
+
 
         on(event: any, callback: any) {
             if (!this.socket) {
-                this.onEvents.push({ event, callback });
+
+                this.onEvents.push({ event, callback })
             } else {
-                this.socket.on(event, callback);
+                (this as any).socket.on(event, callback);
             }
         }
 
         emit(message: any, data: any) {
             if (this.socket) {
-                this.socket.emit(message, data);
+                (this as any).socket.emit(message, data);
             }
         }
 
         close() {
             if (this.socket) {
-                this.socket.close();
+                (this as any).socket.close();
             }
         }
 
@@ -69,20 +77,20 @@ const ConnectedWidget = forwardRef((props:any, ref) => {
             );
             // We set a function on session_confirm here so as to avoid any race condition
             // this will be called first and will set those parameters for everyone to use.
-            this.socket.on('session_confirm', (sessionObject) => {
-                this.sessionConfirmed = true;
+            (this as any).socket.on('session_confirm', (sessionObject: any) => {
+                (this as any).sessionConfirmed = true;
                 this.sessionId =
                     sessionObject && sessionObject.session_id
                         ? sessionObject.session_id
                         : sessionObject;
             });
-            this.onEvents.forEach((event) => {
-                this.socket.on(event.event, event.callback);
+            this.onEvents.forEach((event: any) => {
+                (this as any).socket.on(event.event, event.callback);
             });
 
             this.onEvents = [];
             Object.keys(this.onSocketEvent).forEach((event) => {
-                this.socket.on(event, this.onSocketEvent[event]);
+                (this as any).socket.on(event, this.onSocketEvent[event]);
             });
         }
     }
@@ -90,7 +98,7 @@ const ConnectedWidget = forwardRef((props:any, ref) => {
     const instanceSocket = useRef({});
     const store = useRef(null);
 
-    if (!instanceSocket.current.url && !(store && store.current && store.current.socketRef)) {
+    if (!(instanceSocket as any).current.url && !(store && store.current && (store as any).current.socketRef)) {
         instanceSocket.current = new Socket(
             props.socketUrl,
             props.customData,
@@ -101,25 +109,26 @@ const ConnectedWidget = forwardRef((props:any, ref) => {
         );
     }
 
-    if (!instanceSocket.current.url && store && store.current && store.current.socketRef) {
-        instanceSocket.current = store.socket;
+    if (!(instanceSocket as any).current.url && store && store.current && (store as any).current.socketRef) {
+        instanceSocket.current = (store as any).socket;
     }
 
     const storage = props.params.storage === 'session' ? sessionStorage : localStorage;
 
     if (!store || !store.current) {
-        store.current = initStore(
+        (store as any).current = initStore(
             props.connectingText,
             instanceSocket.current,
             storage,
             props.docViewer,
             props.onWidgetEvent
         );
-        store.current.socketRef = instanceSocket.current.marker;
-        store.current.socket = instanceSocket.current;
+        (store as any).current.socketRef = (instanceSocket as any).current.marker;
+        (store as any).current.socket = instanceSocket.current;
     }
+    const { initPayload }: any = props
     return (
-        <Provider store={store.current}>
+        <Provider store={(store as any).current}>
             <ThemeContext.Provider
                 value={{
                     mainColor: props.mainColor,
@@ -132,7 +141,7 @@ const ConnectedWidget = forwardRef((props:any, ref) => {
             >
                 <Widget
                     ref={ref}
-                    initPayload={props.initPayload}
+                    initPayload={initPayload}
                     title={props.title}
                     subtitle={props.subtitle}
                     titleImage={props.titleImage}
@@ -259,7 +268,7 @@ ConnectedWidget.defaultProps = {
     showFullScreenButton: false,
     displayUnreadCount: false,
     showMessageDate: false,
-    customMessageDelay: (message:any) => {
+    customMessageDelay: (message: any) => {
         let delay = message.length * 10;
         if (delay > 2000) delay = 2000;
         if (delay < 800) delay = 800;

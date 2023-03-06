@@ -126,12 +126,11 @@ export default class RulesHandler {
       if (trigger && (trigger.when === 'limited' || trigger.timeLimit)) {
         this.storeRuleHash(rules);
       }
-      const timeFun = () => (window as any)[RULES_HANDLER_SINGLETON].initEventHandler(rules)
 
       if (trigger.eventListeners) {
         if (trigger.timeOnPage) {
           this.timeoutIds.push(
-            setTimeout(timeFun, (trigger.timeOnPage * 1000))
+            setTimeout(() => (window as any)[RULES_HANDLER_SINGLETON].initEventHandler(rules),trigger.timeOnPage * 1000)
           );
         } else {
           this.initEventHandler(rules);
@@ -144,26 +143,26 @@ export default class RulesHandler {
       } else {
         this.timeoutIds.push(
           setTimeout<[]>(
-            () => window[RULES_HANDLER_SINGLETON].verifyConditions(rules): () => void,
-            (trigger.timeOnPage * 1000): number
+            () => (window as any)[RULES_HANDLER_SINGLETON].verifyConditions(rules):()=>void,
+            (trigger.timeOnPage * 1000):number
           )
         );
       }
     });
   }
 
-  initEventHandler(rules: any, withViz = true) {
+  initEventHandler(rules:any, withViz = true) {
     const trigger = rules.trigger || {};
 
-    const eventListenersForThisTrigger: any = [];
+    const eventListenersForThisTrigger:any = [];
 
-    trigger.eventListeners.forEach((listener: any) => {
+    trigger.eventListeners.forEach((listener:any) => {
       if (!listener.selector || !listener.event) {
         // eslint-disable-next-line no-console
         console.log("you're missing a selector or an event on an event listener");
         return;
       }
-      let elemList: any = null;
+      let elemList:any = null;
       try {
         elemList = document.querySelectorAll(listener.selector);
       } catch (e) {
@@ -171,7 +170,7 @@ export default class RulesHandler {
         console.log(`${listener.selector} is not a valid selector string`);
       }
       if (elemList.length > 0) {
-        elemList.forEach((elem: any) => {
+        elemList.forEach((elem:any) => {
           // We create it empty, because it depends on what happens later in this method.
           // By the time this callback is called, it will be a different method.
           let removalMethod = () => { };
@@ -191,7 +190,7 @@ export default class RulesHandler {
             id: Math.random()
           };
 
-          this.eventListeners.push(eventListener);
+          (this as any).eventListeners.push(eventListener);
           eventListenersForThisTrigger.push(eventListener);
 
           elem.addEventListener(listener.event, conditionChecker);
@@ -209,16 +208,16 @@ export default class RulesHandler {
     this.resetListenersTimeouts.push({
       timeout: setTimeout(() => {
         // this removes the timeout that just triggered.
-        window[RULES_HANDLER_SINGLETON].resetListenersTimeouts = window[RULES_HANDLER_SINGLETON]
-          .resetListenersTimeouts.filter(timeout => timeout.id !== timeoutId);
+        window[RULES_HANDLER_SINGLETON].resetListenersTimeouts = (window as any)[RULES_HANDLER_SINGLETON]
+          .resetListenersTimeouts.filter((timeout: { id: number; }) => timeout.id !== timeoutId);
 
         RulesHandler.removeEventListeners(eventListenersForThisTrigger);
         // this removes the event listners that we just removed from the list used by the cleanup.
         // No need to clean them up anymore.
-        window[RULES_HANDLER_SINGLETON].eventListeners = window[RULES_HANDLER_SINGLETON]
+        (window as any)[RULES_HANDLER_SINGLETON].eventListeners = (window as any)[RULES_HANDLER_SINGLETON]
           .eventListeners
-          .filter(listener => !eventListenersForThisTrigger
-            .some(eListener => eListener.id === listener.id)
+          .filter((listener: { id: any; }) => !eventListenersForThisTrigger
+            .some((eListener: { id: any; }) => eListener.id === listener.id)
           );
 
         // We recall this method without placing the vizs,
@@ -230,11 +229,11 @@ export default class RulesHandler {
   }
 
   // returns a method to remove the element
-  addViz(listener: any, elem: any) {
+  addViz(listener:any, elem:any) {
     if (listener.event && listener.event.includes && listener.event.includes('click')) {
       elem.classList.add('rw-cursor-pointer');
     }
-    const vizRemoval = (visualisationObject: any) => () => {
+    const vizRemoval = (visualisationObject:any) => () => {
       try {
         document.body.removeChild(visualisationObject);
       } catch (e) {
@@ -262,7 +261,7 @@ export default class RulesHandler {
     return () => { };
   }
 
-  placeDot(receptacle: any, dot: any) {
+  placeDot(receptacle:any, dot:any) {
     const rect = receptacle.getBoundingClientRect();
     dot.setAttribute(
       'style',
@@ -272,7 +271,7 @@ export default class RulesHandler {
     );
   }
 
-  placeQuestionMark(receptacle: any, questionMark: any) {
+  placeQuestionMark(receptacle:any, questionMark:any) {
     const rect = receptacle.getBoundingClientRect();
     questionMark.setAttribute(
       'style',
@@ -283,7 +282,7 @@ export default class RulesHandler {
     );
   }
 
-  verifyMobile(trigger: any) {
+  verifyMobile(trigger:any) {
     if (!trigger.device) return true;
     if (
       (/Mobi/.test(navigator.userAgent) && trigger.device === 'mobile') ||
@@ -295,7 +294,7 @@ export default class RulesHandler {
   }
 
   // the times compared are in minute, Date gives milliseconds, so we do * 60 * 1000
-  verifyTimeLimit(trigger: any, ruleTriggeredIndex: any) {
+  verifyTimeLimit(trigger:any, ruleTriggeredIndex:any) {
     if (!trigger.timeLimit) return true;
     if (
       !this.history.rulesTriggered[ruleTriggeredIndex].lastTimeTriggered ||
@@ -309,13 +308,13 @@ export default class RulesHandler {
     return false;
   }
 
-  verifyUrlSequence(trigger: any) {
+  verifyUrlSequence(trigger:any) {
     let sequenceMatched = true;
     // We first check that there is enough urls in the history to match the sequence to
     if (this.history.path.length >= trigger.url.length) {
       // we use that next line to start from the end of the history.
       let historyPosition = this.history.path.length - 1;
-      trigger.url.forEach((triggerUrl: any, index: any) => {
+      trigger.url.forEach((triggerUrl:any, index:any) => {
         if (sequenceMatched === false || historyPosition < 0) return;
         const historyUrl = this.history.path[historyPosition];
         if (
@@ -370,7 +369,7 @@ export default class RulesHandler {
   // verifyUrl check that the url trigger is true
   // if its a string it checks if its the page we're currently on
   // if its an array, it checks that the user has been on every url mentionned in the array
-  verifyUrl(trigger: any) {
+  verifyUrl(trigger:any) {
     // rule is not defined
     if (!trigger.url) return true;
 
@@ -391,7 +390,7 @@ export default class RulesHandler {
         return this.verifyUrlSequence(trigger);
       }
       return urlToUse.every(url =>
-        this.history.path.some((historyUrl: any) =>
+        this.history.path.some((historyUrl :any) =>
           RulesHandler.compareUrls(historyUrl, url.path, url.partialMatch)
         )
       );
@@ -400,7 +399,7 @@ export default class RulesHandler {
     return false;
   }
 
-  static cleanURL(url: any) {
+  static cleanURL(url:any) {
     const regexProtocolHostPort = /(https?:\/\/)?(([A-Za-z0-9-])+(\.?))+[a-z]+(:[0-9]+)?/;
     const regexLastTrailingSlash = /\/$|\/(?=\?)/;
     const regexQueryString = /\?.+$/;
@@ -411,7 +410,7 @@ export default class RulesHandler {
     return cleanUrl;
   }
 
-  static compareUrls(urlWindow: any, urlCompare: any, partialMatch = false) {
+  static compareUrls(urlWindow:any, urlCompare:any, partialMatch = false) {
     if (partialMatch) {
       return RulesHandler.cleanURL(urlWindow).includes(RulesHandler.cleanURL(urlCompare));
     }
@@ -419,7 +418,7 @@ export default class RulesHandler {
   }
 
   // eslint-disable-next-line consistent-return
-  verifyConditions(rules: any, boolMode: any, tooltipSelector = false, removeViz = () => { }) {
+  verifyConditions(rules:any, boolMode:any, tooltipSelector = false, removeViz = () => { }) {
     const trigger = rules.trigger || {};
     const payload = {
       intent: rules.payload,
@@ -431,7 +430,7 @@ export default class RulesHandler {
 
     if (trigger && (trigger.when === 'limited' || trigger.timeLimit)) {
       ruleTriggeredIndex = this.history.rulesTriggered.findIndex(
-        (rule: any) => rule.hash === rules.hash
+        (rule :any) => rule.hash === rules.hash
       );
     }
 
@@ -454,7 +453,7 @@ export default class RulesHandler {
     const queryString = window.location.search;
     const queryStringCondition =
       !trigger.queryString ||
-      trigger.queryString.every((queryObject: any) =>
+      trigger.queryString.every((queryObject:any) =>
         this.verifyQueryStringAndAddEntities(queryString, queryObject, payload)
       );
 
@@ -491,7 +490,7 @@ export default class RulesHandler {
 
   // this checks that the query string is present, and adds it to the payload
   // that we're going to send if neccessary.
-  verifyQueryStringAndAddEntities(encodedQueryString: any, queryObject: any, payload: any) {
+  verifyQueryStringAndAddEntities(encodedQueryString:any, queryObject:any, payload:any) {
     const queryStringJson = this.convertQueryStringToJson(encodedQueryString);
     const { param, value } = queryObject;
     if (!queryObject.sendAsEntity) {
@@ -511,19 +510,19 @@ export default class RulesHandler {
     return query
       .replace(/^\?/, '')
       .split('&')
-      .reduce((json: any, item: any) => {
+      .reduce((json:any, item:any) => {
         if (item) {
-          item = item.split('=').map((value: any) => decodeURIComponent(value));
+          item = item.split('=').map((value:any) => decodeURIComponent(value));
           json[item[0]] = item[1];
         }
         return json;
       }, {});
   }
 
-  sendMessage(payload: any, when = 'always', tooltipSelector = false) {
+  sendMessage(payload:any, when = 'always', tooltipSelector = false) {
     if (payload.intent) {
       let entities = '';
-      payload.entities.forEach((entity: any, index: any) => {
+      payload.entities.forEach((entity:any, index:any) => {
         const ent = `"${entity.entity}":"${entity.value}"${index === payload.entities.length - 1 ? '' : ','
           }`;
         entities += ent;
@@ -541,7 +540,7 @@ export default class RulesHandler {
     }
   }
 
-  storeHistory(url: any) {
+  storeHistory(url:any) {
     if (this.history && this.history.lastTimeInDomain) {
       // https://stackoverflow.com/questions/12661293/save-and-load-date-localstorage
       // This is why we parse the date stored in localStorage

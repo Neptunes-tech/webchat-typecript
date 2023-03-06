@@ -18,7 +18,7 @@ const Carousel = (props: any) => {
     chooseReply(action.payload, action.title);
   };
 
-  const scrollContainer = useRef();
+  const scrollContainer = useRef(null as any);
   const [leftButton, setLeftButton] = useState(false);
   const [rightButton, setRightButton] = useState(true);
   const { mainColor, assistTextColor } = useContext(ThemeContext);

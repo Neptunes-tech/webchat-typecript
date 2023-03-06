@@ -72,8 +72,8 @@ const Launcher = ({
         }
     }, [lastUserMessage, domHighlight]);
 
-    const [popperElement, setPopperElement] = useState(null);
-    const [arrowElement, setArrowElement] = useState(null);
+    const [popperElement, setPopperElement] = useState(null as any);
+    const [arrowElement, setArrowElement] = useState(null as any);
 
     const { styles, attributes } = usePopper(referenceElement, popperElement, {
         modifiers: [
@@ -228,7 +228,7 @@ const Launcher = ({
                                 autoStart: true,
                                 delay: 50,
                                 deleteSpeed: 25,
-                                pauseFor: 3000,
+                                // pauseFor: 3000,
                                 loop: true,
                                 cursor: '',
                                 wrapperClassName: 'rw-textwriter-effect',
@@ -357,7 +357,7 @@ const mapStateToProps = (state: any) => ({
                     messages.unshift(state.messages.get(-i));
                 }
                 return messages;
-            })()) || new Map<any>(),
+            })()) /* || new Map<any>() */,
 
     unreadCount: state.behavior.get('unreadCount') || 0,
     showTooltip: state.metadata.get('showTooltip'),

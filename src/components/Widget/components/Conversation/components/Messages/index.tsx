@@ -9,14 +9,14 @@ import { Video, Image, Message, Carousel, Buttons } from '../Messages/components
 import './styles.scss';
 import ThemeContext from '../../../../ThemeContext';
 
-const isToday = (date:any) => {
+const isToday = (date: any) => {
   const today = new Date();
   return date.getDate() === today.getDate() &&
     date.getMonth() === today.getMonth() &&
     date.getFullYear() === today.getFullYear();
 };
 
-const formatDate = (date:any) => {
+const formatDate = (date: any) => {
   const dateToFormat = new Date(date);
   const showDate = isToday(dateToFormat) ? '' : `${dateToFormat.toLocaleDateString()} `;
   return `${showDate}${dateToFormat.toLocaleTimeString('en-US', { timeStyle: 'short' })}`;
@@ -33,7 +33,7 @@ class Messages extends Component {
   // static propTypes: { src: PropTypes.Validator<string>; };
   static propTypes: { message: Requireable<any>; docViewer: PropTypes.Requireable<boolean>; linkTarget: PropTypes.Requireable<string>; };
 
-  static defaultTypes: { displayTypingIndication:boolean };
+  static defaultTypes: { displayTypingIndication: boolean };
 
   componentDidMount() {
     scrollToBottom();
@@ -43,9 +43,9 @@ class Messages extends Component {
     scrollToBottom();
   }
 
-  getComponentToRender = (message:any, index:number, isLast:any) => {
-    const { params }:any = this.props;
-    const { customComponent }:any = this.props;
+  getComponentToRender = (message: any, index: number, isLast: any) => {
+    const { params }: any = this.props;
+    const { customComponent }: any = this.props;
 
 
     const ComponentToRender = (() => {
@@ -86,23 +86,23 @@ class Messages extends Component {
   }
 
   render() {
-    const { displayTypingIndication, profileAvatar }:any = this.props;
+    const { displayTypingIndication, profileAvatar }: any = this.props;
 
     const renderMessages = () => {
       const {
         messages,
         showMessageDate
-      }:any = this.props;
+      }: any = this.props;
 
       if (messages.isEmpty()) return null;
 
       const groups = [];
-      let group:any = null;
+      let group: any = null;
 
       const dateRenderer = typeof showMessageDate === 'function' ? showMessageDate :
         showMessageDate === true ? formatDate : null;
 
-      const renderMessageDate = (message:any) => {
+      const renderMessageDate = (message: any) => {
         const timestamp = message.get('timestamp');
 
         if (!dateRenderer || !timestamp) return null;
@@ -112,7 +112,7 @@ class Messages extends Component {
           : null;
       };
 
-      const renderMessage = (message:any, index:number) => (
+      const renderMessage = (message: any, index: number) => (
         <div className={`rw-message ${profileAvatar && 'rw-with-avatar'}`} key={index}>
           {
             profileAvatar &&
@@ -124,7 +124,7 @@ class Messages extends Component {
         </div>
       );
 
-      messages.forEach((msg:any, index:number) => {
+      messages.forEach((msg: any, index: number) => {
         if (msg.get('hidden')) return;
         if (group === null || group.from !== msg.get('sender')) {
           if (group !== null) groups.push(group);
@@ -146,18 +146,18 @@ class Messages extends Component {
         </div>
       ));
     };
-    const { conversationBackgroundColor, assistBackgoundColor }:any = this.context;
+    const { conversationBackgroundColor, assistBackgoundColor }: any = this.context;
 
     return (
       <div id="rw-messages" style={{ backgroundColor: conversationBackgroundColor }} className="rw-messages-container">
-        { renderMessages() }
+        {renderMessages()}
         {displayTypingIndication && (
           <div className={`rw-message rw-typing-indication ${profileAvatar && 'rw-with-avatar'}`}>
             {
               profileAvatar &&
               <img src={profileAvatar} className="rw-avatar" alt="profile" />
             }
-            <div style={{ backgroundColor: assistBackgoundColor }}className="rw-response">
+            <div style={{ backgroundColor: assistBackgoundColor }} className="rw-response">
               <div id="wave">
                 <span className="rw-dot" />
                 <span className="rw-dot" />
@@ -183,7 +183,7 @@ Message.defaultTypes = {
   displayTypingIndication: false
 };
 
-export default connect(store => ({
+export default connect((store: any) => ({
   messages: store.messages,
   displayTypingIndication: store.behavior.get('messageDelayed')
-}))(Messages);
+}))(Messages as any);

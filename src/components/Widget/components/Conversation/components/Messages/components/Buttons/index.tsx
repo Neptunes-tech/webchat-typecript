@@ -10,7 +10,7 @@ import ThemeContext from '../../../../../../ThemeContext';
 
 
 class Buttons extends PureComponent {
-  static propTypes: { src: PropTypes.Validator<string>; };
+  static propTypes: { getChosenReply: PropTypes.Validator<string>; };
   constructor(props: any) {
     super(props);
     this.handleClick = this.handleClick.bind(this);
@@ -40,7 +40,7 @@ class Buttons extends PureComponent {
     chooseReply(payload, title, id);
   }
 
-  renderButtons(message:any, buttons: any, persit: any) {
+  renderButtons(message: any, buttons: any, persit: any) {
     const { isLast, linkTarget, separateButtons
     }: any = this.props;
     const { userTextColor, userBackgroundColor }: any = this.context;
@@ -51,7 +51,7 @@ class Buttons extends PureComponent {
     };
     return (
       <div>
-        <Message message={message} />
+        <Message /* message={message} */ />
         {separateButtons && (<div className="rw-separator" />)}
         {(isLast || persit) && (
           <div className="rw-replies">
@@ -92,37 +92,33 @@ class Buttons extends PureComponent {
 
 
   render() {
-    const {
-      message,
-      getChosenReply,
-      id
-    }: any = this.props;
+    const { message, getChosenReply, id }: any = this.props;
     const chosenReply = getChosenReply(id);
     if (message.get('quick_replies') !== undefined) {
       const buttons = message.get('quick_replies');
       if (chosenReply) {
-        return <Message message={message} />;
+        return <Message /* message={message} */ />;
       }
       return this.renderButtons(message, buttons, false);
     } else if (message.get('buttons') !== undefined) {
       const buttons = message.get('buttons');
       return this.renderButtons(message, buttons, true);
     }
-    return <Message message={message} />;
+    return <Message /* message={message} */ />;
   }
 }
 
 Buttons.contextType = ThemeContext;
 
-const mapStateToProps = (state:any) => ({
-  getChosenReply: (id:any) => state.messages.get(id).get('chosenReply'),
+const mapStateToProps = (state: any) => ({
+  getChosenReply: (id: any) => state.messages.get(id).get('chosenReply'),
   inputState: state.behavior.get('disabledInput'),
   linkTarget: state.metadata.get('linkTarget')
 });
 
-const mapDispatchToProps = (dispatch:any) => ({
+const mapDispatchToProps = (dispatch: any) => ({
   toggleInputDisabled: () => dispatch(toggleInputDisabled(null)),
-  chooseReply: (payload:any, title:any, id:any) => {
+  chooseReply: (payload: any, title: any, id: any) => {
     dispatch(setButtons(id, title));
     dispatch(addUserMessage(title));
     dispatch(emitUserMessage(payload));
@@ -130,13 +126,13 @@ const mapDispatchToProps = (dispatch:any) => ({
   }
 });
 
-Buttons.propTypes = {
-  getChosenReply: PropTypes.func,
-  chooseReply: PropTypes.func,
-  id: PropTypes.number,
-  isLast: PropTypes.bool,
-  message: PROP_TYPES.BUTTONS,
-  linkTarget: PropTypes.string
-};
+// Buttons.propTypes = {
+//   getChosenReply: PropTypes.func,
+//   chooseReply: PropTypes.func,
+//   id: PropTypes.number,
+//   isLast: PropTypes.bool,
+//   message: PROP_TYPES.BUTTONS,
+//   linkTarget: PropTypes.string
+// };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Buttons);
+export default connect(mapStateToProps, mapDispatchToProps)(Buttons as any);

@@ -80,7 +80,7 @@ class Widget extends Component {
         styleNode.innerHTML = defaultHighlightAnimation;
         document.body.appendChild(styleNode);
 
-        this.intervalId = setInterval(() => dispatch(evalUrl(window.location.href)), 500);
+        (this as any).intervalId = setInterval(() => dispatch(evalUrl(window.location.href)), 500);
         if (tooltipText && !tooltipDismissed) {
             dispatch(showTooltip(true));
         }
@@ -129,7 +129,7 @@ class Widget extends Component {
             socket.close();
         }
         clearTimeout(this.tooltipTimeout);
-        clearInterval(this.intervalId);
+        clearInterval((this as any).intervalId);
     }
 
     getSessionId() {
@@ -190,7 +190,7 @@ class Widget extends Component {
             this.newMessageTimeout(message);
         } else {
 
-            this.messages.push(message);
+            (this as any).messages.push(message);
         }
     }
 
@@ -206,7 +206,7 @@ class Widget extends Component {
     newMessageTimeout(message: any) {
         const { dispatch, customMessageDelay }: any = this.props;
         this.delayedMessage = message;
-        this.messageDelayTimeout = setTimeout(() => {
+        (this as any).messageDelayTimeout = setTimeout(() => {
             this.dispatchMessage(message);
             this.delayedMessage = null;
             this.applyCustomStyle();
@@ -457,7 +457,7 @@ class Widget extends Component {
                     }
                 }
                 if (connectOn === 'mount' && tooltipPayload) {
-                    this.tooltipTimeout = setTimeout(() => {
+                    (this as any).tooltipTimeout = setTimeout(() => {
                         this.trySendTooltipPayload();
                     }, parseInt(tooltipDelay, 10));
                 }
@@ -539,7 +539,7 @@ class Widget extends Component {
         const { isChatOpen, dispatch, disableTooltips }:any = this.props;
         if (isChatOpen && this.delayedMessage) {
             if (!disableTooltips) dispatch(showTooltip(true));
-            clearTimeout(this.messageDelayTimeout);
+            clearTimeout((this as any).messageDelayTimeout);
             this.dispatchMessage(this.delayedMessage);
             dispatch(newUnreadMessage());
             this.onGoingMessageDelay = false;
@@ -553,14 +553,14 @@ class Widget extends Component {
             this.messages = [];
             this.delayedMessage = null;
         } else {
-            this.props.dispatch(showTooltip(false));
+            (this as any).props.dispatch(showTooltip(false));
         }
         clearTimeout(this.tooltipTimeout);
         dispatch(toggleChat());
     }
 
     toggleFullScreen() {
-        this.props.dispatch(toggleFullScreen());
+        (this as any).props.dispatch(toggleFullScreen());
     }
 
     dispatchMessage(message:any) {
@@ -570,14 +570,14 @@ class Widget extends Component {
         const { customCss, ...messageClean } = message;
 
         if (isText(messageClean)) {
-            this.props.dispatch(addResponseMessage(messageClean.text));
+            (this as any).props.dispatch(addResponseMessage(messageClean.text));
         } else if (isButtons(messageClean)) {
-            this.props.dispatch(addButtons(messageClean));
+            (this as any).props.dispatch(addButtons(messageClean));
         } else if (isCarousel(messageClean)) {
-            this.props.dispatch(addCarousel(messageClean));
+            (this as any).props.dispatch(addCarousel(messageClean));
         } else if (isVideo(messageClean)) {
             const element = messageClean.attachment.payload;
-            this.props.dispatch(
+            (this as any).props.dispatch(
                 addVideoSnippet({
                     title: element.title,
                     video: element.src,
@@ -585,7 +585,7 @@ class Widget extends Component {
             );
         } else if (isImage(messageClean)) {
             const element = messageClean.attachment.payload;
-            this.props.dispatch(
+            (this as any).props.dispatch(
                 addImageSnippet({
                     title: element.title,
                     image: element.src,
@@ -594,20 +594,20 @@ class Widget extends Component {
         } else {
             // some custom message
             const props = messageClean;
-            if (this.props.customComponent) {
-                this.props.dispatch(renderCustomComponent(this.props.customComponent, props, true));
+            if ((this as any).props.customComponent) {
+                (this as any).props.dispatch(renderCustomComponent((this as any).props.customComponent, props, true));
             }
         }
         if (customCss) {
-            this.props.dispatch(setCustomCss(message.customCss));
+            (this as any).props.dispatch(setCustomCss(message.customCss));
         }
     }
 
     handleMessageSubmit(message:any) {
         const userUttered = message;
         if (userUttered) {
-            this.props.dispatch(addUserMessage(userUttered));
-            this.props.dispatch(emitUserMessage(userUttered));
+            (this as any).props.dispatch(addUserMessage(userUttered));
+            (this as any).props.dispatch(emitUserMessage(userUttered));
         }
     }
 
@@ -617,34 +617,34 @@ class Widget extends Component {
                 toggleChat={() => this.toggleConversation()}
                 toggleFullScreen={() => this.toggleFullScreen()}
                 onSendMessage={(message) => this.handleMessageSubmit(message)}
-                title={this.props.title}
-                subtitle={this.props.subtitle}
-                titleImage={this.props.titleImage}
-                customData={this.props.customData}
-                profileAvatar={this.props.profileAvatar}
-                showCloseButton={this.props.showCloseButton}
-                showFullScreenButton={this.props.showFullScreenButton}
-                hideWhenNotConnected={this.props.hideWhenNotConnected}
-                fullScreenMode={this.props.fullScreenMode}
-                isChatOpen={this.props.isChatOpen}
-                isChatVisible={this.props.isChatVisible}
-                badge={this.props.badge}
-                chatIndicator={this.props.chatIndicator}
-                tooltipDisabled={this.props.tooltipDisabled}
-                embedded={this.props.embedded}
-                params={this.props.params}
-                openLauncherImage={this.props.openLauncherImage}
-                inputTextFieldHint={this.props.inputTextFieldHint}
-                closeImage={this.props.closeImage}
-                customComponent={this.props.customComponent}
-                displayUnreadCount={this.props.displayUnreadCount}
-                showMessageDate={this.props.showMessageDate}
-                tooltipHeader={this.props.tooltipHeader}
-                tooltipText={this.props.tooltipText}
-                tooltipSuggestions={this.props.tooltipSuggestions}
-                tooltipPayload={this.props.tooltipPayload}
-                iconSpinFrequence={this.props.iconSpinFrequence}
-                iconSpinNoTooltip={this.props.iconSpinNoTooltip}
+                title={(this as any).props.title}
+                subtitle={(this as any).props.subtitle}
+                titleImage={(this as any).props.titleImage}
+                customData={(this as any).props.customData}
+                profileAvatar={(this as any).props.profileAvatar}
+                showCloseButton={(this as any).props.showCloseButton}
+                showFullScreenButton={(this as any).props.showFullScreenButton}
+                hideWhenNotConnected={(this as any).props.hideWhenNotConnected}
+                fullScreenMode={(this as any).props.fullScreenMode}
+                isChatOpen={(this as any).props.isChatOpen}
+                isChatVisible={(this as any).props.isChatVisible}
+                badge={(this as any).props.badge}
+                chatIndicator={(this as any).props.chatIndicator}
+                tooltipDisabled={(this as any).props.tooltipDisabled}
+                embedded={(this as any).props.embedded}
+                params={(this as any).props.params}
+                openLauncherImage={(this as any).props.openLauncherImage}
+                inputTextFieldHint={(this as any).props.inputTextFieldHint}
+                closeImage={(this as any).props.closeImage}
+                customComponent={(this as any).props.customComponent}
+                displayUnreadCount={(this as any).props.displayUnreadCount}
+                showMessageDate={(this as any).props.showMessageDate}
+                tooltipHeader={(this as any).props.tooltipHeader}
+                tooltipText={(this as any).props.tooltipText}
+                tooltipSuggestions={(this as any).props.tooltipSuggestions}
+                tooltipPayload={(this as any).props.tooltipPayload}
+                iconSpinFrequence={(this as any).props.iconSpinFrequence}
+                iconSpinNoTooltip={(this as any).props.iconSpinNoTooltip}
             />
         );
     }
@@ -748,4 +748,4 @@ Widget.defaultProps = {
   }`,
 };
 
-export default connect(mapStateToProps, null, null, { forwardRef: true })(Widget);
+export default connect(mapStateToProps, null, null, { forwardRef: true })(Widget as any);

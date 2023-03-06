@@ -8,7 +8,7 @@ class DocViewer extends Component {
   static propTypes: { src: PropTypes.Validator<string>; };
   iframe: any;
   constructor() {
-    super();
+    super(null as any,null as any);
     this.iframeLoaded = this.iframeLoaded.bind(this);
     this.updateIframeSrc = this.updateIframeSrc.bind(this);
     this.handleOpenModal = this.handleOpenModal.bind(this);
@@ -24,7 +24,7 @@ class DocViewer extends Component {
   }
 
   iframeLoaded() {
-    clearInterval(this.iframeTimeoutId);
+    clearInterval((this as any).iframeTimeoutId);
     this.setState({ iFrameLoading: false });
   }
   iframeTimeoutId(iframeTimeoutId: any) {
@@ -37,12 +37,12 @@ class DocViewer extends Component {
 
   updateIframeSrc() {
     if (this.iframe) this.iframe.src = this.getIframeLink();
-    else clearInterval(this.iframeTimeoutId);
+    else clearInterval((this as any).iframeTimeoutId);
   }
 
   handleOpenModal() {
     this.setState({ openedModal: true });
-    this.iframeTimeoutId = setInterval(this.updateIframeSrc, 1000 * 4);
+    (this as any).iframeTimeoutId = setInterval(this.updateIframeSrc, 1000 * 4);
   }
 
   handleCloseModal() {
@@ -55,14 +55,14 @@ class DocViewer extends Component {
     return (
       <span>
         <button onClick={this.handleOpenModal} className="rw-doc-viewer-open-modal-link">
-          {this.props.children}
+          {(this as any).props.children}
         </button>
-        {this.state.openedModal && (
+        {(this as any).state.openedModal && (
           <Portal>
             <div className="rw-doc-viewer-modal-fade" aria-hidden="true" onClick={this.handleCloseModal} />
             <div className="rw-doc-viewer-modal">
               <div className="rw-doc-viewer-modal-body">
-                {this.state.iFrameLoading && <div className="rw-doc-viewer-spinner" />}
+                {(this as any).state.iFrameLoading && <div className="rw-doc-viewer-spinner" />}
                 <iframe
                   src={iframeSrc}
                   title="viewer"
