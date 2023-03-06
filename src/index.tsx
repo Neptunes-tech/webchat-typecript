@@ -9,11 +9,6 @@ import socket from './socket';
 import ThemeContext from './components/Widget/ThemeContext';
 // eslint-disable-next-line import/no-mutable-exports
 
-interface valObj {
-    event: any,
-    callback: any
-}
-
 const ConnectedWidget = forwardRef((props: any, ref: any) => {
     class Socket {
         url: any;

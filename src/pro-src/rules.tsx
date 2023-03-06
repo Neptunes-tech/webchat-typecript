@@ -142,7 +142,7 @@ export default class RulesHandler {
         this.verifyConditions(rules);
       } else {
         this.timeoutIds.push(
-          setTimeout<[]>(
+          setTimeout(
             () => (window as any)[RULES_HANDLER_SINGLETON].verifyConditions(rules):()=>void,
             (trigger.timeOnPage * 1000):number
           )
