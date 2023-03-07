@@ -9,7 +9,7 @@ import socket from './socket';
 import ThemeContext from './components/Widget/ThemeContext';
 // eslint-disable-next-line import/no-mutable-exports
 
-const ConnectedWidget = forwardRef((props: any, ref: any) => {
+const ConnectedWidget = forwardRef((props: any, ref) => {
     class Socket {
         url: any;
         customData: any;
@@ -44,7 +44,7 @@ const ConnectedWidget = forwardRef((props: any, ref: any) => {
         on(event: any, callback: any) {
             if (!this.socket) {
 
-                this.onEvents.push({ event, callback })
+                (this as any).onEvents.push({ event, callback })
             } else {
                 (this as any).socket.on(event, callback);
             }
