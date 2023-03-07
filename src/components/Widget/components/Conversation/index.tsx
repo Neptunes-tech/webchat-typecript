@@ -60,4 +60,4 @@ Conversation.propTypes = {
     showMessageDate: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
 };
 
-export default Conversation;
+export default (Conversation as any);

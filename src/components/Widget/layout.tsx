@@ -6,7 +6,7 @@ import Conversation from './components/Conversation';
 import Launcher from './components/Launcher';
 import './style.scss';
 
-const WidgetLayout = (props:any) => {
+const WidgetLayout = (props: any) => {
     const classes = props.embedded ? ['rw-widget-embedded'] : ['rw-widget-container'];
     if (props.fullScreenMode) {
         classes.push('rw-full-screen');
@@ -68,7 +68,7 @@ const WidgetLayout = (props:any) => {
     ) : null;
 };
 
-const mapStateToProps = (state:any) => ({
+const mapStateToProps = (state: any) => ({
     isChatVisible: state.behavior.get('isChatVisible'),
     isChatOpen: state.behavior.get('isChatOpen'),
     disabledInput: state.behavior.get('disabledInput'),
@@ -112,4 +112,4 @@ WidgetLayout.propTypes = {
     iconSpinNoTooltip: PropTypes.bool,
 };
 
-export default connect(mapStateToProps)(WidgetLayout);
+export default connect(mapStateToProps)(WidgetLayout as any);

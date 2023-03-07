@@ -36,17 +36,26 @@ export default class RulesHandler {
     this.lastLocationChange = Date.now();
 
     // Here we supersede those events to all redirect them to our custom event
+
+    // on(eventName:string, callback) {
+    //   this.socket.on(eventName, (...args) => {
+    //     this.$rootScope.$apply(() => {
+    //       callback.apply(this.socket, args);
+    //     });
+    //   });
+    // }
     window.history.pushState = (f =>
-      () => {
-        const ret = f.apply(this, arguments);
+      (...args) => {
+        // changes
+        const ret = f.apply(this, args);
         window.dispatchEvent(new Event('pushstate'));
         window.dispatchEvent(new Event('locationchange'));
         return ret;
       })(window.history.pushState);
 
     window.history.replaceState = (f =>
-      () => {
-        const ret = f.apply(this, arguments);
+      (...args) => {
+        const ret = f.apply(this, args);
         window.dispatchEvent(new Event('replacestate'));
         window.dispatchEvent(new Event('locationchange'));
         return ret;
@@ -129,7 +138,7 @@ export default class RulesHandler {
 
       if (trigger.eventListeners) {
         if (trigger.timeOnPage) {
-          this.timeoutIds.push(
+          (this as any).timeoutIds.push(
             setTimeout(() => (window as any)[RULES_HANDLER_SINGLETON].initEventHandler(rules),trigger.timeOnPage * 1000)
           );
         } else {
@@ -139,12 +148,12 @@ export default class RulesHandler {
         return;
       }
       if (!trigger.timeOnPage) {
-        this.verifyConditions(rules);
+        (this as any).verifyConditions(rules);
       } else {
-        this.timeoutIds.push(
+        (this as any).timeoutIds.push(
           setTimeout(
-            () => (window as any)[RULES_HANDLER_SINGLETON].verifyConditions(rules):()=>void,
-            (trigger.timeOnPage * 1000):number
+            () => (window as any)[RULES_HANDLER_SINGLETON].verifyConditions(rules),
+            (trigger.timeOnPage * 1000)
           )
         );
       }
@@ -205,10 +214,10 @@ export default class RulesHandler {
 
     const timeoutId = Math.random();
 
-    this.resetListenersTimeouts.push({
+    (this as any).resetListenersTimeouts.push({
       timeout: setTimeout(() => {
         // this removes the timeout that just triggered.
-        window[RULES_HANDLER_SINGLETON].resetListenersTimeouts = (window as any)[RULES_HANDLER_SINGLETON]
+        (window as any)[RULES_HANDLER_SINGLETON].resetListenersTimeouts = (window as any)[RULES_HANDLER_SINGLETON]
           .resetListenersTimeouts.filter((timeout: { id: number; }) => timeout.id !== timeoutId);
 
         RulesHandler.removeEventListeners(eventListenersForThisTrigger);

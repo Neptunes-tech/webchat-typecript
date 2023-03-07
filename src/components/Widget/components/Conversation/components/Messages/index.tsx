@@ -48,7 +48,7 @@ class Messages extends Component {
     const { customComponent }: any = this.props;
 
 
-    const ComponentToRender = (() => {
+    const ComponentToRender: any = (() => {
       switch (message.get('type')) {
         case MESSAGES_TYPES.TEXT: {
           return Message;
@@ -171,13 +171,13 @@ class Messages extends Component {
   }
 }
 Messages.contextType = ThemeContext;
-Messages.propTypes = {
-  messages: ImmutablePropTypes.listOf(ImmutablePropTypes.map),
-  profileAvatar: PropTypes.string,
-  customComponent: PropTypes.func,
-  showMessageDate: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
-  displayTypingIndication: PropTypes.bool
-};
+// Messages.propTypes = {
+//   messages: ImmutablePropTypes.listOf(ImmutablePropTypes.map),
+//   profileAvatar: PropTypes.string,
+//   customComponent: PropTypes.func,
+//   showMessageDate: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
+//   displayTypingIndication: PropTypes.bool
+// };
 
 Message.defaultTypes = {
   displayTypingIndication: false

@@ -88,9 +88,10 @@ const Launcher = ({
         ],
         placement: (domHighlight && domHighlight.get('tooltipPlacement')) || 'auto',
     });
-    let tooltipMessage = new Map<any, any>();
+    
+    let tooltipMessage = /* new */ Map();
     if (tooltipText) {
-        tooltipMessage = new Map<any, any>({
+        tooltipMessage =/* new */  Map({
             any: MESSAGES_TYPES.TEXT,
             sender: 'response',
             text: tooltipText,
@@ -128,7 +129,7 @@ const Launcher = ({
         infinite: false,
         adaptiveHeight: true,
     };
-    const lastMessage = lastMessages ? lastMessages.slice(-1)[0] : new Map();
+    const lastMessage = lastMessages ? lastMessages.slice(-1)[0] : /* new */ Map();
     // This is used to distinguish bw drag and click events in the tooltips sequences.
     const dragStatus = useRef({
         x: 0,
@@ -139,7 +140,7 @@ const Launcher = ({
     if (fullScreenMode && isChatOpen) className.push('rw-full-screen rw-hide');
 
     const getComponentToRender = (message: any, buttonSeparator = false) => {
-        const ComponentToRender = (() => {
+        const ComponentToRender:any = (() => {
             switch (message.get('type')) {
                 case MESSAGES_TYPES.TEXT: {
                     return Message;
@@ -387,4 +388,4 @@ const mapDispatchToProps = (dispatch: any) => ({
     sendPayload: (payload: any) => dispatch(emitUserMessage(payload)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Launcher);
+export default connect(mapStateToProps, mapDispatchToProps)(Launcher as any);

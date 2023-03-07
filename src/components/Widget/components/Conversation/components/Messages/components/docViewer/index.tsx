@@ -20,7 +20,7 @@ class DocViewer extends Component {
   }
 
   getIframeLink() {
-    return `https://docs.google.com/viewer?url=${this.props.src}&embedded=true`;
+    return `https://docs.google.com/viewer?url=${(this as any).props.src}&embedded=true`;
   }
 
   iframeLoaded() {
@@ -91,4 +91,4 @@ DocViewer.propTypes = {
   src: PropTypes.string.isRequired
 };
 
-export default DocViewer;
+export default (DocViewer as any);

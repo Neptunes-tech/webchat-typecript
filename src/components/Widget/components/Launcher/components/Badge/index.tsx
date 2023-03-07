@@ -11,4 +11,4 @@ Badge.propTypes = {
   badge: PropTypes.number
 };
 
-export default Badge;
+export default (Badge as any);

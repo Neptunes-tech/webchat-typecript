@@ -60,7 +60,7 @@ class Message extends PureComponent {
                             components={{
                                 a: (props) =>
                                     docViewer ? (
-                                        <DocViewer src={(props).href}>{props.children}</DocViewer>
+                                        <DocViewer src={props.href}>{props.children}</DocViewer>
                                     ) : (
                                         <a
                                             href={props.href}

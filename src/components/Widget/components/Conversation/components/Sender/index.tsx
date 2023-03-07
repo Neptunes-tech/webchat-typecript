@@ -8,7 +8,7 @@ import './style.scss';
 
 const Sender = ({ sendMessage, inputTextFieldHint, disabledInput, userInput }:any) => {
     const [inputValue, setInputValue] = useState('');
-    const formRef = useRef('');
+    const formRef:any = useRef('');
     function handleChange(e:any) {
         setInputValue(e.target.value);
     }
@@ -34,7 +34,7 @@ const Sender = ({ sendMessage, inputTextFieldHint, disabledInput, userInput }:an
     ) : (
         <form ref={formRef} className="rw-sender" onSubmit={handleSubmit}>
             <TextareaAutosize
-                type="text"
+                // type="text"
                 minRows={1}
                 onKeyDown={onEnterPress}
                 maxRows={3}
@@ -53,9 +53,9 @@ const Sender = ({ sendMessage, inputTextFieldHint, disabledInput, userInput }:an
                 disabled={!(inputValue && inputValue.length > 0)}
             >
                 <Send
-                    className="rw-send-icon"
+                    // className="rw-send-icon"
                     ready={!!(inputValue && inputValue.length > 0)}
-                    alt="send"
+                    // alt="send"
                 />
             </button>
         </form>

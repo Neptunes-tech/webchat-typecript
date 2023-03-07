@@ -9,7 +9,7 @@ import socket from './socket';
 import ThemeContext from './components/Widget/ThemeContext';
 // eslint-disable-next-line import/no-mutable-exports
 
-const ConnectedWidget = forwardRef((props: any, ref) => {
+const ConnectedWidget = forwardRef((props: any, ref:any) => {
     class Socket {
         url: any;
         customData: any;

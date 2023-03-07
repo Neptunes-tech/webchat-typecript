@@ -616,7 +616,7 @@ class Widget extends Component {
             <WidgetLayout
                 toggleChat={() => this.toggleConversation()}
                 toggleFullScreen={() => this.toggleFullScreen()}
-                onSendMessage={(message) => this.handleMessageSubmit(message)}
+                onSendMessage={(message:any) => this.handleMessageSubmit(message)}
                 title={(this as any).props.title}
                 subtitle={(this as any).props.subtitle}
                 titleImage={(this as any).props.titleImage}
