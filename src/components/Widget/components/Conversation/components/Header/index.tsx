@@ -21,11 +21,11 @@ const Header = ({
   connectingText,
   closeImage,
   profileAvatar
-}:any) => {
+}: any) => {
   const { mainColor } = useContext(ThemeContext);
   return (
     <div className="rw-header-and-loading">
-      <div style={{ backgroundColor: mainColor }}className={`rw-header ${subtitle ? 'rw-with-subtitle' : ''}`}>
+      <div style={{ backgroundColor: mainColor }} className={`rw-header ${subtitle ? 'rw-with-subtitle' : ''}`}>
         {
           profileAvatar && (
             <img src={profileAvatar} className="rw-avatar" alt="chat avatar" />
@@ -53,12 +53,12 @@ const Header = ({
             </button>
           }
         </div>
-        {titleImage && <img src={titleImage} style={{margin: '20px'}} />}
+        {titleImage && <img src={titleImage} style={{ margin: '20px' }} />}
         {!titleImage && <>
           <h4 className={`rw-title ${profileAvatar && 'rw-with-avatar'}`}>{title}</h4>
           {subtitle && <ReactMarkdown className={`rw-markdown subtitle-markdown ${profileAvatar && 'rw-with-avatar'}`}>{subtitle}</ReactMarkdown>}
         </>}
-        </div>
+      </div>
       {
         !connected &&
         <span className="rw-loading">
@@ -68,19 +68,19 @@ const Header = ({
     </div>);
 };
 
-Header.propTypes = {
-  title: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
-  subtitle: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
-  titleImage: PropTypes.string,
-  fullScreenMode: PropTypes.bool,
-  toggleFullScreen: PropTypes.func,
-  toggleChat: PropTypes.func,
-  showCloseButton: PropTypes.bool,
-  showFullScreenButton: PropTypes.bool,
-  connected: PropTypes.bool,
-  connectingText: PropTypes.string,
-  closeImage: PropTypes.string,
-  profileAvatar: PropTypes.string
-};
+// Header.propTypes = {
+//   title: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+//   subtitle: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+//   titleImage: PropTypes.string,
+//   fullScreenMode: PropTypes.bool,
+//   toggleFullScreen: PropTypes.func,
+//   toggleChat: PropTypes.func,
+//   showCloseButton: PropTypes.bool,
+//   showFullScreenButton: PropTypes.bool,
+//   connected: PropTypes.bool,
+//   connectingText: PropTypes.string,
+//   closeImage: PropTypes.string,
+//   profileAvatar: PropTypes.string
+// };
 
 export default Header;

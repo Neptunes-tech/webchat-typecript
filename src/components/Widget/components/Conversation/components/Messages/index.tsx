@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect, useContext } from 'react';
+import { useSelector } from 'react-redux'
 import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { connect } from 'react-redux';
@@ -29,23 +30,29 @@ const scrollToBottom = () => {
   }
 };
 
-class Messages extends Component {
-  // static propTypes: { src: PropTypes.Validator<string>; };
-  static propTypes: { message: Requireable<any>; docViewer: PropTypes.Requireable<boolean>; linkTarget: PropTypes.Requireable<string>; };
+interface MessagesProps {
+  profileAvatar?: string;
+  customComponent(): any;
+  showMessageDate?: boolean | any;
+  params?: any
+}
 
-  static defaultTypes: { displayTypingIndication: boolean };
 
-  componentDidMount() {
-    scrollToBottom();
-  }
+const Messages = (props: MessagesProps) => {
+  const messages: any = useSelector((store: any): any => store.messages)
+  const displayTypingIndication: boolean = useSelector((store: any): boolean => store.displayTypingIndication) || false
 
-  componentDidUpdate() {
-    scrollToBottom();
-  }
+  useEffect(() => {
+    scrollToBottom()
+  }, [])
 
-  getComponentToRender = (message: any, index: number, isLast: any) => {
-    const { params }: any = this.props;
-    const { customComponent }: any = this.props;
+  useEffect(() => {
+    scrollToBottom()
+  }, [])
+
+  const getComponentToRender = (message: any, index: number, isLast: any) => {
+    const { params }: any = props
+    const { customComponent } = props;
 
 
     const ComponentToRender: any = (() => {
@@ -74,6 +81,7 @@ class Messages extends Component {
           return null;
       }
     })();
+
     if (message.get('type') === 'component') {
       const messageProps = message.get('props');
       return (<ComponentToRender
@@ -85,105 +93,86 @@ class Messages extends Component {
     return <ComponentToRender id={index} params={params} message={message} isLast={isLast} />;
   }
 
-  render() {
-    const { displayTypingIndication, profileAvatar }: any = this.props;
+  const { profileAvatar }: any = props;
 
-    const renderMessages = () => {
-      const {
-        messages,
-        showMessageDate
-      }: any = this.props;
+  const renderMessages = () => {
+    const { showMessageDate }: any = props;
 
-      if (messages.isEmpty()) return null;
+    if (messages.isEmpty()) return null;
 
-      const groups = [];
-      let group: any = null;
+    const groups = [];
+    let group: any = null;
 
-      const dateRenderer = typeof showMessageDate === 'function' ? showMessageDate :
-        showMessageDate === true ? formatDate : null;
+    const dateRenderer = typeof showMessageDate === 'function' ? showMessageDate :
+      showMessageDate === true ? formatDate : null;
 
-      const renderMessageDate = (message: any) => {
-        const timestamp = message.get('timestamp');
+    const renderMessageDate = (message: any) => {
+      const timestamp = message.get('timestamp');
 
-        if (!dateRenderer || !timestamp) return null;
-        const dateToRender = dateRenderer(message.get('timestamp', message));
-        return dateToRender
-          ? <span className="rw-message-date">{dateRenderer(message.get('timestamp'), message)}</span>
-          : null;
-      };
-
-      const renderMessage = (message: any, index: number) => (
-        <div className={`rw-message ${profileAvatar && 'rw-with-avatar'}`} key={index}>
-          {
-            profileAvatar &&
-            message.get('showAvatar') &&
-            <img src={profileAvatar} className="rw-avatar" alt="profile" />
-          }
-          {this.getComponentToRender(message, index, index === messages.size - 1)}
-          {renderMessageDate(message)}
-        </div>
-      );
-
-      messages.forEach((msg: any, index: number) => {
-        if (msg.get('hidden')) return;
-        if (group === null || group.from !== msg.get('sender')) {
-          if (group !== null) groups.push(group);
-
-          group = {
-            from: msg.get('sender'),
-            messages: []
-          };
-        }
-
-        group.messages.push(renderMessage(msg, index));
-      });
-
-      groups.push(group); // finally push last group of messages.
-
-      return groups.map((g, index) => (
-        <div className={`rw-group-message rw-from-${g && g.from}`} key={`group_${index}`}>
-          {g.messages}
-        </div>
-      ));
+      if (!dateRenderer || !timestamp) return null;
+      const dateToRender = dateRenderer(message.get('timestamp', message));
+      return dateToRender
+        ? <span className="rw-message-date">{dateRenderer(message.get('timestamp'), message)}</span>
+        : null;
     };
-    const { conversationBackgroundColor, assistBackgoundColor }: any = this.context;
 
-    return (
-      <div id="rw-messages" style={{ backgroundColor: conversationBackgroundColor }} className="rw-messages-container">
-        {renderMessages()}
-        {displayTypingIndication && (
-          <div className={`rw-message rw-typing-indication ${profileAvatar && 'rw-with-avatar'}`}>
-            {
-              profileAvatar &&
-              <img src={profileAvatar} className="rw-avatar" alt="profile" />
-            }
-            <div style={{ backgroundColor: assistBackgoundColor }} className="rw-response">
-              <div id="wave">
-                <span className="rw-dot" />
-                <span className="rw-dot" />
-                <span className="rw-dot" />
-              </div>
-            </div>
-          </div>
-        )}
+    const renderMessage = (message: any, index: number) => (
+      <div className={`rw-message ${profileAvatar && 'rw-with-avatar'}`} key={index}>
+        {
+          profileAvatar &&
+          message.get('showAvatar') &&
+          <img src={profileAvatar} className="rw-avatar" alt="profile" />
+        }
+        {getComponentToRender(message, index, index === messages.size - 1)}
+        {renderMessageDate(message)}
       </div>
     );
-  }
+
+    messages.forEach((msg: any, index: number) => {
+      if (msg.get('hidden')) return;
+      if (group === null || group.from !== msg.get('sender')) {
+        if (group !== null) groups.push(group);
+
+        group = {
+          from: msg.get('sender'),
+          messages: []
+        };
+      }
+
+      group.messages.push(renderMessage(msg, index));
+    });
+
+    groups.push(group); // finally push last group of messages.
+
+    return groups.map((g, index) => (
+      <div className={`rw-group-message rw-from-${g && g.from}`} key={`group_${index}`}>
+        {g.messages}
+      </div>
+    ));
+  };
+
+  const { conversationBackgroundColor, assistBackgoundColor }: any = useContext(ThemeContext);
+
+  return (
+    <div id="rw-messages" style={{ backgroundColor: conversationBackgroundColor }} className="rw-messages-container">
+      {renderMessages()}
+      {displayTypingIndication && (
+        <div className={`rw-message rw-typing-indication ${profileAvatar && 'rw-with-avatar'}`}>
+          {
+            profileAvatar &&
+            <img src={profileAvatar} className="rw-avatar" alt="profile" />
+          }
+          <div style={{ backgroundColor: assistBackgoundColor }} className="rw-response">
+            <div id="wave">
+              <span className="rw-dot" />
+              <span className="rw-dot" />
+              <span className="rw-dot" />
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
-Messages.contextType = ThemeContext;
-// Messages.propTypes = {
-//   messages: ImmutablePropTypes.listOf(ImmutablePropTypes.map),
-//   profileAvatar: PropTypes.string,
-//   customComponent: PropTypes.func,
-//   showMessageDate: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
-//   displayTypingIndication: PropTypes.bool
-// };
 
-Message.defaultTypes = {
-  displayTypingIndication: false
-};
-
-export default connect((store: any) => ({
-  messages: store.messages,
-  displayTypingIndication: store.behavior.get('messageDelayed')
-}))(Messages as any);
+export default (Messages as any)
