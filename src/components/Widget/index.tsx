@@ -1,6 +1,5 @@
-import ImmutablePropTypes from 'react-immutable-proptypes';
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { useEffect, useState } from 'react'
+import { connect, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
     toggleFullScreen,
@@ -39,109 +38,67 @@ import { isVideo, isImage, isButtons, isText, isCarousel } from './msgProcessor'
 import WidgetLayout from './layout';
 import { storeLocalSession, getLocalSession } from '../../store/reducers/helper';
 
-class Widget extends Component {
-    eventListenerCleaner: () => void;
-    intervalId: null;
-    onGoingMessageDelay: boolean;
-    messageDelayTimeout: null;
-    delayedMessage: null;
-    messages: never[];
-    tooltipTimeout: string | number  | undefined;
-    static defaultProps: {
-        isChatOpen: boolean; isChatVisible: boolean; fullScreenMode: boolean; connectOn: string; autoClearCache: boolean; displayUnreadCount: boolean; tooltipHeader: null; tooltipText: string; tooltipSuggestions: null; tooltipPayload: null; iconSpinFrequence: number; iconSpinNoTooltip: boolean; inputTextFieldHint: string; oldUrl: string; disableTooltips: boolean; defaultHighlightClassname: string; defaultHighlightCss: string;
-        // unfortunately it looks like outline-style is not an animatable property on Safari
-        defaultHighlightAnimation: string;
-    };
-    constructor(props: any) {
-        super(props);
-        this.messages = [];
-        this.delayedMessage = null;
-        this.messageDelayTimeout = null;
-        this.onGoingMessageDelay = false;
-        this.sendMessage = this.sendMessage.bind(this);
-        this.getSessionId = this.getSessionId.bind(this);
-        this.intervalId = null;
-        this.eventListenerCleaner = () => { };
-    }
+const Widget = (props: any) => {
+    const messagess = useSelector((state: any) => state.messages)
 
-    componentDidMount() {
-        const {
-            connectOn,
-            autoClearCache,
-            storage,
-            dispatch,
-            defaultHighlightAnimation,
-            tooltipText,
-            tooltipDismissed,
-        }: any = this.props;
+    const [onGoingMessageDelay, setOnGoingMessageDelay] = useState(false)
+    const [delayedMessage, setDelayedMessage] = useState(null)
+    const [messageDelayTimeout, setMessageDelayTimeout] = useState<any>(null)
+    const [tooltipTimeout, setTooltipTimeout] = useState<number | string>(0)
+    const [messages, setMessages] = useState(messagess)
+    const initialized = useSelector((state: any) => state.behavior.get('initialized'))
+    const connected = useSelector((state: any) => state.behavior.get('connected'))
+    const isChatOpen = useSelector((state: any) => state.behavior.get('isChatOpen'))
+    const isChatVisible = useSelector((state: any) => state.behavior.get('isChatVisible'))
+    const fullScreenMode = useSelector((state: any) => state.behavior.get('fullScreenMode'))
+    const tooltipSent = useSelector((state: any) => state.metadata.get('tooltipSent'))
+    const tooltipDismissed = useSelector((state: any) => state.metadata.get('tooltipDismissed'))
 
-        // add the default highlight css to the document
-        const styleNode = document.createElement('style');
-        styleNode.innerHTML = defaultHighlightAnimation;
-        document.body.appendChild(styleNode);
+    const oldUrl = useSelector((state: any) => state.behavior.get('oldUrl'))
+    const domHighlight = useSelector((state: any) => state.metadata.get('domHighlight'))
 
-        (this as any).intervalId = setInterval(() => dispatch(evalUrl(window.location.href)), 500);
-        if (tooltipText && !tooltipDismissed) {
-            dispatch(showTooltip(true));
-        }
-        if (connectOn === 'mount') {
-            console.log("connectOn is 'mount'");
-            this.initializeWidget();
-            return;
-        }
 
-        const localSession = getLocalSession(storage, SESSION_NAME);
-        const lastUpdate = localSession ? localSession.lastUpdate : 0;
 
-        if (autoClearCache) {
-            if (Date.now() - lastUpdate < 30 * 60 * 1000) {
-                this.initializeWidget();
-            } else {
-                localStorage.removeItem(SESSION_NAME);
-            }
-        } else {
-            this.checkVersionBeforePull();
-            dispatch(pullSession());
-            if (lastUpdate) this.initializeWidget();
+
+
+
+    // const mapStateToProps = (state:any) => ({
+
+    //     fullScreenMode: state.behavior.get('fullScreenMode'),
+    //     tooltipSent: state.metadata.get('tooltipSent'),
+    //     tooltipDismissed: state.metadata.get('tooltipDismissed'),
+    //     oldUrl: state.behavior.get('oldUrl'),
+    //     pageChangeCallbacks: state.behavior.get('pageChangeCallbacks'),
+    //     domHighlight: state.metadata.get('domHighlight'),
+    //     messages: state.messages,
+    // });
+
+    function clearCustomStyle() {
+        const { defaultHighlightClassname }: any = props;
+        const domHighlightJS = domHighlight.toJS() || {};
+        if (domHighlightJS.selector) {
+            const elements = safeQuerySelectorAll(domHighlightJS.selector);
+            elements.forEach((element) => {
+                switch (domHighlightJS.style) {
+                    case 'custom':
+                        element.setAttribute('style', '');
+                        break;
+                    case 'class':
+                        element.classList.remove(domHighlightJS.css);
+                        break;
+                    default:
+                        if (defaultHighlightClassname !== '') {
+                            element.classList.remove(defaultHighlightClassname);
+                        } else {
+                            element.setAttribute('style', '');
+                        }
+                }
+            });
         }
     }
 
-    componentDidUpdate() {
-        const { isChatOpen, dispatch, embedded, initialized }: any = this.props;
-
-        if (isChatOpen) {
-            if (!initialized) {
-                this.initializeWidget();
-            }
-            this.trySendInitPayload();
-        }
-
-        if (embedded && initialized) {
-            dispatch(showChat());
-            dispatch(openChat());
-        }
-    }
-
-    componentWillUnmount() {
-        const { socket }: any = this.props;
-
-        if (socket) {
-            socket.close();
-        }
-        clearTimeout(this.tooltipTimeout);
-        clearInterval((this as any).intervalId);
-    }
-
-    getSessionId() {
-        const { storage }: any = this.props;
-        // Get the local session, check if there is an existing session_id
-        const localSession = getLocalSession(storage, SESSION_NAME);
-        const localId = localSession ? localSession.session_id : null;
-        return localId;
-    }
-
-    sendMessage(payload: any, text = '', when = 'always', tooltipSelector = false) {
-        const { dispatch, initialized, messages }: any = this.props;
+    function sendMessage(payload: any, text = '', when = 'always', tooltipSelector = false) {
+        const { dispatch, }: any = props;
         const emit = () => {
             const send = () => {
                 dispatch(emitUserMessage(payload));
@@ -164,7 +121,7 @@ class Widget extends Component {
             }
         };
         if (!initialized) {
-            this.initializeWidget(false);
+            initializeWidget(false);
             dispatch(initialize());
             emit();
         } else {
@@ -172,57 +129,44 @@ class Widget extends Component {
         }
     }
 
-    handleMessageReceived(messageWithMetadata: any) {
-        const { dispatch, isChatOpen, disableTooltips }: any = this.props;
+    function addCustomsEventListeners(pageEventCallbacks: any) {
+        const eventsListeners: any = [];
 
-        // we extract metadata so we are sure it does not interfer with type checking of the message
-        const { metadata, ...message } = messageWithMetadata;
-        if (!isChatOpen) {
-            this.dispatchMessage(message);
-            dispatch(newUnreadMessage());
-            if (!disableTooltips) {
-                dispatch(showTooltip(true));
-                this.applyCustomStyle();
+        pageEventCallbacks.forEach((pageEvent: any) => {
+            const { event, payload, selector } = pageEvent;
+            const sendPayload = () => {
+                sendMessage(payload);
+            };
+
+            if (event && payload && selector) {
+                const elemList = document.querySelectorAll(selector);
+                if (elemList.length > 0) {
+                    elemList.forEach((elem) => {
+                        eventsListeners.push({ elem, event, sendPayload });
+                        elem.addEventListener(event, sendPayload);
+                    });
+                }
             }
-        } else if (!this.onGoingMessageDelay) {
-            this.onGoingMessageDelay = true;
-            dispatch(triggerMessageDelayed(true));
-            this.newMessageTimeout(message);
-        } else {
+        });
 
-            (this as any).messages.push(message);
-        }
+        const cleaner = () => {
+            eventsListeners.forEach((eventsListener: any) => {
+                eventsListener.elem.removeEventListener(
+                    eventsListener.event,
+                    eventsListener.sendPayload
+                );
+            });
+        };
+
+        return cleaner;
     }
 
-    popLastMessage() {
-        const { dispatch }: any = this.props;
-        if (this.messages.length) {
-            this.onGoingMessageDelay = true;
-            dispatch(triggerMessageDelayed(true));
-            this.newMessageTimeout(this.messages.shift());
-        }
-    }
-
-    newMessageTimeout(message: any) {
-        const { dispatch, customMessageDelay }: any = this.props;
-        this.delayedMessage = message;
-        (this as any).messageDelayTimeout = setTimeout(() => {
-            this.dispatchMessage(message);
-            this.delayedMessage = null;
-            this.applyCustomStyle();
-            dispatch(triggerMessageDelayed(false));
-            this.onGoingMessageDelay = false;
-            this.popLastMessage();
-        }, customMessageDelay(message.text || ''));
-    }
-
-    propagateMetadata(metadata:any) {
-        const { dispatch }:any = this.props;
+    function propagateMetadata(metadata: any) {
+        const { dispatch }: any = props;
         const {
             linkTarget,
             userInput,
             pageChangeCallbacks,
-            domHighlight,
             forceOpen,
             forceClose,
             pageEventCallbacks,
@@ -247,83 +191,79 @@ class Widget extends Component {
             dispatch(closeChat());
         }
         if (pageEventCallbacks) {
-            this.eventListenerCleaner = this.addCustomsEventListeners(
+            const eventListenerCleaner = addCustomsEventListeners(
                 pageEventCallbacks.pageEvents
             );
         }
     }
 
-    handleBotUtterance(botUtterance:any) {
-        const { dispatch }:any = this.props;
-        this.clearCustomStyle();
-        this.eventListenerCleaner();
-        dispatch(clearMetadata());
-        if (botUtterance.metadata) this.propagateMetadata(botUtterance.metadata);
-        const newMessage = { ...botUtterance, text: String(botUtterance.text) };
-        if (botUtterance.metadata && botUtterance.metadata.customCss) {
-            newMessage.customCss = botUtterance.metadata.customCss;
+    const eventListenerCleaner = () => console.log('**')
+
+    function dispatchMessage(message: any) {
+        if (Object.keys(message).length === 0) {
+            return;
         }
-        this.handleMessageReceived(newMessage);
-    }
+        const { customCss, ...messageClean } = message;
 
-    addCustomsEventListeners(pageEventCallbacks:any) {
-        const eventsListeners:any = [];
-
-        pageEventCallbacks.forEach((pageEvent:any) => {
-            const { event, payload, selector } = pageEvent;
-            const sendPayload = () => {
-                this.sendMessage(payload);
-            };
-
-            if (event && payload && selector) {
-                const elemList = document.querySelectorAll(selector);
-                if (elemList.length > 0) {
-                    elemList.forEach((elem) => {
-                        eventsListeners.push({ elem, event, sendPayload });
-                        elem.addEventListener(event, sendPayload);
-                    });
-                }
+        if (isText(messageClean)) {
+            props.dispatch(addResponseMessage(messageClean.text));
+        } else if (isButtons(messageClean)) {
+            props.dispatch(addButtons(messageClean));
+        } else if (isCarousel(messageClean)) {
+            props.dispatch(addCarousel(messageClean));
+        } else if (isVideo(messageClean)) {
+            const element = messageClean.attachment.payload;
+            props.dispatch(
+                addVideoSnippet({
+                    title: element.title,
+                    video: element.src,
+                })
+            );
+        } else if (isImage(messageClean)) {
+            const element = messageClean.attachment.payload;
+            props.dispatch(
+                addImageSnippet({
+                    title: element.title,
+                    image: element.src,
+                })
+            );
+        } else {
+            // some custom message
+            const props = messageClean;
+            if (props.customComponent) {
+                props.dispatch(renderCustomComponent(props.customComponent, props, true));
             }
-        });
-
-        const cleaner = () => {
-            eventsListeners.forEach((eventsListener:any) => {
-                eventsListener.elem.removeEventListener(
-                    eventsListener.event,
-                    eventsListener.sendPayload
-                );
-            });
-        };
-
-        return cleaner;
-    }
-
-    clearCustomStyle() {
-        const { domHighlight, defaultHighlightClassname }:any = this.props;
-        const domHighlightJS = domHighlight.toJS() || {};
-        if (domHighlightJS.selector) {
-            const elements = safeQuerySelectorAll(domHighlightJS.selector);
-            elements.forEach((element) => {
-                switch (domHighlightJS.style) {
-                    case 'custom':
-                        element.setAttribute('style', '');
-                        break;
-                    case 'class':
-                        element.classList.remove(domHighlightJS.css);
-                        break;
-                    default:
-                        if (defaultHighlightClassname !== '') {
-                            element.classList.remove(defaultHighlightClassname);
-                        } else {
-                            element.setAttribute('style', '');
-                        }
-                }
-            });
+        }
+        if (customCss) {
+            props.dispatch(setCustomCss(message.customCss));
         }
     }
 
-    applyCustomStyle() {
-        const { domHighlight, defaultHighlightCss, defaultHighlightClassname }:any = this.props;
+    function newMessageTimeout(message: any) {
+        const { dispatch, customMessageDelay }: any = props;
+        setDelayedMessage(message);
+        setMessageDelayTimeout(setTimeout(() => {
+            dispatchMessage(message);
+            setDelayedMessage(null);
+            applyCustomStyle();
+            dispatch(triggerMessageDelayed(false));
+            setOnGoingMessageDelay(false);
+            popLastMessage();
+        }, customMessageDelay(message.text || '')))
+    }
+
+    function popLastMessage() {
+        const { dispatch, }: any = props;
+        if (messages.length) {
+            setOnGoingMessageDelay(true);
+            dispatch(triggerMessageDelayed(true));
+            newMessageTimeout(messages.shift());
+        }
+    }
+
+
+    function applyCustomStyle() {
+        const {  defaultHighlightCss, defaultHighlightClassname }: any = props;
         const domHighlightJS = domHighlight.toJS() || {};
         if (domHighlightJS.selector) {
             const elements = safeQuerySelectorAll(domHighlightJS.selector);
@@ -377,46 +317,129 @@ class Widget extends Component {
         }
     }
 
-    checkVersionBeforePull() {
-        const { storage } :any= this.props;
-        const localSession = getLocalSession(storage, SESSION_NAME);
-        if (localSession && localSession.version !== 'PACKAGE_VERSION_TO_BE_REPLACED') {
-            storage.removeItem(SESSION_NAME);
+    function handleMessageReceived(messageWithMetadata: any) {
+        const { dispatch, disableTooltips }: any = props;
+
+        // we extract metadata so we are sure it does not interfer with type checking of the message
+        const { metadata, ...message } = messageWithMetadata;
+        if (!isChatOpen) {
+            dispatchMessage(message);
+            dispatch(newUnreadMessage());
+            if (!disableTooltips) {
+                dispatch(showTooltip(true));
+                applyCustomStyle();
+            }
+        } else if (!onGoingMessageDelay) {
+            setOnGoingMessageDelay(true);
+            dispatch(triggerMessageDelayed(true));
+            newMessageTimeout(message);
+        } else {
+
+            messages.push(message);
         }
     }
 
-    initializeWidget(sendInitPayload = true) {
+    function handleBotUtterance(botUtterance: any) {
+        const { dispatch }: any = props;
+        clearCustomStyle();
+        eventListenerCleaner();
+        dispatch(clearMetadata());
+        if (botUtterance.metadata) propagateMetadata(botUtterance.metadata);
+        const newMessage = { ...botUtterance, text: String(botUtterance.text) };
+        if (botUtterance.metadata && botUtterance.metadata.customCss) {
+            newMessage.customCss = botUtterance.metadata.customCss;
+        }
+        handleMessageReceived(newMessage);
+    }
+
+    function trySendTooltipPayload() {
+        const { tooltipPayload, socket, customData,  dispatch }: any =
+            props;
+
+        if (connected && !isChatOpen && !tooltipSent.get(tooltipPayload)) {
+            const sessionId = getSessionId();
+
+            if (!sessionId) return;
+
+            socket.emit('user_uttered', {
+                message: tooltipPayload,
+                customData,
+                session_id: sessionId,
+            });
+
+            dispatch(triggerTooltipSent(tooltipPayload));
+            dispatch(initialize());
+        }
+    }
+
+    function trySendInitPayload() {
+        const {
+            initPayload,
+            customData,
+            socket,
+            embedded,
+            dispatch,
+        }: any = props;
+
+        // Send initial payload when chat is opened or widget is shown
+        if (!initialized && connected && ((isChatOpen && isChatVisible) || embedded)) {
+            // Only send initial payload if the widget is connected to the server but not yet initialized
+
+            const sessionId = getSessionId();
+
+            // check that session_id is confirmed
+            if (!sessionId) return;
+
+            // eslint-disable-next-line no-console
+            console.log('sending init payload', sessionId);
+            socket.emit('user_uttered', {
+                message: initPayload,
+                customData,
+                session_id: sessionId,
+            });
+            dispatch(initialize());
+        }
+    }
+
+    function getSessionId() {
+        const { storage }: any = props;
+        // Get the local session, check if there is an existing session_id
+        const localSession = getLocalSession(storage, SESSION_NAME);
+        const localId = localSession ? localSession.session_id : null;
+        return localId;
+    }
+
+    function initializeWidget(sendInitPayload = true) {
         const {
             storage,
             socket,
             dispatch,
             embedded,
-            initialized,
             connectOn,
             tooltipPayload,
             tooltipDelay,
-        } :any= this.props;
+        }: any = props;
         if (!socket.isInitialized()) {
             socket.createSocket();
 
-            socket.on('bot_uttered', (botUttered:any) => {
+            socket.on('bot_uttered', (botUttered: any) => {
                 // botUttered.attachment.payload.elements = [botUttered.attachment.payload.elements];
                 // console.log(botUttered);
-                this.handleBotUtterance(botUttered);
+                handleBotUtterance(botUttered);
             });
 
-            this.checkVersionBeforePull();
+            checkVersionBeforePull();
 
             dispatch(pullSession());
 
             // Request a session from server
             socket.on('connect', () => {
-                const localId = this.getSessionId();
+                const localId = getSessionId();
                 socket.emit('session_request', { session_id: localId });
             });
 
             // When session_confirm is received from the server:
-            socket.on('session_confirm', (sessionObject:any) => {
+            socket.on('session_confirm', (sessionObject: any) => {
                 const remoteId =
                     sessionObject && sessionObject.session_id
                         ? sessionObject.session_id
@@ -431,7 +454,7 @@ class Widget extends Component {
         If the localId is null or different from the remote_id,
         start a new session.
         */
-                const localId = this.getSessionId();
+                const localId = getSessionId();
                 if (localId !== remoteId) {
                     // storage.clear();
                     // Store the received session_id to storage
@@ -439,7 +462,7 @@ class Widget extends Component {
                     storeLocalSession(storage, SESSION_NAME, remoteId);
                     dispatch(pullSession());
                     if (sendInitPayload) {
-                        this.trySendInitPayload();
+                        trySendInitPayload();
                     }
                 } else {
                     // If this is an existing session, it's possible we changed pages and want to send a
@@ -457,13 +480,13 @@ class Widget extends Component {
                     }
                 }
                 if (connectOn === 'mount' && tooltipPayload) {
-                    (this as any).tooltipTimeout = setTimeout(() => {
-                        this.trySendTooltipPayload();
+                    const tooltipTimeout = setTimeout(() => {
+                        trySendTooltipPayload();
                     }, parseInt(tooltipDelay, 10));
                 }
             });
 
-            socket.on('disconnect', (reason:any) => {
+            socket.on('disconnect', (reason: any) => {
                 // eslint-disable-next-line no-console
                 console.log(reason);
                 if (reason !== 'io client disconnect') {
@@ -478,239 +501,117 @@ class Widget extends Component {
         }
     }
 
-    // TODO: Need to erase redux store on load if localStorage
-    // is erased. Then behavior on reload can be consistent with
-    // behavior on first load
-
-    trySendInitPayload() {
-        const {
-            initPayload,
-            customData,
-            socket,
-            initialized,
-            isChatOpen,
-            isChatVisible,
-            embedded,
-            connected,
-            dispatch,
-        }:any = this.props;
-
-        // Send initial payload when chat is opened or widget is shown
-        if (!initialized && connected && ((isChatOpen && isChatVisible) || embedded)) {
-            // Only send initial payload if the widget is connected to the server but not yet initialized
-
-            const sessionId = this.getSessionId();
-
-            // check that session_id is confirmed
-            if (!sessionId) return;
-
-            // eslint-disable-next-line no-console
-            console.log('sending init payload', sessionId);
-            socket.emit('user_uttered', {
-                message: initPayload,
-                customData,
-                session_id: sessionId,
-            });
-            dispatch(initialize());
+    function checkVersionBeforePull() {
+        const { storage }: any = props;
+        const localSession = getLocalSession(storage, SESSION_NAME);
+        if (localSession && localSession.version !== 'PACKAGE_VERSION_TO_BE_REPLACED') {
+            storage.removeItem(SESSION_NAME);
         }
     }
 
-    trySendTooltipPayload() {
-        const { tooltipPayload, socket, customData, connected, isChatOpen, dispatch, tooltipSent }:any =
-            this.props;
 
-        if (connected && !isChatOpen && !tooltipSent.get(tooltipPayload)) {
-            const sessionId = this.getSessionId();
-
-            if (!sessionId) return;
-
-            socket.emit('user_uttered', {
-                message: tooltipPayload,
-                customData,
-                session_id: sessionId,
-            });
-
-            dispatch(triggerTooltipSent(tooltipPayload));
-            dispatch(initialize());
-        }
-    }
-
-    toggleConversation() {
-        const { isChatOpen, dispatch, disableTooltips }:any = this.props;
-        if (isChatOpen && this.delayedMessage) {
+    function toggleConversation() {
+        const {  dispatch, disableTooltips }: any = props;
+        if (isChatOpen && delayedMessage) {
             if (!disableTooltips) dispatch(showTooltip(true));
-            clearTimeout((this as any).messageDelayTimeout);
-            this.dispatchMessage(this.delayedMessage);
+            clearTimeout(messageDelayTimeout);
+            dispatchMessage(delayedMessage);
             dispatch(newUnreadMessage());
-            this.onGoingMessageDelay = false;
+            setOnGoingMessageDelay(false);
             dispatch(triggerMessageDelayed(false));
-            this.messages.forEach((message) => {
-                this.dispatchMessage(message);
+            messages.forEach((message: any) => {
+                dispatchMessage(message);
                 dispatch(newUnreadMessage());
             });
-            this.applyCustomStyle();
+            applyCustomStyle();
 
-            this.messages = [];
-            this.delayedMessage = null;
+            setMessages([]);
+            setDelayedMessage(null);
         } else {
-            (this as any).props.dispatch(showTooltip(false));
+            props.dispatch(showTooltip(false));
         }
-        clearTimeout(this.tooltipTimeout);
+        clearTimeout(tooltipTimeout);
         dispatch(toggleChat());
     }
 
-    toggleFullScreen() {
-        (this as any).props.dispatch(toggleFullScreen());
+    function toggleFullScreen() {
+        props.dispatch(toggleFullScreen());
     }
 
-    dispatchMessage(message:any) {
-        if (Object.keys(message).length === 0) {
-            return;
-        }
-        const { customCss, ...messageClean } = message;
-
-        if (isText(messageClean)) {
-            (this as any).props.dispatch(addResponseMessage(messageClean.text));
-        } else if (isButtons(messageClean)) {
-            (this as any).props.dispatch(addButtons(messageClean));
-        } else if (isCarousel(messageClean)) {
-            (this as any).props.dispatch(addCarousel(messageClean));
-        } else if (isVideo(messageClean)) {
-            const element = messageClean.attachment.payload;
-            (this as any).props.dispatch(
-                addVideoSnippet({
-                    title: element.title,
-                    video: element.src,
-                })
-            );
-        } else if (isImage(messageClean)) {
-            const element = messageClean.attachment.payload;
-            (this as any).props.dispatch(
-                addImageSnippet({
-                    title: element.title,
-                    image: element.src,
-                })
-            );
-        } else {
-            // some custom message
-            const props = messageClean;
-            if ((this as any).props.customComponent) {
-                (this as any).props.dispatch(renderCustomComponent((this as any).props.customComponent, props, true));
-            }
-        }
-        if (customCss) {
-            (this as any).props.dispatch(setCustomCss(message.customCss));
-        }
-    }
-
-    handleMessageSubmit(message:any) {
+    function handleMessageSubmit(message: any) {
         const userUttered = message;
         if (userUttered) {
-            (this as any).props.dispatch(addUserMessage(userUttered));
-            (this as any).props.dispatch(emitUserMessage(userUttered));
+            props.dispatch(addUserMessage(userUttered));
+            props.dispatch(emitUserMessage(userUttered));
         }
     }
 
-    render() {
-        return (
-            <WidgetLayout
-                toggleChat={() => this.toggleConversation()}
-                toggleFullScreen={() => this.toggleFullScreen()}
-                onSendMessage={(message:any) => this.handleMessageSubmit(message)}
-                title={(this as any).props.title}
-                subtitle={(this as any).props.subtitle}
-                titleImage={(this as any).props.titleImage}
-                customData={(this as any).props.customData}
-                profileAvatar={(this as any).props.profileAvatar}
-                showCloseButton={(this as any).props.showCloseButton}
-                showFullScreenButton={(this as any).props.showFullScreenButton}
-                hideWhenNotConnected={(this as any).props.hideWhenNotConnected}
-                fullScreenMode={(this as any).props.fullScreenMode}
-                isChatOpen={(this as any).props.isChatOpen}
-                isChatVisible={(this as any).props.isChatVisible}
-                badge={(this as any).props.badge}
-                chatIndicator={(this as any).props.chatIndicator}
-                tooltipDisabled={(this as any).props.tooltipDisabled}
-                embedded={(this as any).props.embedded}
-                params={(this as any).props.params}
-                openLauncherImage={(this as any).props.openLauncherImage}
-                inputTextFieldHint={(this as any).props.inputTextFieldHint}
-                closeImage={(this as any).props.closeImage}
-                customComponent={(this as any).props.customComponent}
-                displayUnreadCount={(this as any).props.displayUnreadCount}
-                showMessageDate={(this as any).props.showMessageDate}
-                tooltipHeader={(this as any).props.tooltipHeader}
-                tooltipText={(this as any).props.tooltipText}
-                tooltipSuggestions={(this as any).props.tooltipSuggestions}
-                tooltipPayload={(this as any).props.tooltipPayload}
-                iconSpinFrequence={(this as any).props.iconSpinFrequence}
-                iconSpinNoTooltip={(this as any).props.iconSpinNoTooltip}
-            />
-        );
-    }
+    useEffect(() => {
+        const { connectOn, autoClearCache, storage, dispatch, defaultHighlightAnimation, tooltipText,  }: any = props;
+        const styleNode = document.createElement('style');
+        styleNode.innerHTML = defaultHighlightAnimation;
+        document.body.appendChild(styleNode);
+
+        const intervalId = setInterval(() => dispatch(evalUrl(window.location.href)), 500);
+        if (tooltipText && !tooltipDismissed) {
+            dispatch(showTooltip(true));
+        }
+        if (connectOn === 'mount') {
+            console.log("connectOn is 'mount'");
+            initializeWidget();
+            return;
+        }
+        const localSession = getLocalSession(storage, SESSION_NAME);
+        const lastUpdate = localSession ? localSession.lastUpdate : 0;
+
+        if (autoClearCache) {
+            if (Date.now() - lastUpdate < 30 * 60 * 1000) {
+                initializeWidget();
+            } else {
+                localStorage.removeItem(SESSION_NAME);
+            }
+        } else {
+            checkVersionBeforePull();
+            dispatch(pullSession());
+            if (lastUpdate) initializeWidget();
+        }
+    }, [])
+    return (
+        <WidgetLayout
+            toggleChat={() => toggleConversation()}
+            toggleFullScreen={() => toggleFullScreen()}
+            onSendMessage={(message: any) => handleMessageSubmit(message)}
+            title={props.title}
+            subtitle={props.subtitle}
+            titleImage={props.titleImage}
+            customData={props.customData}
+            profileAvatar={props.profileAvatar}
+            showCloseButton={props.showCloseButton}
+            showFullScreenButton={props.showFullScreenButton}
+            hideWhenNotConnected={props.hideWhenNotConnected}
+            fullScreenMode={fullScreenMode}
+            isChatOpen={isChatOpen}
+            isChatVisible={isChatVisible}
+            badge={props.badge}
+            chatIndicator={props.chatIndicator}
+            tooltipDisabled={props.tooltipDisabled}
+            embedded={props.embedded}
+            params={props.params}
+            openLauncherImage={props.openLauncherImage}
+            inputTextFieldHint={props.inputTextFieldHint}
+            closeImage={props.closeImage}
+            customComponent={props.customComponent}
+            displayUnreadCount={props.displayUnreadCount}
+            showMessageDate={props.showMessageDate}
+            tooltipHeader={props.tooltipHeader}
+            tooltipText={props.tooltipText}
+            tooltipSuggestions={props.tooltipSuggestions}
+            tooltipPayload={props.tooltipPayload}
+            iconSpinFrequence={props.iconSpinFrequence}
+            iconSpinNoTooltip={props.iconSpinNoTooltip}
+        />
+    );
 }
-
-const mapStateToProps = (state:any) => ({
-    initialized: state.behavior.get('initialized'),
-    connected: state.behavior.get('connected'),
-    isChatOpen: state.behavior.get('isChatOpen'),
-    isChatVisible: state.behavior.get('isChatVisible'),
-    fullScreenMode: state.behavior.get('fullScreenMode'),
-    tooltipSent: state.metadata.get('tooltipSent'),
-    tooltipDismissed: state.metadata.get('tooltipDismissed'),
-    oldUrl: state.behavior.get('oldUrl'),
-    pageChangeCallbacks: state.behavior.get('pageChangeCallbacks'),
-    domHighlight: state.metadata.get('domHighlight'),
-    messages: state.messages,
-});
-
-Widget.propTypes = {
-    title: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
-    customData: PropTypes.shape({}),
-    subtitle: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
-    titleImage: PropTypes.string,
-    initPayload: PropTypes.string,
-    profileAvatar: PropTypes.string,
-    showCloseButton: PropTypes.bool,
-    showFullScreenButton: PropTypes.bool,
-    hideWhenNotConnected: PropTypes.bool,
-    connectOn: PropTypes.oneOf(['mount', 'open']),
-    autoClearCache: PropTypes.bool,
-    fullScreenMode: PropTypes.bool,
-    isChatVisible: PropTypes.bool,
-    isChatOpen: PropTypes.bool,
-    badge: PropTypes.number,
-    chatIndicator: PropTypes.bool,
-    tooltipDisabled: PropTypes.bool,
-    socket: PropTypes.shape({}),
-    embedded: PropTypes.bool,
-    params: PropTypes.shape({}),
-    connected: PropTypes.bool,
-    initialized: PropTypes.bool,
-    openLauncherImage: PropTypes.string,
-    closeImage: PropTypes.string,
-    inputTextFieldHint: PropTypes.string,
-    customComponent: PropTypes.func,
-    displayUnreadCount: PropTypes.bool,
-    showMessageDate: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
-    customMessageDelay: PropTypes.func.isRequired,
-    tooltipHeader: PropTypes.string,
-    tooltipText: PropTypes.string,
-    tooltipSuggestions: PropTypes.arrayOf(PropTypes.string),
-    tooltipPayload: PropTypes.string,
-    tooltipSent: PropTypes.shape({}),
-    tooltipDismissed: PropTypes.bool,
-    tooltipDelay: PropTypes.number.isRequired,
-    iconSpinFrequence: PropTypes.number,
-    iconSpinNoTooltip: PropTypes.bool,
-    domHighlight: PropTypes.shape({}),
-    storage: PropTypes.shape({}),
-    disableTooltips: PropTypes.bool,
-    defaultHighlightAnimation: PropTypes.string,
-    defaultHighlightCss: PropTypes.string,
-    defaultHighlightClassname: PropTypes.string,
-    messages: ImmutablePropTypes.listOf(ImmutablePropTypes.map),
-};
 
 Widget.defaultProps = {
     isChatOpen: false,
@@ -748,4 +649,5 @@ Widget.defaultProps = {
   }`,
 };
 
-export default connect(mapStateToProps, null, null, { forwardRef: true })(Widget as any);
+
+export default (Widget as any)

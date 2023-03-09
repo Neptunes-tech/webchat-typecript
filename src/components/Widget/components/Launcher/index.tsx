@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import { Map } from 'immutable';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { usePopper } from 'react-popper';
@@ -31,14 +31,9 @@ const Launcher = ({
     fullScreenMode,
     openLauncherImage,
     closeImage,
-    unreadCount,
+    // unreadCount,
     displayUnreadCount,
-    showTooltip,
     lastMessages,
-    closeTooltip,
-    lastUserMessage,
-    domHighlight,
-    sendPayload,
     tooltipHeader,
     tooltipText,
     tooltipSuggestions,
@@ -52,6 +47,37 @@ const Launcher = ({
     const [referenceElement, setReferenceElement] = useState(null);
 
     const [newChatIndicator, setNewChatIndicator] = useState(true)
+    const dispatch = useDispatch()
+    const closeTooltip = () => {
+        dispatch(showTooltipAction(false));
+        dispatch(tooltipDismissed(true));
+    }
+    const sendPayload = (payload: any) => dispatch(emitUserMessage(payload))
+
+
+
+    let unreadCount = useSelector((state: any) => state.behavior.get('unreadCount') || 0)
+    let showTooltip = useSelector((state: any) => state.metadata.get('showTooltip'))
+    let linkTarget = useSelector((state: any) => state.metadata.get('linkTarget'))
+    let lastUserMessage: any = useSelector((state: any) => {
+        (function getLastUserMessage() {
+            if (!state.messages) return false;
+            let index = -1;
+            while (index > -10) {
+                const lastMessage = state.messages.get(index);
+                if (lastMessage) {
+                    if (lastMessage.get('sender') === 'client') return lastMessage;
+                } else {
+                    return false;
+                }
+                index -= 1;
+            }
+            return false;
+        })()
+    })
+    let domHighlight = useSelector((state: any) => state.metadata.get('domHighlight'))
+
+
 
     useEffect(() => {
         const setReference = (selector: any) => {
@@ -88,7 +114,7 @@ const Launcher = ({
         ],
         placement: (domHighlight && domHighlight.get('tooltipPlacement')) || 'auto',
     });
-    
+
     let tooltipMessage = /* new */ Map();
     if (tooltipText) {
         tooltipMessage =/* new */  Map({
@@ -140,7 +166,7 @@ const Launcher = ({
     if (fullScreenMode && isChatOpen) className.push('rw-full-screen rw-hide');
 
     const getComponentToRender = (message: any, buttonSeparator = false) => {
-        const ComponentToRender:any = (() => {
+        const ComponentToRender: any = (() => {
             switch (message.get('type')) {
                 case MESSAGES_TYPES.TEXT: {
                     return Message;
@@ -196,6 +222,7 @@ const Launcher = ({
             </Slider>
         </div>
     );
+
     const renderTooltipContent = () => (
         <React.Fragment>
             <div className="rw-tooltip-header">
@@ -326,66 +353,30 @@ const Launcher = ({
     );
 };
 
-Launcher.propTypes = {
-    toggle: PropTypes.func,
-    isChatOpen: PropTypes.bool,
-    badge: PropTypes.number,
-    fullScreenMode: PropTypes.bool,
-    openLauncherImage: PropTypes.string,
-    closeImage: PropTypes.string,
-    unreadCount: PropTypes.number,
-    displayUnreadCount: PropTypes.bool,
-    showTooltip: PropTypes.bool,
-    lastUserMessage: PropTypes.oneOfType([ImmutablePropTypes.map, PropTypes.bool]),
-    domHighlight: PropTypes.shape({}),
-    lastMessages: PropTypes.arrayOf(ImmutablePropTypes.map),
-    chatIndicator: PropTypes.bool,
-    tooltipDisabled: PropTypes.bool
-};
+// Launcher.propTypes = {
+//     toggle: PropTypes.func,
+//     isChatOpen: PropTypes.bool,
+//     badge: PropTypes.number,
+//     fullScreenMode: PropTypes.bool,
+//     openLauncherImage: PropTypes.string,
+//     closeImage: PropTypes.string,
+//     unreadCount: PropTypes.number,
+//     displayUnreadCount: PropTypes.bool,
+//     showTooltip: PropTypes.bool,
+//     lastUserMessage: PropTypes.oneOfType([ImmutablePropTypes.map, PropTypes.bool]),
+//     domHighlight: PropTypes.shape({}),
+//     lastMessages: PropTypes.arrayOf(ImmutablePropTypes.map),
+//     chatIndicator: PropTypes.bool,
+//     tooltipDisabled: PropTypes.bool
+// };
 
-const mapStateToProps = (state: any) => ({
-    lastMessages:
-        (state.messages &&
-            (() => {
-                const messages = [];
-                for (let i = 1; i <= 10; i += 1) {
-                    if (
-                        state.messages.get(-i) &&
-                        state.messages.get(-i).get('sender') !== 'response'
-                    )
-                        break;
-                    if (!state.messages.get(-i)) break;
-                    messages.unshift(state.messages.get(-i));
-                }
-                return messages;
-            })()) /* || new Map<any>() */,
 
-    unreadCount: state.behavior.get('unreadCount') || 0,
-    showTooltip: state.metadata.get('showTooltip'),
-    linkTarget: state.metadata.get('linkTarget'),
-    lastUserMessage: (function getLastUserMessage() {
-        if (!state.messages) return false;
-        let index = -1;
-        while (index > -10) {
-            const lastMessage = state.messages.get(index);
-            if (lastMessage) {
-                if (lastMessage.get('sender') === 'client') return lastMessage;
-            } else {
-                return false;
-            }
-            index -= 1;
-        }
-        return false;
-    })(),
-    domHighlight: state.metadata.get('domHighlight'),
-});
+// const mapDispatchToProps = (dispatch: any) => ({
+//     closeTooltip: () => {
+//         dispatch(showTooltipAction(false));
+//         dispatch(tooltipDismissed(true));
+//     },
+//     sendPayload: (payload: any) => dispatch(emitUserMessage(payload)),
+// });
 
-const mapDispatchToProps = (dispatch: any) => ({
-    closeTooltip: () => {
-        dispatch(showTooltipAction(false));
-        dispatch(tooltipDismissed(true));
-    },
-    sendPayload: (payload: any) => dispatch(emitUserMessage(payload)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Launcher as any);
+export default (Launcher as any);
