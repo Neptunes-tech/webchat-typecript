@@ -7,10 +7,10 @@ var fs = require('fs');
 console.log(process.env['CHATBOT_ENDPOINT'],'ENVIRONMENT_PROCESS')
 module.exports = {
     // entry: ['babel-polyfill', './index.js'],
-    entry: './umd.js',
+    entry: './umd.tsx',
     output: {
         path: path.join(__dirname, '/lib'),
-        filename: 'index.js',
+        filename: 'index.tsx',
         library: 'WebChat',
         libraryTarget: 'umd',
     },
@@ -21,7 +21,7 @@ module.exports = {
         static: { directory: path.resolve(__dirname, '/lib') },
     },
     resolve: {
-        extensions: ['.js', '.jsx'],
+        extensions: ['.js', '.jsx', '.ts', '.tsx'],
         alias: {
             'react-native$': 'react-native-web',
         },
@@ -31,7 +31,7 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.(js|jsx)$/,
+                test: /\.(js|jsx|ts|tsx)$/,
                 exclude: /node_modules/,
                 use: [
                     {
