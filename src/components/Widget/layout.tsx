@@ -1,12 +1,12 @@
-import React from 'react';
-import { connect, useSelector } from 'react-redux';
+import { forwardRef } from 'react';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import Conversation from './components/Conversation';
 import Launcher from './components/Launcher';
 import './style.scss';
 
-const WidgetLayout = (props: any) => {
+const WidgetLayout = forwardRef((props: any, ref: any) => {
 
     const isChatVisible = useSelector((state: any) => state.behavior.get('isChatVisible'))
     const isChatOpen = useSelector((state: any) => state.behavior.get('isChatOpen'))
@@ -49,6 +49,7 @@ const WidgetLayout = (props: any) => {
                     customComponent={props.customComponent}
                     showMessageDate={props.showMessageDate}
                     inputTextFieldHint={props.inputTextFieldHint}
+                    ref={ref}
                 />
             )}
             {!props.embedded && (
@@ -68,11 +69,12 @@ const WidgetLayout = (props: any) => {
                     tooltipPayload={props.tooltipPayload}
                     iconSpinFrequence={props.iconSpinFrequence}
                     iconSpinNoTooltip={props.iconSpinNoTooltip}
+                    ref={ref}
                 />
             )}
         </div>
     ) : null;
-};
+})
 
 // const mapStateToProps = (state: any) => ({
 //     isChatVisible: state.behavior.get('isChatVisible'),

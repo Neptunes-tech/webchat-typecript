@@ -4,13 +4,13 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { version } = require('./package.json');
 const { BannerPlugin } = require('webpack');
 var fs = require('fs');
-console.log(process.env['CHATBOT_ENDPOINT'],'ENVIRONMENT_PROCESS')
+console.log(process.env['CHATBOT_ENDPOINT'], 'ENVIRONMENT_PROCESS')
 module.exports = {
     // entry: ['babel-polyfill', './index.js'],
-    entry: './umd.tsx',
+    entry: './umd.js',
     output: {
         path: path.join(__dirname, '/lib'),
-        filename: 'index.tsx',
+        filename: 'index.js',
         library: 'WebChat',
         libraryTarget: 'umd',
     },
@@ -21,7 +21,7 @@ module.exports = {
         static: { directory: path.resolve(__dirname, '/lib') },
     },
     resolve: {
-        extensions: ['.js', '.jsx', '.ts', '.tsx'],
+        extensions: ['.ts', '.tsx', '.js', '.jsx'],
         alias: {
             'react-native$': 'react-native-web',
         },
@@ -31,7 +31,7 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.(js|jsx|ts|tsx)$/,
+                test: /\.(js|jsx)$/,
                 exclude: /node_modules/,
                 use: [
                     {
@@ -43,6 +43,11 @@ module.exports = {
                     },
                     { loader: 'babel-loader' },
                 ],
+            },
+            {
+                test: /\.(ts|tsx)$/,
+                exclude: [/node_modules/],
+                loader: 'ts-loader'
             },
             {
                 test: /\.scss$/,

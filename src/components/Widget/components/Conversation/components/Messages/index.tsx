@@ -31,10 +31,10 @@ const scrollToBottom = () => {
 };
 
 interface MessagesProps {
-  profileAvatar?: string;
+  profileAvatar: string;
   customComponent(): any;
-  showMessageDate?: boolean | any;
-  params?: any
+  showMessageDate: boolean | any;
+  params: any
 }
 
 

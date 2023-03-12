@@ -1,45 +1,16 @@
-import React, { useEffect, useState } from 'react'
-import { connect, useSelector } from 'react-redux';
+import React, { useEffect, useState, forwardRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import {
-    toggleFullScreen,
-    toggleChat,
-    openChat,
-    closeChat,
-    showChat,
-    addUserMessage,
-    emitUserMessage,
-    addResponseMessage,
-    addCarousel,
-    addVideoSnippet,
-    addImageSnippet,
-    addButtons,
-    renderCustomComponent,
-    initialize,
-    connectServer,
-    disconnectServer,
-    pullSession,
-    newUnreadMessage,
-    triggerMessageDelayed,
-    triggerTooltipSent,
-    showTooltip,
-    clearMetadata,
-    setUserInput,
-    setLinkTarget,
-    setPageChangeCallbacks,
-    changeOldUrl,
-    setDomHighlight,
-    evalUrl,
-    setCustomCss,
-} from '../../store/actions';
+import { toggleFullScreen, toggleChat, openChat, closeChat, showChat, addUserMessage, emitUserMessage, addResponseMessage, addCarousel, addVideoSnippet, addImageSnippet, addButtons, renderCustomComponent, initialize, connectServer, disconnectServer, pullSession, newUnreadMessage, triggerMessageDelayed, triggerTooltipSent, showTooltip, clearMetadata, setUserInput, setLinkTarget, setPageChangeCallbacks, changeOldUrl, setDomHighlight, evalUrl, setCustomCss } from '../../store/actions';
 import { safeQuerySelectorAll } from '../../utils/dom';
 import { SESSION_NAME, NEXT_MESSAGE } from '../../constants';
 import { isVideo, isImage, isButtons, isText, isCarousel } from './msgProcessor';
 import WidgetLayout from './layout';
 import { storeLocalSession, getLocalSession } from '../../store/reducers/helper';
 
-const Widget = (props: any) => {
+const Widget = forwardRef((props: any, ref: any) => {
     const messagess = useSelector((state: any) => state.messages)
+    const dispatch = useDispatch()
 
     const [onGoingMessageDelay, setOnGoingMessageDelay] = useState(false)
     const [delayedMessage, setDelayedMessage] = useState(null)
@@ -56,11 +27,6 @@ const Widget = (props: any) => {
 
     const oldUrl = useSelector((state: any) => state.behavior.get('oldUrl'))
     const domHighlight = useSelector((state: any) => state.metadata.get('domHighlight'))
-
-
-
-
-
 
     // const mapStateToProps = (state:any) => ({
 
@@ -98,13 +64,13 @@ const Widget = (props: any) => {
     }
 
     function sendMessage(payload: any, text = '', when = 'always', tooltipSelector = false) {
-        const { dispatch, }: any = props;
         const emit = () => {
             const send = () => {
                 dispatch(emitUserMessage(payload));
                 if (text !== '') {
                     dispatch(addUserMessage(text, tooltipSelector));
-                } else {
+                }
+                else {
                     dispatch(addUserMessage('hidden', tooltipSelector, true));
                 }
                 if (tooltipSelector) {
@@ -124,7 +90,8 @@ const Widget = (props: any) => {
             initializeWidget(false);
             dispatch(initialize());
             emit();
-        } else {
+        }
+        else {
             emit();
         }
     }
@@ -162,15 +129,7 @@ const Widget = (props: any) => {
     }
 
     function propagateMetadata(metadata: any) {
-        const { dispatch }: any = props;
-        const {
-            linkTarget,
-            userInput,
-            pageChangeCallbacks,
-            forceOpen,
-            forceClose,
-            pageEventCallbacks,
-        } = metadata;
+        const { linkTarget, userInput, pageChangeCallbacks, forceOpen, forceClose, pageEventCallbacks } = metadata;
         if (linkTarget) {
             dispatch(setLinkTarget(linkTarget));
         }
@@ -206,14 +165,17 @@ const Widget = (props: any) => {
         const { customCss, ...messageClean } = message;
 
         if (isText(messageClean)) {
-            props.dispatch(addResponseMessage(messageClean.text));
-        } else if (isButtons(messageClean)) {
-            props.dispatch(addButtons(messageClean));
-        } else if (isCarousel(messageClean)) {
-            props.dispatch(addCarousel(messageClean));
-        } else if (isVideo(messageClean)) {
+            dispatch(addResponseMessage(messageClean.text));
+        }
+        else if (isButtons(messageClean)) {
+            dispatch(addButtons(messageClean));
+        }
+        else if (isCarousel(messageClean)) {
+            dispatch(addCarousel(messageClean));
+        }
+        else if (isVideo(messageClean)) {
             const element = messageClean.attachment.payload;
-            props.dispatch(
+            dispatch(
                 addVideoSnippet({
                     title: element.title,
                     video: element.src,
@@ -221,7 +183,7 @@ const Widget = (props: any) => {
             );
         } else if (isImage(messageClean)) {
             const element = messageClean.attachment.payload;
-            props.dispatch(
+            dispatch(
                 addImageSnippet({
                     title: element.title,
                     image: element.src,
@@ -231,16 +193,16 @@ const Widget = (props: any) => {
             // some custom message
             const props = messageClean;
             if (props.customComponent) {
-                props.dispatch(renderCustomComponent(props.customComponent, props, true));
+                dispatch(renderCustomComponent(props.customComponent, props, true));
             }
         }
         if (customCss) {
-            props.dispatch(setCustomCss(message.customCss));
+            dispatch(setCustomCss(message.customCss));
         }
     }
 
     function newMessageTimeout(message: any) {
-        const { dispatch, customMessageDelay }: any = props;
+        const { customMessageDelay }: any = props;
         setDelayedMessage(message);
         setMessageDelayTimeout(setTimeout(() => {
             dispatchMessage(message);
@@ -253,7 +215,6 @@ const Widget = (props: any) => {
     }
 
     function popLastMessage() {
-        const { dispatch, }: any = props;
         if (messages.length) {
             setOnGoingMessageDelay(true);
             dispatch(triggerMessageDelayed(true));
@@ -263,7 +224,7 @@ const Widget = (props: any) => {
 
 
     function applyCustomStyle() {
-        const {  defaultHighlightCss, defaultHighlightClassname }: any = props;
+        const { defaultHighlightCss, defaultHighlightClassname }: any = props;
         const domHighlightJS = domHighlight.toJS() || {};
         if (domHighlightJS.selector) {
             const elements = safeQuerySelectorAll(domHighlightJS.selector);
@@ -318,7 +279,7 @@ const Widget = (props: any) => {
     }
 
     function handleMessageReceived(messageWithMetadata: any) {
-        const { dispatch, disableTooltips }: any = props;
+        const { disableTooltips }: any = props;
 
         // we extract metadata so we are sure it does not interfer with type checking of the message
         const { metadata, ...message } = messageWithMetadata;
@@ -340,7 +301,6 @@ const Widget = (props: any) => {
     }
 
     function handleBotUtterance(botUtterance: any) {
-        const { dispatch }: any = props;
         clearCustomStyle();
         eventListenerCleaner();
         dispatch(clearMetadata());
@@ -352,8 +312,16 @@ const Widget = (props: any) => {
         handleMessageReceived(newMessage);
     }
 
+    function getSessionId() {
+        const { storage }: any = props;
+        // Get the local session, check if there is an existing session_id
+        const localSession = getLocalSession(storage, SESSION_NAME);
+        const localId = localSession ? localSession?.session_id : null;
+        return localId;
+    }
+
     function trySendTooltipPayload() {
-        const { tooltipPayload, socket, customData,  dispatch }: any =
+        const { tooltipPayload, socket, customData, dispatch }: any =
             props;
 
         if (connected && !isChatOpen && !tooltipSent.get(tooltipPayload)) {
@@ -378,7 +346,6 @@ const Widget = (props: any) => {
             customData,
             socket,
             embedded,
-            dispatch,
         }: any = props;
 
         // Send initial payload when chat is opened or widget is shown
@@ -401,19 +368,10 @@ const Widget = (props: any) => {
         }
     }
 
-    function getSessionId() {
-        const { storage }: any = props;
-        // Get the local session, check if there is an existing session_id
-        const localSession = getLocalSession(storage, SESSION_NAME);
-        const localId = localSession ? localSession.session_id : null;
-        return localId;
-    }
-
     function initializeWidget(sendInitPayload = true) {
         const {
             storage,
             socket,
-            dispatch,
             embedded,
             connectOn,
             tooltipPayload,
@@ -511,7 +469,7 @@ const Widget = (props: any) => {
 
 
     function toggleConversation() {
-        const {  dispatch, disableTooltips }: any = props;
+        const { disableTooltips }: any = props;
         if (isChatOpen && delayedMessage) {
             if (!disableTooltips) dispatch(showTooltip(true));
             clearTimeout(messageDelayTimeout);
@@ -528,26 +486,22 @@ const Widget = (props: any) => {
             setMessages([]);
             setDelayedMessage(null);
         } else {
-            props.dispatch(showTooltip(false));
+            dispatch(showTooltip(false));
         }
         clearTimeout(tooltipTimeout);
         dispatch(toggleChat());
     }
 
-    function toggleFullScreen() {
-        props.dispatch(toggleFullScreen());
-    }
-
     function handleMessageSubmit(message: any) {
         const userUttered = message;
         if (userUttered) {
-            props.dispatch(addUserMessage(userUttered));
-            props.dispatch(emitUserMessage(userUttered));
+            dispatch(addUserMessage(userUttered));
+            dispatch(emitUserMessage(userUttered));
         }
     }
 
     useEffect(() => {
-        const { connectOn, autoClearCache, storage, dispatch, defaultHighlightAnimation, tooltipText,  }: any = props;
+        const { connectOn, autoClearCache, storage, defaultHighlightAnimation, tooltipText, }: any = props;
         const styleNode = document.createElement('style');
         styleNode.innerHTML = defaultHighlightAnimation;
         document.body.appendChild(styleNode);
@@ -576,10 +530,11 @@ const Widget = (props: any) => {
             if (lastUpdate) initializeWidget();
         }
     }, [])
+
     return (
         <WidgetLayout
             toggleChat={() => toggleConversation()}
-            toggleFullScreen={() => toggleFullScreen()}
+            toggleFullScreen={() => dispatch(toggleFullScreen())}
             onSendMessage={(message: any) => handleMessageSubmit(message)}
             title={props.title}
             subtitle={props.subtitle}
@@ -609,9 +564,10 @@ const Widget = (props: any) => {
             tooltipPayload={props.tooltipPayload}
             iconSpinFrequence={props.iconSpinFrequence}
             iconSpinNoTooltip={props.iconSpinNoTooltip}
+            ref={ref}
         />
     );
-}
+})
 
 Widget.defaultProps = {
     isChatOpen: false,
